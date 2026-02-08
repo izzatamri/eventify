@@ -27,10 +27,6 @@ class Ticket
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?TicketType $ticketType = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tickets')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?User $user = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -66,17 +62,6 @@ class Ticket
     public function setTicketType(?TicketType $ticketType): static
     {
         $this->ticketType = $ticketType;
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
         return $this;
     }
 }

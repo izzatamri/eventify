@@ -29,6 +29,7 @@ class TicketType
     /** Available tickets for this type. Decremented on each reservation. */
     #[ORM\Column]
     #[Assert\Positive]
+    #[Assert\Type('integer')]
     private ?int $quantity = null;
 
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'ticketTypes')]
