@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'ticket')]
@@ -18,9 +19,12 @@ class Ticket
     private ?int $id = null;
 
     #[ORM\Column(length: 64, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 64)]
     private ?string $code = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Assert\NotBlank]
     private ?\DateTimeImmutable $purchaseDate = null;
 
     #[ORM\ManyToOne(targetEntity: TicketType::class, inversedBy: 'tickets')]
