@@ -8,26 +8,278 @@
 	<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
 	<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
 	<link rel="stylesheet" href="/assets/css/main.css" />
+	<style>
+		.event-create-page { background: #f5f5f5; min-height: 100vh; padding: 1.5rem 0 3rem; }
+		.event-create-page .back-link { color: #2E4DFD; text-decoration: none; font-size: 0.95rem; }
+		.event-create-page .back-link:hover { color: #1e3dd9; }
+		.event-create-page .preview-btn { border: 1px solid #dee2e6; border-radius: 2rem; padding: 0.4rem 1rem; background: #fff; color: #333; font-size: 0.9rem; }
+		.event-create-page .preview-btn:hover { background: #f8f9fa; }
+		.event-create-page .sidebar { max-width: 300px; }
+		.event-create-page .summary-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 1.25rem; position: relative; overflow: hidden; }
+		.event-create-page .summary-card::before { content: ""; position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%); border-radius: 50%; opacity: 0.35; }
+		.event-create-page .summary-title { font-size: 1.25rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; }
+		.event-create-page .summary-date { font-size: 0.9rem; color: #555; }
+		.event-create-page .summary-date i { margin-right: 0.35rem; color: #666; }
+		.event-create-page .steps-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem; }
+		.event-create-page .step { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
+		.event-create-page .step-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #dee2e6; flex-shrink: 0; margin-top: 2px; }
+		.event-create-page .step.step-active .step-radio { background: #2E4DFD; border-color: #2E4DFD; }
+		.event-create-page .step-title { font-weight: 600; color: #1a1a1a; }
+		.event-create-page .step-desc { font-size: 0.85rem; color: #666; margin-top: 0.2rem; }
+		.event-create-page .main-content { max-width: 720px; }
+		.event-create-page .section-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 1.5rem; margin-bottom: 1.25rem; }
+		.event-create-page .section-card.focus { border: 1px solid #2E4DFD; }
+		.event-create-page .section-card h3 { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; }
+		.event-create-page .section-card .section-add { width: 28px; height: 28px; border-radius: 50%; background: #2E4DFD; color: #fff; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+		.event-create-page .upload-zone { border: 2px dashed #2E4DFD; border-radius: 12px; min-height: 220px; display: flex; align-items: center; justify-content: center; background: #f8f9ff; position: relative; }
+		.event-create-page .upload-zone.has-image { min-height: 200px; background-size: cover; background-position: center; }
+		.event-create-page .upload-zone .upload-inner { text-align: center; padding: 1rem; }
+		.event-create-page .upload-zone .upload-inner i { font-size: 2.5rem; color: #2E4DFD; margin-bottom: 0.5rem; }
+		.event-create-page .upload-zone .upload-inner p { color: #555; margin: 0; font-size: 0.95rem; }
+		.event-create-page .form-label { font-weight: 600; color: #1a1a1a; margin-bottom: 0.35rem; }
+		.event-create-page .form-control, .event-create-page .form-select { border-radius: 8px; border: 1px solid #dee2e6; }
+		.event-create-page .form-control:focus, .event-create-page .form-select:focus { border-color: #2E4DFD; box-shadow: 0 0 0 3px rgba(46,77,253,.15); }
+		.event-create-page .form-control.is-invalid { border-color: #dc3545; }
+		.event-create-page .invalid-feedback { color: #dc3545; font-size: 0.85rem; }
+		.event-create-page .char-count { font-size: 0.8rem; color: #888; }
+		.event-create-page .hint { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
+		.event-create-page .good-to-know .add-btn { border: 1px solid #dee2e6; border-radius: 8px; padding: 0.5rem 1rem; background: #fff; font-size: 0.9rem; color: #555; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+		.event-create-page .good-to-know .add-btn:hover { background: #f8f9fa; }
+		.event-create-page .add-more { border: 2px dashed #dee2e6; border-radius: 12px; padding: 1.5rem; text-align: center; color: #666; font-size: 0.95rem; }
+		.event-create-page .save-btn { padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; border: none; }
+		.event-create-page .status-pill { border-radius: 2rem; padding: 0.35rem 0.9rem; font-size: 0.85rem; border: 1px solid #dee2e6; background: #fff; }
+	</style>
 </head>
 <body class="homepage1-body">
-	<div class="container py-5">
-		<p class="mb-4">
-			<a href="{{ path('app_events') }}">&larr; Back to events</a>
-		</p>
-		<h1>{{ title }}</h1>
-		{{ form_start(form) }}
-			{{ form_row(form.title) }}
-			{{ form_row(form.description) }}
-			{{ form_row(form.startDatetime) }}
-			{{ form_row(form.endDatetime) }}
-			{{ form_row(form.status) }}
-			{{ form_row(form.organizer) }}
-			{{ form_row(form.venue) }}
-			{{ form_row(form.categories) }}
-			<button type="submit" class="vl-btn1">{{ event.id ? 'Update' : 'Create' }} event</button>
-		{{ form_end(form) }}
+	<div class="event-create-page">
+		<div class="container-fluid px-3 px-lg-4">
+			{# Top bar: Back + Preview #}
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<a href="{{ path('app_events') }}" class="back-link"><i class="fa-solid fa-chevron-left me-1"></i> Back to events</a>
+				{% if event.id %}
+					<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-btn" target="_blank"><i class="fa-solid fa-eye me-1"></i> Preview</a>
+				{% else %}
+					<span class="preview-btn text-muted" title="Save draft first to preview"><i class="fa-solid fa-eye me-1"></i> Preview</span>
+				{% endif %}
+			</div>
+
+			{{ form_start(form, { attr: { id: 'event-form' } }) }}
+			<div class="row g-4">
+				{# Left sidebar #}
+				<aside class="col-lg-4 col-xl-3 sidebar">
+					<div class="summary-card mb-3">
+						<div class="summary-title" id="live-title">{{ event.title ?: 'Event Title' }}</div>
+						<div class="summary-date">
+							<i class="fa-regular fa-calendar"></i>
+							<span id="live-date">{% if event.startDatetime %}{{ event.startDatetime|date('D, M j, Y, g:i A') }}{% else %}Fri, Mar 20, 2026, 10:00 AM{% endif %}</span>
+						</div>
+						<div class="mt-3">
+							{{ form_widget(form.status, { attr: { class: 'status-pill form-select form-select-sm' } }) }}
+						</div>
+					</div>
+					<div class="steps-label">Steps</div>
+					<div class="step step-active">
+						<div class="step-radio"></div>
+						<div>
+							<div class="step-title">Build event page</div>
+							<div class="step-desc">Add all of your event details and let attendees know what to expect.</div>
+						</div>
+					</div>
+					<div class="step">
+						<div class="step-radio"></div>
+						<div>
+							<div class="step-title">Add tickets</div>
+							<div class="step-desc">Create ticket types and set prices.</div>
+						</div>
+					</div>
+					<div class="step">
+						<div class="step-radio"></div>
+						<div>
+							<div class="step-title">Publish</div>
+							<div class="step-desc">Review and publish your event.</div>
+						</div>
+					</div>
+				</aside>
+
+				{# Main form #}
+				<div class="col-lg-8 col-xl-9 main-content">
+					{# Cover image #}
+					<div class="section-card">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Cover image</h3>
+							<button type="button" class="section-add" title="Add image">+</button>
+						</div>
+						<div class="upload-zone {{ form.vars.value.image ? 'has-image' : '' }}" id="upload-zone" style="{% if form.vars.value.image %}background-image: url('{{ form.vars.value.image }}');{% endif %}">
+							<div class="upload-inner" id="upload-inner">
+								<i class="fa-solid fa-cloud-arrow-up"></i>
+								<p>Upload photos and video</p>
+							</div>
+						</div>
+						<div class="mt-2" id="image-url-wrap">
+							{{ form_widget(form.image, { attr: { class: 'form-control', placeholder: 'Paste image URL (e.g. https://...)' } }) }}
+							{{ form_errors(form.image) }}
+						</div>
+					</div>
+
+					{# Event title + Summary #}
+					<div class="section-card">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Event details</h3>
+							<button type="button" class="section-add" title="Add section">+</button>
+						</div>
+						<div class="mb-3">
+							{{ form_label(form.title) }}
+							<p class="hint">Be clear and descriptive with a title that tells people what your event is about.</p>
+							{{ form_widget(form.title, { attr: { class: 'form-control' ~ (form.title.vars.errors|length ? ' is-invalid' : '') } }) }}
+							{{ form_errors(form.title) }}
+						</div>
+						<div class="mb-0">
+							{{ form_label(form.summary) }}
+							<p class="hint">Grab people's attention with a short description. Attendees will see this at the top of your event page. (140 characters max)</p>
+							{{ form_widget(form.summary, { attr: { class: 'form-control', maxlength: 140 } }) }}
+							<div class="d-flex justify-content-between mt-1">
+								{{ form_errors(form.summary) }}
+								<span class="char-count ms-auto" id="summary-count">{{ (form.summary.vars.value ?? '')|length }}/140</span>
+							</div>
+						</div>
+					</div>
+
+					{# Date and time #}
+					<div class="section-card">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Date and time</h3>
+							<button type="button" class="section-add" title="Add time">+</button>
+						</div>
+						<div class="row g-3">
+							<div class="col-md-6">
+								{{ form_label(form.startDatetime) }}
+								{{ form_widget(form.startDatetime, { attr: { class: 'form-control' ~ (form.startDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
+								{{ form_errors(form.startDatetime) }}
+							</div>
+							<div class="col-md-6">
+								{{ form_label(form.endDatetime) }}
+								{{ form_widget(form.endDatetime, { attr: { class: 'form-control' ~ (form.endDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
+								{{ form_errors(form.endDatetime) }}
+							</div>
+						</div>
+					</div>
+
+					{# Location #}
+					<div class="section-card">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Location</h3>
+							<button type="button" class="section-add" title="Add location">+</button>
+						</div>
+						<div class="mb-2">
+							{{ form_label(form.venue) }}
+							{{ form_widget(form.venue, { attr: { class: 'form-select' ~ (form.venue.vars.errors|length ? ' is-invalid' : '') } }) }}
+							{{ form_errors(form.venue) }}
+						</div>
+					</div>
+
+					{# Overview #}
+					<div class="section-card focus">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Overview</h3>
+							<button type="button" class="section-add" title="Add content">+</button>
+						</div>
+						<p class="hint">Add more details about your event and include what people can expect if they attend.</p>
+						<div class="mb-2">
+							{{ form_widget(form.description, { attr: { class: 'form-control', rows: 6 } }) }}
+							{{ form_errors(form.description) }}
+						</div>
+						<p class="text-muted small mb-0"><i class="fa-solid fa-bolt me-1"></i> Suggest description</p>
+					</div>
+
+					{# Good to know (placeholder) #}
+					<div class="section-card">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Good to know</h3>
+							<button type="button" class="section-add" title="Add">+</button>
+						</div>
+						<div class="mb-3">
+							<div class="mb-2"><strong>Highlights</strong></div>
+							<button type="button" class="add-btn"><i class="fa-solid fa-plus me-1"></i> Add Age info</button>
+							<button type="button" class="add-btn"><i class="fa-solid fa-plus me-1"></i> Add Door Time</button>
+							<button type="button" class="add-btn"><i class="fa-solid fa-plus me-1"></i> Add Parking info</button>
+						</div>
+						<div>
+							<div class="mb-2"><strong>Frequently asked questions</strong></div>
+							<p class="small text-muted mb-2"><i class="fa-solid fa-lightbulb me-1"></i> Events with FAQs have 8% more organic traffic.</p>
+							<a href="#" class="text-primary" style="font-size: 0.9rem;">+ Add question</a>
+						</div>
+					</div>
+
+					{# Add more sections (placeholder) #}
+					<div class="add-more mb-4">
+						<strong>Add more sections to your event page</strong>
+						<p class="mb-0 mt-1">Make your event stand out. Add lineup, agenda, and more.</p>
+					</div>
+
+					{# Organizer & Categories (compact) #}
+					<div class="section-card">
+						<h3 class="mb-3">Organizer & categories</h3>
+						<div class="row g-3">
+							<div class="col-md-6">
+								{{ form_label(form.organizer) }}
+								{{ form_widget(form.organizer, { attr: { class: 'form-select' } }) }}
+								{{ form_errors(form.organizer) }}
+							</div>
+							<div class="col-md-6">
+								{{ form_label(form.categories) }}
+								{{ form_widget(form.categories, { attr: { class: 'form-select' } }) }}
+								{{ form_errors(form.categories) }}
+							</div>
+						</div>
+					</div>
+
+					<div class="d-flex justify-content-end mt-3">
+						<button type="submit" class="btn vl-btn4 save-btn">{{ event.id ? 'Save changes' : 'Save and continue' }}</button>
+					</div>
+				</div>
+			</div>
+			{{ form_end(form) }}
+		</div>
 	</div>
 	<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
 	<script src="/assets/js/vendor/bootstrap.min.js"></script>
+	<script>
+		(function() {
+			var form = document.getElementById('event-form');
+			if (!form) return;
+			var titleInput = form.querySelector('input[name*="[title]"]');
+			var summaryInput = form.querySelector('input[name*="[summary]"]');
+			var liveTitle = document.getElementById('live-title');
+			var summaryCount = document.getElementById('summary-count');
+			if (titleInput && liveTitle) {
+				titleInput.addEventListener('input', function() { liveTitle.textContent = this.value || 'Event Title'; });
+			}
+			if (summaryInput && summaryCount) {
+				summaryInput.addEventListener('input', function() { summaryCount.textContent = this.value.length + '/140'; });
+			}
+			var uploadZone = document.getElementById('upload-zone');
+			var uploadInner = document.getElementById('upload-inner');
+			var imageInput = form.querySelector('input[name*="[image]"]');
+			if (uploadZone && imageInput) {
+				imageInput.addEventListener('input', function() {
+					var url = this.value && this.value.trim();
+					if (url) {
+						uploadZone.classList.add('has-image');
+						uploadZone.style.backgroundImage = 'url(' + url + ')';
+						if (uploadInner) uploadInner.style.display = 'none';
+					} else {
+						uploadZone.classList.remove('has-image');
+						uploadZone.style.backgroundImage = '';
+						if (uploadInner) uploadInner.style.display = '';
+					}
+				});
+				if (imageInput.value && imageInput.value.trim()) {
+					uploadZone.classList.add('has-image');
+					uploadZone.style.backgroundImage = 'url(' + imageInput.value.trim() + ')';
+					if (uploadInner) uploadInner.style.display = 'none';
+				}
+			}
+		})();
+	</script>
 </body>
 </html>
