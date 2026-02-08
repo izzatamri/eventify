@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ORM\Table(name: 'event')]
 #[ORM\HasLifecycleCallbacks]
 class Event
@@ -44,6 +45,9 @@ class Event
     #[ORM\Column(length: 20)]
     #[Assert\Choice(choices: [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_CANCELLED])]
     private string $status = self::STATUS_DRAFT;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $image = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
@@ -147,6 +151,17 @@ class Event
         return $this;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -238,5 +253,30 @@ class Event
     {
         $this->categories->removeElement($category);
         return $this;
+    }
+
+    /** Minimum ticket price for display, or null if no tickets. */
+    public function getMinPrice(): ?string
+    {
+        $min = null;
+        foreach ($this->tickets as $ticket) {
+            $p = $ticket->getPrice();
+            if ($p !== null && ($min === null || bccomp((string) $p, (string) $min, 2) < 0)) {
+                $min = $p;
+            }
+        }
+        return $min;
+    }
+
+    /** Formatted price label for display (e.g. "Free" or "From €10.00"). */
+    public function getPriceLabel(): string
+    {
+        $min = $this->getMinPrice();
+        if ($min === null || bccomp($min, '0', 2) === 0) {
+            return 'Free';
+        }
+        $currency = $this->tickets->first() ? $this->tickets->first()->getCurrency() : 'USD';
+        $symbol = $currency === 'EUR' ? '€' : ($currency === 'USD' ? '$' : $currency . ' ');
+        return 'From ' . $symbol . number_format((float) $min, 2);
     }
 }
