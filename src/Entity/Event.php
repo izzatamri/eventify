@@ -12,8 +12,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'event')]
+#[ORM\HasLifecycleCallbacks]
 class Event
 {
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_CANCELLED = 'cancelled';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,7 +26,7 @@ class Event
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3)]
+    #[Assert\Length(max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -30,26 +35,56 @@ class Event
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Assert\NotBlank]
-    private ?\DateTimeImmutable $eventDate = null;
+    private ?\DateTimeImmutable $startDatetime = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Assert\NotBlank]
-    private ?string $location = null;
+    private ?\DateTimeImmutable $endDatetime = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image = null;
+    #[ORM\Column(length: 20)]
+    #[Assert\Choice(choices: [self::STATUS_DRAFT, self::STATUS_PUBLISHED, self::STATUS_CANCELLED])]
+    private string $status = self::STATUS_DRAFT;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizedEvents')]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(targetEntity: Venue::class, inversedBy: 'events', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Venue $venue = null;
+
+    #[ORM\ManyToOne(targetEntity: Organizer::class, inversedBy: 'events', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?User $organizer = null;
+    private ?Organizer $organizer = null;
 
-    /** @var Collection<int, TicketType> */
-    #[ORM\OneToMany(targetEntity: TicketType::class, mappedBy: 'event', orphanRemoval: true, cascade: ['persist'])]
-    private Collection $ticketTypes;
+    /** @var Collection<int, Ticket> */
+    #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'event', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $tickets;
+
+    /** @var Collection<int, Category> */
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'events', cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'event_category')]
+    private Collection $categories;
 
     public function __construct()
     {
-        $this->ticketTypes = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -79,74 +114,129 @@ class Event
         return $this;
     }
 
-    public function getEventDate(): ?\DateTimeImmutable
+    public function getStartDatetime(): ?\DateTimeImmutable
     {
-        return $this->eventDate;
+        return $this->startDatetime;
     }
 
-    public function setEventDate(\DateTimeImmutable $eventDate): static
+    public function setStartDatetime(\DateTimeImmutable $startDatetime): static
     {
-        $this->eventDate = $eventDate;
+        $this->startDatetime = $startDatetime;
         return $this;
     }
 
-    public function getLocation(): ?string
+    public function getEndDatetime(): ?\DateTimeImmutable
     {
-        return $this->location;
+        return $this->endDatetime;
     }
 
-    public function setLocation(string $location): static
+    public function setEndDatetime(\DateTimeImmutable $endDatetime): static
     {
-        $this->location = $location;
+        $this->endDatetime = $endDatetime;
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getStatus(): string
     {
-        return $this->image;
+        return $this->status;
     }
 
-    public function setImage(?string $image): static
+    public function setStatus(string $status): static
     {
-        $this->image = $image;
+        $this->status = $status;
         return $this;
     }
 
-    public function getOrganizer(): ?User
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getVenue(): ?Venue
+    {
+        return $this->venue;
+    }
+
+    public function setVenue(?Venue $venue): static
+    {
+        $this->venue = $venue;
+        return $this;
+    }
+
+    public function getOrganizer(): ?Organizer
     {
         return $this->organizer;
     }
 
-    public function setOrganizer(?User $organizer): static
+    public function setOrganizer(?Organizer $organizer): static
     {
         $this->organizer = $organizer;
         return $this;
     }
 
     /**
-     * @return Collection<int, TicketType>
+     * @return Collection<int, Ticket>
      */
-    public function getTicketTypes(): Collection
+    public function getTickets(): Collection
     {
-        return $this->ticketTypes;
+        return $this->tickets;
     }
 
-    public function addTicketType(TicketType $ticketType): static
+    public function addTicket(Ticket $ticket): static
     {
-        if (!$this->ticketTypes->contains($ticketType)) {
-            $this->ticketTypes->add($ticketType);
-            $ticketType->setEvent($this);
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setEvent($this);
         }
         return $this;
     }
 
-    public function removeTicketType(TicketType $ticketType): static
+    public function removeTicket(Ticket $ticket): static
     {
-        if ($this->ticketTypes->removeElement($ticketType)) {
-            if ($ticketType->getEvent() === $this) {
-                $ticketType->setEvent(null);
+        if ($this->tickets->removeElement($ticket)) {
+            if ($ticket->getEvent() === $this) {
+                $ticket->setEvent(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+        return $this;
+    }
+
+    public function removeCategory(Category $category): static
+    {
+        $this->categories->removeElement($category);
         return $this;
     }
 }

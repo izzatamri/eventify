@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,17 +33,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', orphanRemoval: true)]
-    private Collection $organizedEvents;
-
-    /** @var Collection<int, Ticket> */
-    #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $tickets;
-
     public function __construct()
     {
-        $this->organizedEvents = new ArrayCollection();
-        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,57 +116,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @return Collection<int, Event>
-     */
-    public function getOrganizedEvents(): Collection
-    {
-        return $this->organizedEvents;
-    }
-
-    public function addOrganizedEvent(Event $event): static
-    {
-        if (!$this->organizedEvents->contains($event)) {
-            $this->organizedEvents->add($event);
-            $event->setOrganizer($this);
-        }
-        return $this;
-    }
-
-    public function removeOrganizedEvent(Event $event): static
-    {
-        if ($this->organizedEvents->removeElement($event)) {
-            if ($event->getOrganizer() === $this) {
-                $event->setOrganizer(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Ticket>
-     */
-    public function getTickets(): Collection
-    {
-        return $this->tickets;
-    }
-
-    public function addTicket(Ticket $ticket): static
-    {
-        if (!$this->tickets->contains($ticket)) {
-            $this->tickets->add($ticket);
-            $ticket->setUser($this);
-        }
-        return $this;
-    }
-
-    public function removeTicket(Ticket $ticket): static
-    {
-        if ($this->tickets->removeElement($ticket)) {
-            if ($ticket->getUser() === $this) {
-                $ticket->setUser(null);
-            }
-        }
-        return $this;
-    }
 }
