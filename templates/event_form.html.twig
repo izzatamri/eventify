@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>{{ title }} - Eventify</title>
+	<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
+	<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
+	<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
+	<link rel="stylesheet" href="/assets/css/main.css" />
+</head>
+<body class="homepage1-body">
+	<div class="container py-5">
+		<p class="mb-4">
+			<a href="{{ path('app_events') }}">&larr; Back to events</a>
+		</p>
+		<h1>{{ title }}</h1>
+		{{ form_start(form) }}
+			{{ form_row(form.title) }}
+			{{ form_row(form.description) }}
+			{{ form_row(form.startDatetime) }}
+			{{ form_row(form.endDatetime) }}
+			{{ form_row(form.status) }}
+			{{ form_row(form.organizer) }}
+			{{ form_row(form.venue) }}
+			{{ form_row(form.categories) }}
+			<button type="submit" class="vl-btn1">{{ event.id ? 'Update' : 'Create' }} event</button>
+		{{ form_end(form) }}
+	</div>
+	<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/vendor/bootstrap.min.js"></script>
+</body>
+</html>
