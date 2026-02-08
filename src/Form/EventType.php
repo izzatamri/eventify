@@ -23,19 +23,25 @@ class EventType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'Title',
-                'attr' => ['maxlength' => 255],
+                'label' => 'Event title',
+                'attr' => ['maxlength' => 255, 'placeholder' => 'Event title *'],
+            ])
+            ->add('summary', TextType::class, [
+                'label' => 'Summary',
+                'required' => false,
+                'attr' => ['maxlength' => 140, 'placeholder' => 'Summary *'],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description',
+                'label' => 'Overview',
+                'attr' => ['rows' => 6, 'placeholder' => 'Add more details about your event...'],
             ])
             ->add('startDatetime', DateTimeType::class, [
-                'label' => 'Start',
+                'label' => 'Start time',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
             ])
             ->add('endDatetime', DateTimeType::class, [
-                'label' => 'End',
+                'label' => 'End time',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
             ])
@@ -48,7 +54,7 @@ class EventType extends AbstractType
                 ],
             ])
             ->add('image', TextType::class, [
-                'label' => 'Image URL',
+                'label' => 'Cover image URL',
                 'required' => false,
                 'attr' => ['placeholder' => 'https://...'],
             ])

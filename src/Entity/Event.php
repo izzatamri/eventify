@@ -30,6 +30,10 @@ class Event
     #[Assert\Length(max: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(length: 140, nullable: true)]
+    #[Assert\Length(max: 140)]
+    private ?string $summary = null;
+
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     private ?string $description = null;
@@ -104,6 +108,17 @@ class Event
     public function setTitle(string $title): static
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getSummary(): ?string
+    {
+        return $this->summary;
+    }
+
+    public function setSummary(?string $summary): static
+    {
+        $this->summary = $summary;
         return $this;
     }
 
