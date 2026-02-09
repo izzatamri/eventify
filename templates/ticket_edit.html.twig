@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Edit {{ ticket.name }} - Eventify</title>
-	<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
-	<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
-	<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
-	<link rel="stylesheet" href="/assets/css/main.css" />
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Edit {{ ticket.name }} - Eventify{% endblock %}
+{% block page_heading %}Edit ticket{% endblock %}
+{% block page_breadcrumb %}Edit ticket{% endblock %}
+
+{% block page_styles %}
 	<style>
 		.event-create-page { background: #f5f5f5; min-height: 100vh; padding: 1.5rem 0 3rem; }
 		.event-create-page .back-link { color: #2E4DFD; text-decoration: none; font-size: 0.95rem; }
@@ -17,61 +14,66 @@
 		.event-create-page .form-control.is-invalid { border-color: #dc3545; }
 		.event-create-page .save-btn { padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; border: none; }
 	</style>
-</head>
-<body class="homepage1-body">
-	<div class="event-create-page">
-		<div class="container-fluid px-3 px-lg-4">
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="back-link"><i class="fa-solid fa-chevron-left me-1"></i> Back to tickets</a>
-			</div>
-			<div class="row g-4">
-				<aside class="col-lg-4 col-xl-3">
-					<div class="summary-card mb-3">
-						<div class="fw-bold">{{ event.title }}</div>
-						<div class="small text-muted mt-1">Editing: {{ ticket.name }}</div>
-						<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="small text-primary mt-2 d-inline-block">View all tickets</a>
-					</div>
-				</aside>
-				<div class="col-lg-8">
-					<div class="section-card">
-						<h2 class="h5 fw-bold mb-4">Edit ticket</h2>
-						{{ form_start(form) }}
-						<div class="mb-3">
-							{{ form_label(form.name) }}
-							{{ form_widget(form.name, { attr: { class: 'form-control' } }) }}
-							{{ form_errors(form.name) }}
+{% endblock %}
+
+{% block content %}
+<section class="team-sperkers-section-area sp1 ef-animate-slideUp">
+	<div class="container">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+		{% endfor %}
+		<div class="event-create-page">
+			<div class="container-fluid px-3 px-lg-4">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="back-link"><i class="fa-solid fa-chevron-left me-1"></i> Back to tickets</a>
+				</div>
+				<div class="row g-4">
+					<aside class="col-lg-4 col-xl-3">
+						<div class="summary-card mb-3">
+							<div class="fw-bold">{{ event.title }}</div>
+							<div class="small text-muted mt-1">Editing: {{ ticket.name }}</div>
+							<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="small text-primary mt-2 d-inline-block">View all tickets</a>
 						</div>
-						<div class="mb-3">
-							{{ form_label(form.quantityAvailable) }}
-							{{ form_widget(form.quantityAvailable, { attr: { class: 'form-control' } }) }}
-							{{ form_errors(form.quantityAvailable) }}
+					</aside>
+					<div class="col-lg-8">
+						<div class="section-card">
+							<h2 class="h5 fw-bold mb-4">Edit ticket</h2>
+							{{ form_start(form) }}
+							<div class="mb-3">
+								{{ form_label(form.name) }}
+								{{ form_widget(form.name, { attr: { class: 'form-control' } }) }}
+								{{ form_errors(form.name) }}
+							</div>
+							<div class="mb-3">
+								{{ form_label(form.quantityAvailable) }}
+								{{ form_widget(form.quantityAvailable, { attr: { class: 'form-control' } }) }}
+								{{ form_errors(form.quantityAvailable) }}
+							</div>
+							<div class="mb-3">
+								{{ form_label(form.price) }}
+								{{ form_widget(form.price, { attr: { class: 'form-control' } }) }}
+								{{ form_errors(form.price) }}
+							</div>
+							<div class="mb-3">
+								{{ form_label(form.saleStart) }}
+								{{ form_widget(form.saleStart, { attr: { class: 'form-control' } }) }}
+								{{ form_errors(form.saleStart) }}
+							</div>
+							<div class="mb-4">
+								{{ form_label(form.saleEnd) }}
+								{{ form_widget(form.saleEnd, { attr: { class: 'form-control' } }) }}
+								{{ form_errors(form.saleEnd) }}
+							</div>
+							<div class="d-flex gap-2">
+								<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="btn btn-outline-secondary">Cancel</a>
+								<button type="submit" class="btn vl-btn4 save-btn">Save changes</button>
+							</div>
+							{{ form_end(form) }}
 						</div>
-						<div class="mb-3">
-							{{ form_label(form.price) }}
-							{{ form_widget(form.price, { attr: { class: 'form-control' } }) }}
-							{{ form_errors(form.price) }}
-						</div>
-						<div class="mb-3">
-							{{ form_label(form.saleStart) }}
-							{{ form_widget(form.saleStart, { attr: { class: 'form-control' } }) }}
-							{{ form_errors(form.saleStart) }}
-						</div>
-						<div class="mb-4">
-							{{ form_label(form.saleEnd) }}
-							{{ form_widget(form.saleEnd, { attr: { class: 'form-control' } }) }}
-							{{ form_errors(form.saleEnd) }}
-						</div>
-						<div class="d-flex gap-2">
-							<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="btn btn-outline-secondary">Cancel</a>
-							<button type="submit" class="btn vl-btn4 save-btn">Save changes</button>
-						</div>
-						{{ form_end(form) }}
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
-	<script src="/assets/js/vendor/bootstrap.min.js"></script>
-</body>
-</html>
+</section>
+{% endblock %}

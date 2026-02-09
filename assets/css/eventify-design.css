@@ -1,0 +1,368 @@
+/*
+ * Eventify Design System
+ * Modern, animated UI for event management. Respects prefers-reduced-motion.
+ */
+
+/* ========== 1. CSS VARIABLES ========== */
+:root {
+  /* Primary */
+  --ef-primary: #3B82F6;
+  --ef-primary-dark: #1D4ED8;
+  --ef-primary-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  --ef-primary-hover: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+
+  /* Secondary */
+  --ef-secondary: #8B5CF6;
+  --ef-secondary-dark: #6D28D9;
+  --ef-secondary-gradient: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+
+  /* Semantic */
+  --ef-success: #10B981;
+  --ef-success-dark: #059669;
+  --ef-warning: #F59E0B;
+  --ef-warning-dark: #D97706;
+  --ef-danger: #EF4444;
+  --ef-danger-dark: #DC2626;
+
+  /* Neutral */
+  --ef-gray-50: #F9FAFB;
+  --ef-gray-100: #F3F4F6;
+  --ef-gray-200: #E5E7EB;
+  --ef-gray-300: #D1D5DB;
+  --ef-gray-500: #6B7280;
+  --ef-gray-700: #374151;
+  --ef-gray-900: #111827;
+
+  /* Motion & elevation */
+  --ef-transition: 0.3s ease-in-out;
+  --ef-transition-fast: 0.15s ease-out;
+  --ef-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ef-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --ef-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --ef-shadow-glow: 0 0 20px rgba(59, 130, 246, 0.4);
+  --ef-radius: 8px;
+  --ef-radius-lg: 12px;
+}
+
+/* ========== 2. REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ef-transition: 0.01ms;
+    --ef-transition-fast: 0.01ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== 3. ANIMATION KEYFRAMES ========== */
+@keyframes ef-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ef-slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ef-slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ef-scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes ef-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+@keyframes ef-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes ef-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+@keyframes ef-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== 4. BUTTON SYSTEM ========== */
+.ef-btn,
+.event-create-page .vl-btn4,
+.event-create-page .save-btn,
+.event-create-page .add-more-tickets-btn,
+.event-create-page .section-add,
+.event-create-page .preview-btn,
+.event-create-page .back-link {
+  transition: transform var(--ef-transition-fast), box-shadow var(--ef-transition), background var(--ef-transition), color var(--ef-transition), border-color var(--ef-transition), opacity var(--ef-transition);
+  min-height: 44px;
+  min-width: 44px;
+}
+@media (min-width: 768px) {
+  .ef-btn, .event-create-page .vl-btn4, .event-create-page .save-btn { min-height: 40px; min-width: auto; }
+}
+
+/* Primary (gradient) */
+.ef-btn-primary,
+.event-create-page .vl-btn4:not(.btn-outline-secondary):not(.btn-link),
+.event-create-page .save-btn:not(.btn-outline-secondary),
+.event-create-page .add-more-tickets-btn {
+  background: var(--ef-primary-gradient) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: var(--ef-shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.ef-btn-primary:hover:not(:disabled):not(.disabled),
+.event-create-page .vl-btn4:hover:not(:disabled):not(.disabled):not(.btn-outline-secondary),
+.event-create-page .save-btn:hover:not(:disabled):not(.btn-outline-secondary),
+.event-create-page .add-more-tickets-btn:hover {
+  background: var(--ef-primary-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+.ef-btn-primary:active:not(:disabled),
+.event-create-page .vl-btn4:active:not(:disabled),
+.event-create-page .save-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--ef-shadow-sm);
+}
+
+/* Outline */
+.ef-btn-outline,
+.event-create-page .btn-outline-secondary {
+  background: transparent !important;
+  border: 2px solid var(--ef-gray-300) !important;
+  color: var(--ef-gray-700) !important;
+}
+.ef-btn-outline:hover:not(:disabled),
+.event-create-page .btn-outline-secondary:hover {
+  border-color: var(--ef-primary) !important;
+  color: var(--ef-primary) !important;
+  background: rgba(59, 130, 246, 0.06) !important;
+}
+
+/* Ghost / link */
+.ef-btn-ghost,
+.event-create-page .back-link {
+  background: transparent !important;
+  color: var(--ef-primary) !important;
+  border: none !important;
+}
+.ef-btn-ghost:hover,
+.event-create-page .back-link:hover {
+  background: rgba(59, 130, 246, 0.08) !important;
+  color: var(--ef-primary-dark) !important;
+}
+
+/* Danger */
+.ef-btn-danger {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+  border: none !important;
+  color: #fff !important;
+}
+.ef-btn-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Disabled */
+.ef-btn:disabled,
+.event-create-page .vl-btn4:disabled,
+.event-create-page .save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Loading state */
+.ef-btn-loading {
+  pointer-events: none;
+  color: transparent !important;
+  position: relative;
+}
+.ef-btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  margin: -9px 0 0 -9px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ef-spin 0.6s linear infinite;
+}
+.ef-btn-loading.ef-btn-primary::after,
+.event-create-page .vl-btn4.ef-btn-loading::after { border-color: rgba(255,255,255,0.4); border-right-color: transparent; }
+
+/* Ripple container (JS adds .ef-ripple) */
+.ef-btn.ef-ripple,
+.event-create-page .vl-btn4.ef-ripple,
+.event-create-page .save-btn.ef-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========== 5. CARDS ========== */
+.ef-card-hover,
+.event-create-page .section-card,
+.event-create-page .summary-card,
+.event-create-page .ticket-type-card,
+.event-create-page .form-panel {
+  transition: transform var(--ef-transition), box-shadow var(--ef-transition), border-color var(--ef-transition);
+}
+.ef-card-hover:hover,
+.event-create-page .ticket-type-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ef-shadow-lg);
+}
+.event-create-page .section-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+
+/* ========== 6. FORM ELEMENTS ========== */
+.event-create-page .form-control,
+.event-create-page .form-select {
+  transition: border-color var(--ef-transition), box-shadow var(--ef-transition);
+  border-radius: var(--ef-radius);
+}
+.event-create-page .form-control:focus,
+.event-create-page .form-select:focus {
+  border-color: var(--ef-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+.event-create-page .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Upload zone */
+.event-create-page .upload-zone {
+  transition: border-color var(--ef-transition), background var(--ef-transition);
+}
+.event-create-page .upload-zone:hover,
+.event-create-page .upload-zone.dragover {
+  border-color: var(--ef-primary);
+  background: rgba(59, 130, 246, 0.06);
+}
+
+/* ========== 7. STEPS / PROGRESS ========== */
+.event-create-page .step {
+  transition: opacity var(--ef-transition);
+}
+.event-create-page .step-radio {
+  transition: background var(--ef-transition), border-color var(--ef-transition), transform var(--ef-transition);
+}
+.event-create-page .step.step-done .step-radio {
+  animation: ef-scaleIn 0.3s ease-out;
+}
+.event-create-page .step.step-active .step-radio {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* ========== 8. TOAST NOTIFICATIONS ========== */
+.ef-toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 360px;
+  pointer-events: none;
+}
+.ef-toast {
+  pointer-events: auto;
+  padding: 0.875rem 1rem;
+  border-radius: var(--ef-radius-lg);
+  box-shadow: var(--ef-shadow-lg);
+  background: #fff;
+  border-left: 4px solid var(--ef-success);
+  animation: ef-slideDown 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.ef-toast.ef-toast-success { border-left-color: var(--ef-success); }
+.ef-toast.ef-toast-error { border-left-color: var(--ef-danger); }
+.ef-toast.ef-toast-warning { border-left-color: var(--ef-warning); }
+.ef-toast-icon { font-size: 1.25rem; flex-shrink: 0; }
+.ef-toast.ef-toast-success .ef-toast-icon { color: var(--ef-success); }
+.ef-toast-message { flex: 1; font-size: 0.9375rem; color: var(--ef-gray-900); }
+.ef-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 0 0 0 var(--ef-radius-lg);
+  transform-origin: left;
+  transition: transform 0.1s linear;
+}
+
+/* Bootstrap alert override when inside event-create-page (optional animated toast style) */
+.event-create-page .alert-success {
+  animation: ef-slideDown 0.3s ease-out;
+  border-radius: var(--ef-radius-lg);
+  border-left: 4px solid var(--ef-success);
+}
+
+/* ========== 9. ERROR SHAKE ========== */
+.ef-shake {
+  animation: ef-shake 0.5s ease-in-out;
+}
+.event-create-page .form-control.is-invalid.ef-shake {
+  animation: ef-shake 0.5s ease-in-out;
+}
+
+/* ========== 10. UTILITY CLASSES ========== */
+.ef-transition-all { transition: all var(--ef-transition); }
+.ef-transition-transform { transition: transform var(--ef-transition); }
+.ef-hover-lift:hover { transform: translateY(-4px); }
+.ef-hover-scale:hover { transform: scale(1.02); }
+.ef-animate-fadeIn { animation: ef-fadeIn 0.3s ease-out; }
+.ef-animate-slideUp { animation: ef-slideUp 0.3s ease-out; }
+.ef-animate-scaleIn { animation: ef-scaleIn 0.3s ease-out; }
+
+/* ========== 11. BADGES ========== */
+.event-create-page .badge {
+  transition: transform var(--ef-transition-fast);
+}
+.event-create-page .badge:hover {
+  transform: scale(1.05);
+}
+
+/* ========== 12. DROPDOWN MENU ========== */
+.event-create-page .dropdown-menu {
+  animation: ef-slideDown 0.2s ease-out;
+  border-radius: var(--ef-radius-lg);
+}
+
+/* ========== 13. PREVIEW BUTTON (floating style) ========== */
+.event-create-page .preview-btn {
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+}
+.event-create-page a.preview-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--ef-shadow);
+}
+
+/* ========== 14. SECTION ADD BUTTON ========== */
+.event-create-page .section-add {
+  background: var(--ef-primary-gradient) !important;
+  color: #fff !important;
+  border: none;
+  transition: transform var(--ef-transition-fast), box-shadow var(--ef-transition);
+}
+.event-create-page .section-add:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
