@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\OrganizerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: OrganizerRepository::class)]
 #[ORM\Table(name: 'organizer')]
 #[ORM\HasLifecycleCallbacks]
 class Organizer
@@ -39,6 +40,10 @@ class Organizer
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $user = null;
 
     /** @var Collection<int, Event> */
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', cascade: ['persist'], orphanRemoval: false)]
@@ -141,6 +146,17 @@ class Organizer
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 

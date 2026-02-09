@@ -326,11 +326,13 @@
 			<div class="section-card">
 				<h3 class="mb-3">Organizer & categories</h3>
 				<div class="row g-3">
+					{% if form['organizer'] is defined %}
 					<div class="col-md-6">
 						{{ form_label(form.organizer) }}
 						{{ form_widget(form.organizer, { attr: { class: 'form-select' } }) }}
 						{{ form_errors(form.organizer) }}
 					</div>
+					{% endif %}
 					<div class="col-md-6">
 						{{ form_label(form.categories) }}
 						{{ form_widget(form.categories, { attr: { class: 'form-select' } }) }}

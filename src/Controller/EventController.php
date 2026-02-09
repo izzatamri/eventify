@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\Organizer;
 use App\Entity\Ticket;
+use App\Entity\User;
 use App\Form\EventType;
 use App\Form\TicketType;
 use App\Repository\EventRepository;
+use App\Repository\OrganizerRepository;
+use App\Security\EventVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +24,7 @@ class EventController extends AbstractController
 {
     public function __construct(
         private readonly EventRepository $eventRepository,
+        private readonly OrganizerRepository $organizerRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
@@ -34,16 +39,47 @@ class EventController extends AbstractController
         ]);
     }
 
+    #[Route('/my', name: 'app_my_events', methods: ['GET'])]
+    public function myEvents(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /** @var User $user */
+        $user = $this->getUser();
+        $status = $request->query->getString('status');
+        if ($status !== '' && !\in_array($status, [Event::STATUS_DRAFT, Event::STATUS_PUBLISHED, Event::STATUS_CANCELLED], true)) {
+            $status = '';
+        }
+        $events = $this->eventRepository->findByOrganizerUserOrderByStart($user, $status === '' ? null : $status);
+
+        return $this->render('my_events.html.twig', [
+            'events' => $events,
+            'current_status' => $status,
+        ]);
+    }
+
     #[Route('/create', name: 'app_event_create', methods: ['GET', 'POST'])]
     public function create(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $organizer = $this->getOrCreateOrganizerForUser($user);
         $event = new Event();
-        $form = $this->createForm(EventType::class, $event);
+        $event->setOrganizer($organizer);
+
+        $form = $this->createForm(EventType::class, $event, ['allow_organizer_choice' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($event);
             $this->entityManager->flush();
+
+            if (!$user->hasRole(User::ROLE_ORGANIZER)) {
+                $user->addRole(User::ROLE_ORGANIZER);
+                $this->entityManager->flush();
+            }
+
             $this->addFlash('success', 'Event created successfully.');
             return $this->redirectToRoute('app_event_tickets', ['id' => $event->getId()]);
         }
@@ -58,6 +94,7 @@ class EventController extends AbstractController
     #[Route('/{id}/tickets', name: 'app_event_tickets', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function tickets(Request $request, Event $event): Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::MANAGE_TICKETS, $event);
         $ticket = new Ticket();
         $ticket->setEvent($event);
         $ticket->setPrice('0');
@@ -103,6 +140,7 @@ class EventController extends AbstractController
     #[Route('/{id}/tickets/{ticketId}/edit', name: 'app_ticket_edit', requirements: ['id' => '\d+', 'ticketId' => '\d+'], methods: ['GET', 'POST'])]
     public function ticketEdit(Request $request, Event $event, int $ticketId): Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::MANAGE_TICKETS, $event);
         $ticket = null;
         foreach ($event->getTickets() as $t) {
             if ($t->getId() === $ticketId) {
@@ -134,6 +172,7 @@ class EventController extends AbstractController
     #[Route('/{id}/tickets/{ticketId}/delete', name: 'app_ticket_delete', requirements: ['id' => '\d+', 'ticketId' => '\d+'], methods: ['POST'])]
     public function ticketDelete(Request $request, Event $event, int $ticketId): Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::MANAGE_TICKETS, $event);
         $ticket = null;
         foreach ($event->getTickets() as $t) {
             if ($t->getId() === $ticketId) {
@@ -163,6 +202,7 @@ class EventController extends AbstractController
     #[Route('/{id}/publish', name: 'app_event_publish', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function publish(Request $request, Event $event): Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::PUBLISH, $event);
         if ($request->isMethod('POST')) {
             $token = $request->request->getString('_token');
             if (!$this->isCsrfTokenValid('publish_event_' . $event->getId(), $token)) {
@@ -196,7 +236,10 @@ class EventController extends AbstractController
     #[Route('/{id}/edit', name: 'app_event_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event): Response
     {
-        $form = $this->createForm(EventType::class, $event);
+        $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
+        $form = $this->createForm(EventType::class, $event, [
+            'allow_organizer_choice' => $this->isGranted('ROLE_ADMIN'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -215,6 +258,7 @@ class EventController extends AbstractController
     #[Route('/{id}/delete', name: 'app_event_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Event $event): Response
     {
+        $this->denyAccessUnlessGranted(EventVoter::DELETE, $event);
         $token = $request->request->getString('_token');
         if (!$this->isCsrfTokenValid('delete' . $event->getId(), $token)) {
             $this->addFlash('error', 'Invalid CSRF token.');
@@ -226,5 +270,20 @@ class EventController extends AbstractController
         $this->addFlash('success', 'Event deleted.');
 
         return $this->redirectToRoute('app_events');
+    }
+
+    private function getOrCreateOrganizerForUser(User $user): Organizer
+    {
+        $organizer = $this->organizerRepository->findOneByUser($user);
+        if ($organizer !== null) {
+            return $organizer;
+        }
+        $organizer = new Organizer();
+        $organizer->setName($user->getDisplayName());
+        $organizer->setEmail($user->getEmail());
+        $organizer->setUser($user);
+        $this->entityManager->persist($organizer);
+        $this->entityManager->flush();
+        return $organizer;
     }
 }
