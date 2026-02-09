@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Publish - {{ event.title }} - Eventify</title>
-	<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
-	<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
-	<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
-	<link rel="stylesheet" href="/assets/css/main.css" />
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Publish - {{ event.title }} - Eventify{% endblock %}
+{% block page_heading %}Publish{% endblock %}
+{% block page_breadcrumb %}Publish{% endblock %}
+
+{% block page_styles %}
 	<style>
 		.event-create-page { background: #f5f5f5; min-height: 100vh; padding: 1.5rem 0 3rem; }
 		.event-create-page .back-link { color: #2E4DFD; text-decoration: none; font-size: 0.95rem; }
@@ -36,145 +33,147 @@
 		.event-create-page .publish-section-desc { font-size: 0.9rem; color: #666; margin-bottom: 0.75rem; }
 		.event-create-page .save-btn { padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; border: none; }
 	</style>
-</head>
-<body class="homepage1-body">
-	<div class="event-create-page">
-		<div class="container-fluid px-3 px-lg-4">
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<a href="{{ path('app_events') }}" class="back-link"><i class="fa-solid fa-chevron-left me-1"></i> Back to events</a>
-				<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-btn" target="_blank"><i class="fa-solid fa-eye me-1"></i> Preview <i class="fa-solid fa-external-link-alt ms-1" style="font-size: 0.7rem;"></i></a>
-			</div>
+{% endblock %}
 
-			<div class="row g-4">
-				<aside class="col-lg-4 col-xl-3 sidebar">
-					<div class="summary-card mb-3">
-						<div class="summary-title">{{ event.title }}</div>
-						<div class="summary-date">
-							<i class="fa-regular fa-calendar"></i>
-							{% if event.startDatetime %}{{ event.startDatetime|date('D, M j, Y, g:i A') }}{% else %}—{% endif %}
-						</div>
-						<div class="mt-3 d-flex flex-wrap gap-2 align-items-center">
-							<span class="badge bg-secondary rounded-pill">{{ event.status|capitalize }}</span>
-							<a href="{{ path('app_event_edit', { id: event.id }) }}" class="small text-primary">Edit event</a>
-						</div>
-					</div>
-					<div class="steps-label">Steps</div>
-					<div class="step step-done">
-						<div class="step-radio"></div>
-						<div>
-							<div class="step-title">Build event page</div>
-							<div class="step-desc">Add all of your event details and let attendees know what to expect.</div>
-						</div>
-					</div>
-					<div class="step step-done">
-						<div class="step-radio"></div>
-						<div>
-							<div class="step-title">Add tickets</div>
-							<div class="step-desc">Use our suggestions to help sell more tickets or manually create your own.</div>
-						</div>
-					</div>
-					<div class="step step-active">
-						<div class="step-radio"></div>
-						<div>
-							<div class="step-title">Publish</div>
-							<div class="step-desc">Review your event page and settings, then publish your event.</div>
-						</div>
-					</div>
-				</aside>
+{% block content %}
+<section class="team-sperkers-section-area sp1 ef-animate-slideUp">
+	<div class="container">
+		<div class="event-create-page">
+			<div class="container-fluid px-3 px-lg-4">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<a href="{{ path('app_events') }}" class="back-link"><i class="fa-solid fa-chevron-left me-1"></i> Back to events</a>
+					<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-btn" target="_blank"><i class="fa-solid fa-eye me-1"></i> Preview <i class="fa-solid fa-external-link-alt ms-1" style="font-size: 0.7rem;"></i></a>
+				</div>
 
-				<div class="col-lg-8 col-xl-9">
-					<h1 class="publish-title">Your event is almost ready to publish</h1>
-					<p class="publish-subtitle">Review your settings and let everyone find your event.</p>
+				<div class="row g-4">
+					<aside class="col-lg-4 col-xl-3 sidebar">
+						<div class="summary-card mb-3">
+							<div class="summary-title">{{ event.title }}</div>
+							<div class="summary-date">
+								<i class="fa-regular fa-calendar"></i>
+								{% if event.startDatetime %}{{ event.startDatetime|date('D, M j, Y, g:i A') }}{% else %}—{% endif %}
+							</div>
+							<div class="mt-3 d-flex flex-wrap gap-2 align-items-center">
+								<span class="badge bg-secondary rounded-pill">{{ event.status|capitalize }}</span>
+								<a href="{{ path('app_event_edit', { id: event.id }) }}" class="small text-primary">Edit event</a>
+							</div>
+						</div>
+						<div class="steps-label">Steps</div>
+						<div class="step step-done">
+							<div class="step-radio"></div>
+							<div>
+								<div class="step-title">Build event page</div>
+								<div class="step-desc">Add all of your event details and let attendees know what to expect.</div>
+							</div>
+						</div>
+						<div class="step step-done">
+							<div class="step-radio"></div>
+							<div>
+								<div class="step-title">Add tickets</div>
+								<div class="step-desc">Use our suggestions to help sell more tickets or manually create your own.</div>
+							</div>
+						</div>
+						<div class="step step-active">
+							<div class="step-radio"></div>
+							<div>
+								<div class="step-title">Publish</div>
+								<div class="step-desc">Review your event page and settings, then publish your event.</div>
+							</div>
+						</div>
+					</aside>
 
-					<div class="row g-4">
-						<div class="col-md-5">
-							<div class="section-card event-preview-card p-0">
-								<div class="img-placeholder">
-									{% if event.image %}
-										<img src="{{ event.image }}" alt="{{ event.title }}" />
-									{% else %}
-										<i class="fa-solid fa-image fa-3x"></i>
-									{% endif %}
-								</div>
-								<div class="p-3">
-									<div class="fw-bold">{{ event.title }}</div>
-									<div class="small text-muted mt-1">
-										{% if event.startDatetime %}{{ event.startDatetime|date('l, F j') }} • {{ event.startDatetime|date('ga') }} - {{ event.endDatetime|date('ga') }}{% else %}—{% endif %}
+					<div class="col-lg-8 col-xl-9">
+						<h1 class="publish-title">Your event is almost ready to publish</h1>
+						<p class="publish-subtitle">Review your settings and let everyone find your event.</p>
+
+						<div class="row g-4">
+							<div class="col-md-5">
+								<div class="section-card event-preview-card p-0">
+									<div class="img-placeholder">
+										{% if event.image %}
+											<img src="{{ event.image }}" alt="{{ event.title }}" />
+										{% else %}
+											<i class="fa-solid fa-image fa-3x"></i>
+										{% endif %}
 									</div>
-									{% if event.venue %}
-										<div class="small text-muted mt-1">{{ event.venue.name }}{% if event.venue.address %}, {{ event.venue.address }}{% endif %}</div>
-									{% endif %}
-									<div class="small mt-1">{{ event.priceLabel }} • {{ event.tickets|length }} ticket type(s)</div>
-									<a href="{{ path('app_event_show', { id: event.id }) }}" class="small text-primary mt-2 d-inline-block">Preview</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-7">
-							<div class="section-card">
-								<div class="publish-section-title">Event type and category</div>
-								<p class="publish-section-desc">Your type and category help your event appear in more searches.</p>
-								<div class="mb-3">
-									<label class="form-label small text-muted">Type</label>
-									<select class="form-select form-select-sm" disabled><option>Other</option></select>
-								</div>
-								<div class="mb-3">
-									<label class="form-label small text-muted">Category</label>
-									<select class="form-select form-select-sm" disabled>
-										<option>Other</option>
-										{% for cat in event.categories %}<option selected>{{ cat.name }}</option>{% endfor %}
-									</select>
-								</div>
-							</div>
-							<div class="section-card">
-								<div class="publish-section-title">Tags</div>
-								<p class="publish-section-desc">Help people discover your event by adding tags related to your event's theme, topic, vibe, location, and more.</p>
-								<input type="text" class="form-control form-control-sm" placeholder="Add search keywords to your event" disabled />
-								<span class="small text-muted">0/10 tags</span>
-							</div>
-							<div class="section-card">
-								<div class="publish-section-title">Organized by</div>
-								<p class="publish-section-desc">Adding a name will create an organizer profile after publishing.</p>
-								<input type="text" class="form-control form-control-sm" value="{{ event.organizer ? event.organizer.name : '' }}" disabled />
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="section-card">
-										<div class="publish-section-title">Is your event public or private?</div>
-										<div class="form-check">
-											<input class="form-check-input" type="radio" name="visibility" id="visPublic" value="public" checked disabled />
-											<label class="form-check-label small" for="visPublic">Public — Shared on Eventify and search engines</label>
+									<div class="p-3">
+										<div class="fw-bold">{{ event.title }}</div>
+										<div class="small text-muted mt-1">
+											{% if event.startDatetime %}{{ event.startDatetime|date('l, F j') }} • {{ event.startDatetime|date('ga') }} - {{ event.endDatetime|date('ga') }}{% else %}—{% endif %}
 										</div>
-										<div class="form-check mt-2">
-											<input class="form-check-input" type="radio" name="visibility" id="visPrivate" value="private" disabled />
-											<label class="form-check-label small" for="visPrivate">Private — Shared only with a select audience</label>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="section-card">
-										<div class="publish-section-title">When should we publish your event?</div>
-										<div class="form-check">
-											<input class="form-check-input" type="radio" name="when" id="whenNow" value="now" checked disabled />
-											<label class="form-check-label small" for="whenNow">Publish now</label>
-										</div>
-										<div class="form-check mt-2">
-											<input class="form-check-input" type="radio" name="when" id="whenLater" value="later" disabled />
-											<label class="form-check-label small" for="whenLater">Schedule for later</label>
-										</div>
+										{% if event.venue %}
+											<div class="small text-muted mt-1">{{ event.venue.name }}{% if event.venue.address %}, {{ event.venue.address }}{% endif %}</div>
+										{% endif %}
+										<div class="small mt-1">{{ event.priceLabel }} • {{ event.tickets|length }} ticket type(s)</div>
+										<a href="{{ path('app_event_show', { id: event.id }) }}" class="small text-primary mt-2 d-inline-block">Preview</a>
 									</div>
 								</div>
 							</div>
-							<form method="post" action="{{ path('app_event_publish', { id: event.id }) }}" class="d-flex justify-content-end mt-3">
-								<input type="hidden" name="_token" value="{{ csrf_token('publish_event_' ~ event.id) }}" />
-								<button type="submit" class="btn vl-btn4 save-btn">Publish now</button>
-							</form>
+							<div class="col-md-7">
+								<div class="section-card">
+									<div class="publish-section-title">Event type and category</div>
+									<p class="publish-section-desc">Your type and category help your event appear in more searches.</p>
+									<div class="mb-3">
+										<label class="form-label small text-muted">Type</label>
+										<select class="form-select form-select-sm" disabled><option>Other</option></select>
+									</div>
+									<div class="mb-3">
+										<label class="form-label small text-muted">Category</label>
+										<select class="form-select form-select-sm" disabled>
+											<option>Other</option>
+											{% for cat in event.categories %}<option selected>{{ cat.name }}</option>{% endfor %}
+										</select>
+									</div>
+								</div>
+								<div class="section-card">
+									<div class="publish-section-title">Tags</div>
+									<p class="publish-section-desc">Help people discover your event by adding tags related to your event's theme, topic, vibe, location, and more.</p>
+									<input type="text" class="form-control form-control-sm" placeholder="Add search keywords to your event" disabled />
+									<span class="small text-muted">0/10 tags</span>
+								</div>
+								<div class="section-card">
+									<div class="publish-section-title">Organized by</div>
+									<p class="publish-section-desc">Adding a name will create an organizer profile after publishing.</p>
+									<input type="text" class="form-control form-control-sm" value="{{ event.organizer ? event.organizer.name : '' }}" disabled />
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="section-card">
+											<div class="publish-section-title">Is your event public or private?</div>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="visibility" id="visPublic" value="public" checked disabled />
+												<label class="form-check-label small" for="visPublic">Public — Shared on Eventify and search engines</label>
+											</div>
+											<div class="form-check mt-2">
+												<input class="form-check-input" type="radio" name="visibility" id="visPrivate" value="private" disabled />
+												<label class="form-check-label small" for="visPrivate">Private — Shared only with a select audience</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="section-card">
+											<div class="publish-section-title">When should we publish your event?</div>
+											<div class="form-check">
+												<input class="form-check-input" type="radio" name="when" id="whenNow" value="now" checked disabled />
+												<label class="form-check-label small" for="whenNow">Publish now</label>
+											</div>
+											<div class="form-check mt-2">
+												<input class="form-check-input" type="radio" name="when" id="whenLater" value="later" disabled />
+												<label class="form-check-label small" for="whenLater">Schedule for later</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<form method="post" action="{{ path('app_event_publish', { id: event.id }) }}" class="d-flex justify-content-end mt-3">
+									<input type="hidden" name="_token" value="{{ csrf_token('publish_event_' ~ event.id) }}" />
+									<button type="submit" class="btn vl-btn4 save-btn">Publish now</button>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
-	<script src="/assets/js/vendor/bootstrap.min.js"></script>
-</body>
-</html>
+</section>
+{% endblock %}

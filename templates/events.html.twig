@@ -489,6 +489,20 @@
 												&nbsp;
 											{% endif %}
 										</p>
+										{# Management metrics: Sold / Gross / Status #}
+										{% set capacity = 0 %}
+										{% set sold = 0 %}
+										{% set gross = 0 %}
+										{% for t in event.tickets %}
+											{% set capacity = capacity + t.quantityAvailable %}
+											{% set sold = sold + t.quantitySold %}
+											{% set gross = gross + ((t.price ?? 0) * (t.quantitySold ?? 0)) %}
+										{% endfor %}
+										<p class="small text-muted mb-1 d-flex flex-wrap gap-2">
+											<span><strong>Sold</strong> {{ sold }}/{{ capacity }}</span>
+											<span><strong>Gross</strong> {{ gross == 0 ? '$0.00' : ('$' ~ gross|number_format(2)) }}</span>
+											<span><strong>Status</strong> {{ event.status|capitalize }}</span>
+										</p>
 										<p class="small fw-semibold mb-0 mt-auto">{{ event.priceLabel }}</p>
 									</div>
 								</a>

@@ -1,285 +1,422 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>{{ title }} - Eventify</title>
-	<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
-	<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
-	<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
-	<link rel="stylesheet" href="/assets/css/main.css" />
-	<style>
-		.event-create-page { background: #f5f5f5; min-height: 100vh; padding: 1.5rem 0 3rem; }
-		.event-create-page .back-link { color: #2E4DFD; text-decoration: none; font-size: 0.95rem; }
-		.event-create-page .back-link:hover { color: #1e3dd9; }
-		.event-create-page .preview-btn { border: 1px solid #dee2e6; border-radius: 2rem; padding: 0.4rem 1rem; background: #fff; color: #333; font-size: 0.9rem; }
-		.event-create-page .preview-btn:hover { background: #f8f9fa; }
-		.event-create-page .sidebar { max-width: 300px; }
-		.event-create-page .summary-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 1.25rem; position: relative; overflow: hidden; }
-		.event-create-page .summary-card::before { content: ""; position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%); border-radius: 50%; opacity: 0.35; }
-		.event-create-page .summary-title { font-size: 1.25rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; }
-		.event-create-page .summary-date { font-size: 0.9rem; color: #555; }
-		.event-create-page .summary-date i { margin-right: 0.35rem; color: #666; }
-		.event-create-page .steps-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem; }
-		.event-create-page .step { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
-		.event-create-page .step-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #dee2e6; flex-shrink: 0; margin-top: 2px; }
-		.event-create-page .step.step-active .step-radio { background: #2E4DFD; border-color: #2E4DFD; }
-		.event-create-page .step-title { font-weight: 600; color: #1a1a1a; }
-		.event-create-page .step-desc { font-size: 0.85rem; color: #666; margin-top: 0.2rem; }
-		.event-create-page .main-content { max-width: 720px; }
-		.event-create-page .section-card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 1.5rem; margin-bottom: 1.25rem; }
-		.event-create-page .section-card.focus { border: 1px solid #2E4DFD; }
-		.event-create-page .section-card h3 { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; }
-		.event-create-page .section-card .section-add { width: 28px; height: 28px; border-radius: 50%; background: #2E4DFD; color: #fff; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-		.event-create-page .upload-zone { border: 2px dashed #2E4DFD; border-radius: 12px; min-height: 220px; display: flex; align-items: center; justify-content: center; background: #f8f9ff; position: relative; }
-		.event-create-page .upload-zone.has-image { min-height: 200px; background-size: cover; background-position: center; }
-		.event-create-page .upload-zone .upload-inner { text-align: center; padding: 1rem; }
-		.event-create-page .upload-zone .upload-inner i { font-size: 2.5rem; color: #2E4DFD; margin-bottom: 0.5rem; }
-		.event-create-page .upload-zone .upload-inner p { color: #555; margin: 0; font-size: 0.95rem; }
-		.event-create-page .form-label { font-weight: 600; color: #1a1a1a; margin-bottom: 0.35rem; }
-		.event-create-page .form-control, .event-create-page .form-select { border-radius: 8px; border: 1px solid #dee2e6; }
-		.event-create-page .form-control:focus, .event-create-page .form-select:focus { border-color: #2E4DFD; box-shadow: 0 0 0 3px rgba(46,77,253,.15); }
-		.event-create-page .form-control.is-invalid { border-color: #dc3545; }
-		.event-create-page .invalid-feedback { color: #dc3545; font-size: 0.85rem; }
-		.event-create-page .char-count { font-size: 0.8rem; color: #888; }
-		.event-create-page .hint { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
-		.event-create-page .good-to-know .add-btn { border: 1px solid #dee2e6; border-radius: 8px; padding: 0.5rem 1rem; background: #fff; font-size: 0.9rem; color: #555; margin-right: 0.5rem; margin-bottom: 0.5rem; }
-		.event-create-page .good-to-know .add-btn:hover { background: #f8f9fa; }
-		.event-create-page .add-more { border: 2px dashed #dee2e6; border-radius: 12px; padding: 1.5rem; text-align: center; color: #666; font-size: 0.95rem; }
-		.event-create-page .save-btn { padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; border: none; }
-		.event-create-page .status-pill { border-radius: 2rem; padding: 0.35rem 0.9rem; font-size: 0.85rem; border: 1px solid #dee2e6; background: #fff; }
-	</style>
-</head>
-<body class="homepage1-body">
-	<div class="event-create-page">
-		<div class="container-fluid px-3 px-lg-4">
-			{# Top bar: Back + Preview #}
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<a href="{{ path('app_events') }}" class="back-link"><i class="fa-solid fa-chevron-left me-1"></i> Back to events</a>
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}{{ title }} - Eventify{% endblock %}
+
+{% block page_heading %}{{ title }}{% endblock %}
+{% block page_breadcrumb %}{{ title }}{% endblock %}
+
+{% block page_styles %}
+<style>
+	/* Eventify event form: reference layout (sticky sidebar + main + sticky save) */
+	.event-create-page { background: var(--ztc-bg-bg-1, #fff); min-height: 100vh; }
+	.event-form-layout { display: flex; gap: 0; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+	.event-form-sidebar {
+		width: 280px; flex-shrink: 0; position: sticky; top: 1.5rem; align-self: start;
+		border-right: 1px solid rgba(0,0,0,.08); padding-right: 1.5rem; margin-right: 2rem;
+	}
+	.event-form-main { flex: 1; min-width: 0; padding-bottom: 100px; }
+	@media (max-width: 991px) {
+		.event-form-layout { flex-direction: column; padding: 0 1rem 2rem; }
+		.event-form-sidebar { width: 100%; position: static; border-right: none; padding-right: 0; margin-right: 0; border-bottom: 1px solid rgba(0,0,0,.08); padding-bottom: 1.5rem; margin-bottom: 1rem; }
+		.event-form-sticky-save { left: 1rem; right: 1rem; bottom: 1rem; }
+	}
+	.event-form-sidebar .back-link {
+		display: block; margin-bottom: 1.25rem; color: var(--ztc-bg-bg-9, #2E4DFD); text-decoration: none; font-size: 0.9375rem; font-weight: 600;
+		transition: color 0.3s ease;
+	}
+	.event-form-sidebar .back-link:hover { color: var(--ztc-bg-bg-8, #002466); }
+	.event-form-top-bar {
+		display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 0.75rem;
+		margin-bottom: 1.5rem; padding-top: 0.5rem;
+	}
+	.event-create-page .preview-btn {
+		display: inline-flex; align-items: center; gap: 0.5rem;
+		border: 1px solid rgba(46,77,253,0.35); border-radius: 8px; padding: 0.5rem 1rem;
+		background: var(--ztc-bg-bg-1, #fff); color: var(--ztc-bg-bg-9, #2E4DFD); font-size: 0.9rem; font-weight: 600; text-decoration: none;
+		transition: all 0.3s ease;
+	}
+	.event-create-page a.preview-btn:hover { background: rgba(46,77,253,0.06); border-color: var(--ztc-bg-bg-9, #2E4DFD); }
+	.event-create-page .preview-btn.text-muted { border-color: #dee2e6; color: #6c757d; cursor: not-allowed; }
+	.event-form-sticky-save {
+		position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100;
+	}
+	.event-form-sticky-save .save-btn { box-shadow: 0 4px 14px rgba(46,77,253,0.35); }
+	.event-create-page .summary-card {
+		background: var(--ztc-bg-bg-1, #fff); border-radius: 12px;
+		box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1.25rem; position: relative; overflow: hidden;
+		border: 1px solid rgba(0,0,0,.04);
+	}
+	.event-create-page .summary-card::before {
+		content: ""; position: absolute; top: -20px; right: -20px; width: 100px; height: 100px;
+		background: linear-gradient(135deg, var(--ztc-bg-bg-9, #2E4DFD) 0%, var(--ztc-bg-bg-8, #002466) 100%);
+		border-radius: 50%; opacity: 0.12;
+	}
+	.event-create-page .summary-title { font-size: 1.2rem; font-weight: 700; color: var(--ztc-text-text-2, #1A1719); margin-bottom: 0.5rem; }
+	.event-create-page .summary-date { font-size: 0.875rem; color: var(--ztc-text-text-3, #544E51); }
+	.event-create-page .steps-label {
+		font-size: 0.75rem; color: var(--ztc-text-text-3, #544E51); text-transform: uppercase; letter-spacing: 0.06em; margin: 1.25rem 0 0.75rem; font-weight: 600;
+	}
+	.event-create-page .step { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
+	.event-create-page .step-radio {
+		width: 20px; height: 20px; border-radius: 50%; border: 2px solid #dee2e6; flex-shrink: 0; margin-top: 2px;
+		transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+	}
+	.event-create-page .step.step-active .step-radio {
+		background: var(--ztc-bg-bg-9, #2E4DFD); border-color: var(--ztc-bg-bg-9, #2E4DFD);
+		box-shadow: 0 0 0 3px rgba(46,77,253,0.2);
+	}
+	.event-create-page .step-title { font-weight: 600; color: var(--ztc-text-text-2, #1A1719); }
+	.event-create-page .step-desc { font-size: 0.8125rem; color: var(--ztc-text-text-3, #544E51); margin-top: 0.15rem; }
+	.event-create-page .section-card {
+		background: var(--ztc-bg-bg-1, #fff); border-radius: 12px;
+		box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1.5rem; margin-bottom: 1.25rem;
+		border: 1px solid rgba(0,0,0,.04); transition: box-shadow 0.3s ease, border-color 0.3s ease;
+	}
+	.event-create-page .section-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+	.event-create-page .section-card.focus { border-color: rgba(46,77,253,0.35); box-shadow: 0 2px 12px rgba(46,77,253,0.08); }
+	.event-create-page .section-card h3 {
+		font-size: 1.1rem; font-weight: 700; color: var(--ztc-text-text-2, #1A1719); margin-bottom: 0;
+	}
+	.event-create-page .section-card .section-add {
+		width: 32px; height: 32px; border-radius: 8px; background: var(--ztc-bg-bg-9, #2E4DFD); color: #fff; border: none;
+		font-size: 1.1rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+		transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; flex-shrink: 0;
+	}
+	.event-create-page .section-card .section-add:hover { background: var(--ztc-bg-bg-8, #002466); transform: scale(1.05); }
+	.event-create-page .upload-zone {
+		border: 2px dashed rgba(46,77,253,0.4); border-radius: 12px; min-height: 220px;
+		display: flex; align-items: center; justify-content: center; background: rgba(46,77,253,0.03);
+		transition: border-color 0.3s ease, background 0.3s ease;
+	}
+	.event-create-page .upload-zone:hover { border-color: var(--ztc-bg-bg-9, #2E4DFD); background: rgba(46,77,253,0.06); }
+	.event-create-page .upload-zone.has-image { min-height: 200px; background-size: cover; background-position: center; }
+	.event-create-page .upload-inner { color: var(--ztc-text-text-3, #544E51); text-align: center; }
+	.event-create-page .upload-inner i { font-size: 2rem; color: var(--ztc-bg-bg-9, #2E4DFD); margin-bottom: 0.5rem; display: block; }
+	.event-create-page .form-control, .event-create-page .form-select {
+		border-radius: 8px; border-color: rgba(0,0,0,.12); transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	}
+	.event-create-page .form-control:focus, .event-create-page .form-select:focus {
+		border-color: var(--ztc-bg-bg-9, #2E4DFD); box-shadow: 0 0 0 3px rgba(46,77,253,0.15); outline: none;
+	}
+	.event-create-page .form-control.is-invalid { border-color: #dc3545; }
+	.event-create-page .invalid-feedback { color: #dc3545; font-size: 0.85rem; }
+	.event-create-page .hint { font-size: 0.8125rem; color: var(--ztc-text-text-3, #544E51); margin-bottom: 0.5rem; }
+	/* Primary submit: template vl-btn4 style (same as events list) - overrides design system */
+	.event-create-page .save-btn {
+		font-family: var(--ztc-family-font1, inherit) !important; font-size: var(--ztc-font-size-font-s20, 1rem) !important; font-weight: 700 !important;
+		text-transform: uppercase !important; letter-spacing: 0.02em;
+		padding: 16px 28px !important; border-radius: 8px !important; border: none !important;
+		background: var(--ztc-bg-bg-9, #2E4DFD) !important; color: var(--ztc-text-text-1, #fff) !important;
+		position: relative !important; overflow: hidden !important; z-index: 1; transition: color 0.4s ease;
+		box-shadow: none !important;
+	}
+	.event-create-page .save-btn::after {
+		content: "" !important; position: absolute; left: 50%; top: 0; width: 1px; height: 100%;
+		background: var(--ztc-bg-bg-8, #002466) !important; z-index: -1; border-radius: 8px;
+		transition: width 0.4s ease, height 0.4s ease, left 0.4s ease, top 0.4s ease, opacity 0.4s ease;
+		visibility: hidden; opacity: 0;
+	}
+	.event-create-page .save-btn:hover:not(:disabled) { color: #fff !important; background: var(--ztc-bg-bg-9, #2E4DFD) !important; transform: none !important; }
+	.event-create-page .save-btn:hover:not(:disabled)::after { width: 100%; height: 100%; left: 0; top: 0; visibility: visible; opacity: 1; }
+	.event-create-page .status-pill {
+		border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 0.8125rem; border: 1px solid rgba(0,0,0,.12); background: var(--ztc-bg-bg-1, #fff);
+	}
+	/* Status dropdown: pill trigger + open menu (like reference) */
+	.event-create-page .status-dropdown { position: relative; display: inline-block; }
+	.event-create-page .status-dropdown .status-select-native { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+	.event-create-page .status-dropdown-trigger {
+		display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.9rem; border-radius: 999px;
+		border: 1px solid rgba(0,0,0,.2); background: var(--ztc-bg-bg-1, #fff); color: var(--ztc-text-text-2, #1A1719);
+		font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: border-color 0.25s ease, box-shadow 0.25s ease;
+	}
+	.event-create-page .status-dropdown-trigger:hover { border-color: rgba(0,0,0,.3); }
+	.event-create-page .status-dropdown-trigger .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ztc-text-text-3, #544E51); flex-shrink: 0; }
+	.event-create-page .status-dropdown-trigger .status-caret { transition: transform 0.2s ease; color: var(--ztc-text-text-3, #544E51); font-size: 0.65rem; }
+	.event-create-page .status-dropdown.is-open .status-dropdown-trigger { border-color: var(--ztc-bg-bg-9, #2E4DFD); box-shadow: 0 0 0 2px rgba(46,77,253,0.2); }
+	.event-create-page .status-dropdown.is-open .status-caret { transform: rotate(180deg); }
+	.event-create-page .status-dropdown-menu {
+		position: absolute; top: 100%; left: 0; margin-top: 4px; min-width: 100%;
+		background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 8px; box-shadow: 0 10px 24px rgba(0,0,0,.12);
+		padding: 0.35rem 0; z-index: 50; display: none;
+	}
+	.event-create-page .status-dropdown.is-open .status-dropdown-menu { display: block; }
+	.event-create-page .status-dropdown-menu button {
+		display: block; width: 100%; text-align: left; padding: 0.5rem 1rem; font-size: 0.875rem; color: var(--ztc-text-text-2, #1A1719);
+		background: none; border: none; cursor: pointer; transition: background 0.15s ease;
+	}
+	.event-create-page .status-dropdown-menu button:hover { background: rgba(46,77,253,0.06); }
+	.event-create-page .summary-card .preview-link { font-size: 0.875rem; font-weight: 500; color: var(--ztc-bg-bg-9, #2E4DFD); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; }
+	.event-create-page .summary-card .preview-link:hover { text-decoration: underline; }
+	.event-create-page .summary-card .preview-link.muted { color: #6c757d; cursor: not-allowed; pointer-events: none; }
+	/* Good to know: outline buttons matching template */
+	.event-create-page .add-btn {
+		border-radius: 8px; border: 1px solid rgba(0,0,0,.15); padding: 0.4rem 0.75rem; font-size: 0.875rem; font-weight: 500;
+		background: #fff; color: var(--ztc-text-text-2, #1A1719); transition: all 0.3s ease;
+	}
+	.event-create-page .add-btn:hover { border-color: var(--ztc-bg-bg-9, #2E4DFD); color: var(--ztc-bg-bg-9, #2E4DFD); background: rgba(46,77,253,0.04); }
+	.event-create-page .form-actions { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(0,0,0,.06); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="team-sperkers-section-area sp1 ef-animate-slideUp event-create-page">
+	{{ form_start(form, { attr: { id: 'event-form' } }) }}
+	<div class="event-form-layout">
+		<aside class="event-form-sidebar" aria-label="Event progress">
+			<a href="{{ path('app_events') }}" class="back-link" aria-label="Back to events"><i class="fa-solid fa-arrow-left me-2" aria-hidden="true"></i> Back to events</a>
+			<div class="summary-card mb-4">
+				<div class="summary-title" id="live-title">{{ event.title ?: 'Event Title' }}</div>
+				<div class="summary-date">
+					<i class="fa-regular fa-calendar me-1" aria-hidden="true"></i>
+					<span id="live-date">{% if event.startDatetime %}{{ event.startDatetime|date('D, M j, Y, g:i A') }}{% else %}Fri, Mar 20, 2026, 10:00 AM{% endif %}</span>
+				</div>
+				<div class="mt-3 d-flex flex-wrap align-items-center gap-2">
+					<div class="status-dropdown" id="status-dropdown">
+						{{ form_widget(form.status, { attr: { class: 'status-select-native', id: 'event_status_select' } }) }}
+						<button type="button" class="status-dropdown-trigger" id="status-dropdown-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="status-dropdown-label">
+							<span class="status-dot" aria-hidden="true"></span>
+							<span id="status-dropdown-label">{{ event.status == 'published' ? 'Publish now' : (event.status == 'cancelled' ? 'Cancelled' : 'Draft') }}</span>
+							<i class="fa-solid fa-chevron-up status-caret" aria-hidden="true"></i>
+						</button>
+						<div class="status-dropdown-menu" role="listbox" id="status-dropdown-menu" aria-hidden="true">
+							<button type="button" role="option" data-value="draft">Draft</button>
+							<button type="button" role="option" data-value="published">Publish now</button>
+							<button type="button" role="option" data-value="cancelled">Cancelled</button>
+						</div>
+					</div>
+					{% if event.id %}
+						<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-link" target="_blank" rel="noopener">Preview <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem;" aria-hidden="true"></i></a>
+					{% else %}
+						<span class="preview-link muted" title="Save draft first to preview">Preview <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem;" aria-hidden="true"></i></span>
+					{% endif %}
+				</div>
+			</div>
+			<div class="steps-label">Steps</div>
+			<div class="step step-active">
+				<div class="step-radio" aria-hidden="true"></div>
+				<div>
+					<div class="step-title">Build event page</div>
+					<div class="step-desc">Add all of your event details and let attendees know what to expect.</div>
+				</div>
+			</div>
+			<div class="step">
+				<div class="step-radio" aria-hidden="true"></div>
+				<div>
+					<div class="step-title">Add tickets</div>
+					<div class="step-desc">Create ticket types and set prices.</div>
+				</div>
+			</div>
+			<div class="step">
+				<div class="step-radio" aria-hidden="true"></div>
+				<div>
+					<div class="step-title">Publish</div>
+					<div class="step-desc">Review and publish your event.</div>
+				</div>
+			</div>
+		</aside>
+
+		<div class="event-form-main">
+			<div class="event-form-top-bar">
 				{% if event.id %}
-					<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-btn" target="_blank"><i class="fa-solid fa-eye me-1"></i> Preview</a>
+					<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-btn" target="_blank" rel="noopener"><i class="fa-solid fa-eye me-1" aria-hidden="true"></i> Preview event</a>
 				{% else %}
-					<span class="preview-btn text-muted" title="Save draft first to preview"><i class="fa-solid fa-eye me-1"></i> Preview</span>
+					<span class="preview-btn text-muted" title="Save draft first to preview"><i class="fa-solid fa-eye me-1" aria-hidden="true"></i> Preview event</span>
 				{% endif %}
 			</div>
+			<div class="section-card">
+				<div class="d-flex justify-content-between align-items-start mb-3">
+					<h3 class="mb-0">Cover image</h3>
+					<button type="button" class="section-add" title="Add image" aria-label="Add image">+</button>
+				</div>
+				<div class="upload-zone {{ form.vars.value.image ? 'has-image' : '' }}" id="upload-zone" style="{% if form.vars.value.image %}background-image: url('{{ form.vars.value.image }}');{% endif %}">
+					<div class="upload-inner" id="upload-inner">
+						<i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+						<p class="mb-0">Upload photos and video</p>
+					</div>
+				</div>
+				<div class="mt-2" id="image-url-wrap">
+					{{ form_widget(form.image, { attr: { class: 'form-control', placeholder: 'Or paste image URL (e.g. https://...)' } }) }}
+					{{ form_errors(form.image) }}
+				</div>
+			</div>
 
-			{{ form_start(form, { attr: { id: 'event-form' } }) }}
-			<div class="row g-4">
-				{# Left sidebar #}
-				<aside class="col-lg-4 col-xl-3 sidebar">
-					<div class="summary-card mb-3">
-						<div class="summary-title" id="live-title">{{ event.title ?: 'Event Title' }}</div>
-						<div class="summary-date">
-							<i class="fa-regular fa-calendar"></i>
-							<span id="live-date">{% if event.startDatetime %}{{ event.startDatetime|date('D, M j, Y, g:i A') }}{% else %}Fri, Mar 20, 2026, 10:00 AM{% endif %}</span>
-						</div>
-						<div class="mt-3">
-							{{ form_widget(form.status, { attr: { class: 'status-pill form-select form-select-sm' } }) }}
-						</div>
-					</div>
-					<div class="steps-label">Steps</div>
-					<div class="step step-active">
-						<div class="step-radio"></div>
-						<div>
-							<div class="step-title">Build event page</div>
-							<div class="step-desc">Add all of your event details and let attendees know what to expect.</div>
-						</div>
-					</div>
-					<div class="step">
-						<div class="step-radio"></div>
-						<div>
-							<div class="step-title">Add tickets</div>
-							<div class="step-desc">Create ticket types and set prices.</div>
-						</div>
-					</div>
-					<div class="step">
-						<div class="step-radio"></div>
-						<div>
-							<div class="step-title">Publish</div>
-							<div class="step-desc">Review and publish your event.</div>
-						</div>
-					</div>
-				</aside>
-
-				{# Main form #}
-				<div class="col-lg-8 col-xl-9 main-content">
-					{# Cover image #}
-					<div class="section-card">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Cover image</h3>
-							<button type="button" class="section-add" title="Add image">+</button>
-						</div>
-						<div class="upload-zone {{ form.vars.value.image ? 'has-image' : '' }}" id="upload-zone" style="{% if form.vars.value.image %}background-image: url('{{ form.vars.value.image }}');{% endif %}">
-							<div class="upload-inner" id="upload-inner">
-								<i class="fa-solid fa-cloud-arrow-up"></i>
-								<p>Upload photos and video</p>
-							</div>
-						</div>
-						<div class="mt-2" id="image-url-wrap">
-							{{ form_widget(form.image, { attr: { class: 'form-control', placeholder: 'Paste image URL (e.g. https://...)' } }) }}
-							{{ form_errors(form.image) }}
-						</div>
-					</div>
-
-					{# Event title + Summary #}
-					<div class="section-card">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Event details</h3>
-							<button type="button" class="section-add" title="Add section">+</button>
-						</div>
-						<div class="mb-3">
-							{{ form_label(form.title) }}
-							<p class="hint">Be clear and descriptive with a title that tells people what your event is about.</p>
-							{{ form_widget(form.title, { attr: { class: 'form-control' ~ (form.title.vars.errors|length ? ' is-invalid' : '') } }) }}
-							{{ form_errors(form.title) }}
-						</div>
-						<div class="mb-0">
-							{{ form_label(form.summary) }}
-							<p class="hint">Grab people's attention with a short description. Attendees will see this at the top of your event page. (140 characters max)</p>
-							{{ form_widget(form.summary, { attr: { class: 'form-control', maxlength: 140 } }) }}
-							<div class="d-flex justify-content-between mt-1">
-								{{ form_errors(form.summary) }}
-								<span class="char-count ms-auto" id="summary-count">{{ (form.summary.vars.value ?? '')|length }}/140</span>
-							</div>
-						</div>
-					</div>
-
-					{# Date and time #}
-					<div class="section-card">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Date and time</h3>
-							<button type="button" class="section-add" title="Add time">+</button>
-						</div>
-						<div class="row g-3">
-							<div class="col-md-6">
-								{{ form_label(form.startDatetime) }}
-								{{ form_widget(form.startDatetime, { attr: { class: 'form-control' ~ (form.startDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
-								{{ form_errors(form.startDatetime) }}
-							</div>
-							<div class="col-md-6">
-								{{ form_label(form.endDatetime) }}
-								{{ form_widget(form.endDatetime, { attr: { class: 'form-control' ~ (form.endDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
-								{{ form_errors(form.endDatetime) }}
-							</div>
-						</div>
-					</div>
-
-					{# Location #}
-					<div class="section-card">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Location</h3>
-							<button type="button" class="section-add" title="Add location">+</button>
-						</div>
-						<div class="mb-2">
-							{{ form_label(form.venue) }}
-							{{ form_widget(form.venue, { attr: { class: 'form-select' ~ (form.venue.vars.errors|length ? ' is-invalid' : '') } }) }}
-							{{ form_errors(form.venue) }}
-						</div>
-					</div>
-
-					{# Overview #}
-					<div class="section-card focus">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Overview</h3>
-							<button type="button" class="section-add" title="Add content">+</button>
-						</div>
-						<p class="hint">Add more details about your event and include what people can expect if they attend.</p>
-						<div class="mb-2">
-							{{ form_widget(form.description, { attr: { class: 'form-control', rows: 6 } }) }}
-							{{ form_errors(form.description) }}
-						</div>
-						<p class="text-muted small mb-0"><i class="fa-solid fa-bolt me-1"></i> Suggest description</p>
-					</div>
-
-					{# Good to know (placeholder) #}
-					<div class="section-card">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Good to know</h3>
-							<button type="button" class="section-add" title="Add">+</button>
-						</div>
-						<div class="mb-3">
-							<div class="mb-2"><strong>Highlights</strong></div>
-							<button type="button" class="add-btn"><i class="fa-solid fa-plus me-1"></i> Add Age info</button>
-							<button type="button" class="add-btn"><i class="fa-solid fa-plus me-1"></i> Add Door Time</button>
-							<button type="button" class="add-btn"><i class="fa-solid fa-plus me-1"></i> Add Parking info</button>
-						</div>
-						<div>
-							<div class="mb-2"><strong>Frequently asked questions</strong></div>
-							<p class="small text-muted mb-2"><i class="fa-solid fa-lightbulb me-1"></i> Events with FAQs have 8% more organic traffic.</p>
-							<a href="#" class="text-primary" style="font-size: 0.9rem;">+ Add question</a>
-						</div>
-					</div>
-
-					{# Add more sections (placeholder) #}
-					<div class="add-more mb-4">
-						<strong>Add more sections to your event page</strong>
-						<p class="mb-0 mt-1">Make your event stand out. Add lineup, agenda, and more.</p>
-					</div>
-
-					{# Organizer & Categories (compact) #}
-					<div class="section-card">
-						<h3 class="mb-3">Organizer & categories</h3>
-						<div class="row g-3">
-							<div class="col-md-6">
-								{{ form_label(form.organizer) }}
-								{{ form_widget(form.organizer, { attr: { class: 'form-select' } }) }}
-								{{ form_errors(form.organizer) }}
-							</div>
-							<div class="col-md-6">
-								{{ form_label(form.categories) }}
-								{{ form_widget(form.categories, { attr: { class: 'form-select' } }) }}
-								{{ form_errors(form.categories) }}
-							</div>
-						</div>
-					</div>
-
-					<div class="d-flex justify-content-end mt-3">
-						<button type="submit" class="btn vl-btn4 save-btn">{{ event.id ? 'Save changes' : 'Save and continue' }}</button>
+			<div class="section-card">
+				<div class="d-flex justify-content-between align-items-start mb-3">
+					<h3 class="mb-0">Event title</h3>
+					<button type="button" class="section-add" title="Add section" aria-label="Add section">+</button>
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.title) }}
+					<p class="hint">A short and sweet sentence about your event.</p>
+					{{ form_widget(form.title, { attr: { class: 'form-control' ~ (form.title.vars.errors|length ? ' is-invalid' : '') } }) }}
+					{{ form_errors(form.title) }}
+				</div>
+				<div class="mb-0">
+					{{ form_label(form.summary) }}
+					<p class="hint">Grab people's attention with a short description. (140 characters max)</p>
+					{{ form_widget(form.summary, { attr: { class: 'form-control', maxlength: 140 } }) }}
+					<div class="d-flex justify-content-between mt-1">
+						{{ form_errors(form.summary) }}
+						<span class="char-count ms-auto text-muted small" id="summary-count">{{ (form.summary.vars.value ?? '')|length }}/140</span>
 					</div>
 				</div>
 			</div>
-			{{ form_end(form) }}
+
+			<div class="row g-3 mb-0">
+				<div class="col-md-6">
+					<div class="section-card h-100">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Date and time</h3>
+							<button type="button" class="section-add" title="Add time" aria-label="Add time">+</button>
+						</div>
+						{{ form_label(form.startDatetime) }}
+						{{ form_widget(form.startDatetime, { attr: { class: 'form-control mb-2' ~ (form.startDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
+						{{ form_errors(form.startDatetime) }}
+						{{ form_label(form.endDatetime) }}
+						{{ form_widget(form.endDatetime, { attr: { class: 'form-control' ~ (form.endDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
+						{{ form_errors(form.endDatetime) }}
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="section-card h-100">
+						<div class="d-flex justify-content-between align-items-start mb-3">
+							<h3 class="mb-0">Location</h3>
+							<button type="button" class="section-add" title="Add location" aria-label="Add location">+</button>
+						</div>
+						{{ form_label(form.venue) }}
+						{{ form_widget(form.venue, { attr: { class: 'form-select' ~ (form.venue.vars.errors|length ? ' is-invalid' : '') } }) }}
+						{{ form_errors(form.venue) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="section-card focus">
+				<div class="d-flex justify-content-between align-items-start mb-3">
+					<h3 class="mb-0">Overview</h3>
+					<button type="button" class="section-add" title="Add content" aria-label="Add content">+</button>
+				</div>
+				<p class="hint">Use this section to provide more details about your event. You can include things to know, venue information, accessibility options—anything that will help people know what to expect.</p>
+				<div class="mb-2">
+					{{ form_widget(form.description, { attr: { class: 'form-control', rows: 6 } }) }}
+					{{ form_errors(form.description) }}
+				</div>
+				<p class="text-muted small mb-0"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i> Suggest description</p>
+			</div>
+
+			<div class="section-card">
+				<div class="d-flex justify-content-between align-items-start mb-3">
+					<h3 class="mb-0">Good to know</h3>
+					<button type="button" class="section-add" title="Add" aria-label="Add">+</button>
+				</div>
+				<div class="mb-4">
+					<div class="mb-2 fw-semibold">Highlights</div>
+					<div class="d-flex flex-wrap gap-2">
+						<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add Age info</button>
+						<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add Door Time</button>
+						<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add Parking info</button>
+					</div>
+				</div>
+				<div>
+					<div class="mb-2 fw-semibold">Frequently asked questions</div>
+					<p class="small text-muted mb-2"><i class="fa-solid fa-lightbulb me-1" aria-hidden="true"></i> Events with FAQs have 8% more organic traffic.</p>
+					<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add question</button>
+				</div>
+			</div>
+
+			<div class="section-card">
+				<h3 class="mb-3">Organizer & categories</h3>
+				<div class="row g-3">
+					<div class="col-md-6">
+						{{ form_label(form.organizer) }}
+						{{ form_widget(form.organizer, { attr: { class: 'form-select' } }) }}
+						{{ form_errors(form.organizer) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_label(form.categories) }}
+						{{ form_widget(form.categories, { attr: { class: 'form-select' } }) }}
+						{{ form_errors(form.categories) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="section-card">
+				<h3 class="mb-2">Add more sections to your event page</h3>
+				<p class="hint mb-0">Make your event stand out even more. These sections help attendees find information and answer their questions—which means more ticket sales and less time answering messages.</p>
+			</div>
 		</div>
 	</div>
-	<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
-	<script src="/assets/js/vendor/bootstrap.min.js"></script>
-	<script>
-		(function() {
-			var form = document.getElementById('event-form');
-			if (!form) return;
-			var titleInput = form.querySelector('input[name*="[title]"]');
-			var summaryInput = form.querySelector('input[name*="[summary]"]');
-			var liveTitle = document.getElementById('live-title');
-			var summaryCount = document.getElementById('summary-count');
-			if (titleInput && liveTitle) {
-				titleInput.addEventListener('input', function() { liveTitle.textContent = this.value || 'Event Title'; });
-			}
-			if (summaryInput && summaryCount) {
-				summaryInput.addEventListener('input', function() { summaryCount.textContent = this.value.length + '/140'; });
-			}
-			var uploadZone = document.getElementById('upload-zone');
-			var uploadInner = document.getElementById('upload-inner');
-			var imageInput = form.querySelector('input[name*="[image]"]');
-			if (uploadZone && imageInput) {
-				imageInput.addEventListener('input', function() {
-					var url = this.value && this.value.trim();
-					if (url) {
-						uploadZone.classList.add('has-image');
-						uploadZone.style.backgroundImage = 'url(' + url + ')';
-						if (uploadInner) uploadInner.style.display = 'none';
-					} else {
-						uploadZone.classList.remove('has-image');
-						uploadZone.style.backgroundImage = '';
-						if (uploadInner) uploadInner.style.display = '';
-					}
+
+	<div class="event-form-sticky-save">
+		<button type="submit" form="event-form" class="btn vl-btn4 save-btn"><i class="fa-solid fa-check me-2" aria-hidden="true"></i>{{ event.id ? 'Save changes' : 'Save and continue' }}</button>
+	</div>
+	{{ form_end(form) }}
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+(function() {
+	/* Status dropdown: pill trigger + menu (Draft / Publish now / Cancelled) */
+	var statusDropdown = document.getElementById('status-dropdown');
+	if (statusDropdown) {
+		var trigger = document.getElementById('status-dropdown-trigger');
+		var menu = document.getElementById('status-dropdown-menu');
+		var selectEl = document.getElementById('event_status_select');
+		var labelEl = document.getElementById('status-dropdown-label');
+		var labels = { draft: 'Draft', published: 'Publish now', cancelled: 'Cancelled' };
+		function updateLabel() {
+			if (selectEl && labelEl) labelEl.textContent = labels[selectEl.value] || selectEl.value;
+		}
+		function close() {
+			statusDropdown.classList.remove('is-open');
+			if (trigger) trigger.setAttribute('aria-expanded', 'false');
+			if (menu) menu.setAttribute('aria-hidden', 'true');
+		}
+		if (trigger && menu && selectEl) {
+			trigger.addEventListener('click', function(e) {
+				e.preventDefault();
+				var open = statusDropdown.classList.toggle('is-open');
+				trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+				menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+			});
+			menu.querySelectorAll('button[data-value]').forEach(function(btn) {
+				btn.addEventListener('click', function() {
+					var val = this.getAttribute('data-value');
+					selectEl.value = val;
+					updateLabel();
+					close();
 				});
-				if (imageInput.value && imageInput.value.trim()) {
-					uploadZone.classList.add('has-image');
-					uploadZone.style.backgroundImage = 'url(' + imageInput.value.trim() + ')';
-					if (uploadInner) uploadInner.style.display = 'none';
-				}
-			}
-		})();
-	</script>
-</body>
-</html>
+			});
+			document.addEventListener('click', function(e) {
+				if (statusDropdown && statusDropdown.classList.contains('is-open') && !statusDropdown.contains(e.target)) close();
+			});
+		}
+		updateLabel();
+	}
+
+	var form = document.getElementById('event-form');
+	if (!form) return;
+	var titleInput = form.querySelector('input[name*="[title]"]');
+	var summaryInput = form.querySelector('input[name*="[summary]"]');
+	var liveTitle = document.getElementById('live-title');
+	var summaryCount = document.getElementById('summary-count');
+	if (titleInput && liveTitle) titleInput.addEventListener('input', function() { liveTitle.textContent = this.value || 'Event Title'; });
+	if (summaryInput && summaryCount) summaryInput.addEventListener('input', function() { summaryCount.textContent = this.value.length + '/140'; });
+	var uploadZone = document.getElementById('upload-zone');
+	var uploadInner = document.getElementById('upload-inner');
+	var imageInput = form.querySelector('input[name*="[image]"]');
+	if (uploadZone && imageInput) {
+		imageInput.addEventListener('input', function() {
+			var url = this.value && this.value.trim();
+			if (url) { uploadZone.classList.add('has-image'); uploadZone.style.backgroundImage = 'url(' + url + ')'; if (uploadInner) uploadInner.style.display = 'none'; }
+			else { uploadZone.classList.remove('has-image'); uploadZone.style.backgroundImage = ''; if (uploadInner) uploadInner.style.display = ''; }
+		});
+		if (imageInput.value && imageInput.value.trim()) {
+			uploadZone.classList.add('has-image');
+			uploadZone.style.backgroundImage = 'url(' + imageInput.value.trim() + ')';
+			if (uploadInner) uploadInner.style.display = 'none';
+		}
+	}
+})();
+</script>
+{% endblock %}
