@@ -388,6 +388,7 @@
 							<button type="button" class="btn vl-btn4 w-100 mb-2" id="open-ticket-checkout">Reserve a spot</button>
 							{% if is_granted('EVENT_EDIT', event) %}
 							<div class="pt-3 border-top mt-3">
+								<a href="{{ path('app_orders_event', { id: event.id }) }}" class="btn btn-outline-primary btn-sm me-1">View orders</a>
 								<a href="{{ path('app_event_edit', { id: event.id }) }}" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
 								<form method="post" action="{{ path('app_event_delete', { id: event.id }) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
 									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}" />
@@ -402,7 +403,9 @@
 		</div>
 
 		{# ----- TICKET CHECKOUT MODAL ----- #}
-		<div class="ticket-checkout-overlay" id="ticket-checkout">
+		<div class="ticket-checkout-overlay" id="ticket-checkout"
+			data-checkout-url="{{ path('app_order_checkout', { eventId: event.id }) }}"
+			data-checkout-token="{{ csrf_token('order_checkout_' ~ event.id) }}">
 			<div class="ticket-checkout-backdrop"></div>
 			<div class="ticket-checkout-modal" role="dialog" aria-modal="true" aria-labelledby="ticket-checkout-title">
 				<button type="button" class="ticket-checkout-close" id="ticket-checkout-close" aria-label="Close checkout">&times;</button>
@@ -455,20 +458,23 @@
 							<h2 class="h6 fw-bold mb-0">Checkout</h2>
 						</div>
 						<p class="small text-muted mb-3">Contact information</p>
+						{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user %}
+							<p class="small text-muted mb-2">Logged in as <strong>{{ app.user.email }}</strong>. Not you? <a href="{{ path('app_logout') }}">Log out</a></p>
+						{% endif %}
 						<form id="ticket-contact-form">
 							<div class="row mb-3">
 								<div class="col-md-6">
 									<label class="form-label small">First name *</label>
-									<input type="text" class="form-control form-control-sm" name="firstName" required />
+									<input type="text" class="form-control form-control-sm" name="firstName" value="{{ app.user.firstName ?? '' }}" required />
 								</div>
 								<div class="col-md-6">
 									<label class="form-label small">Last name *</label>
-									<input type="text" class="form-control form-control-sm" name="lastName" required />
+									<input type="text" class="form-control form-control-sm" name="lastName" value="{{ app.user.lastName ?? '' }}" required />
 								</div>
 							</div>
 							<div class="mb-3">
 								<label class="form-label small">Email address *</label>
-								<input type="email" class="form-control form-control-sm" name="email" required />
+								<input type="email" class="form-control form-control-sm" name="email" value="{{ app.user.email ?? '' }}" required />
 							</div>
 							<div class="form-check mb-1">
 								<input class="form-check-input" type="checkbox" value="1" id="ticket-optin-organizer" checked />
@@ -496,6 +502,7 @@
 								<i class="fa-solid fa-check" aria-hidden="true"></i>
 							</div>
 							<h2 class="h5 fw-bold mb-1">Thanks for your order!</h2>
+							<p class="small text-muted mb-2" id="ticket-thankyou-order-id"></p>
 							<p class="small text-muted mb-3">You're going to <strong>{{ event.title }}</strong>.</p>
 							<div class="mb-3">
 								<div class="small text-muted text-uppercase mb-1">Ticket sent to</div>
@@ -518,7 +525,8 @@
 								</div>
 							</div>
 							<div class="d-flex flex-wrap gap-2 mt-3">
-								<button type="button" class="btn vl-btn4 btn-sm" id="ticket-thankyou-close">Back to event</button>
+								<a href="{{ path('app_orders_index') }}" class="btn vl-btn4 btn-sm">Take me to my tickets</a>
+								<button type="button" class="btn btn-outline-secondary btn-sm" id="ticket-thankyou-close">Back to event</button>
 							</div>
 						</div>
 					</div>
@@ -657,6 +665,8 @@
 					recalcSummary();
 					$('#ticket-step-1').removeClass('d-none');
 					$('#ticket-step-2').addClass('d-none');
+					$('#ticket-step-3').addClass('d-none');
+					$('#ticket-checkout-register').prop('disabled', false).text('Register');
 				}
 				function closeOverlay() {
 					$overlay.removeClass('active');
@@ -703,13 +713,58 @@
 					$('#ticket-step-1').removeClass('d-none');
 				});
 
-				// Final register: show thank-you view
+				// Final register: create order via API, then show thank-you view
 				$('#ticket-contact-form').on('submit', function (e) {
 					e.preventDefault();
-					var email = $(this).find('input[name=\"email\"]').val() || '';
-					$('#ticket-thankyou-email').text(email);
-					$('#ticket-step-2').addClass('d-none');
-					$('#ticket-step-3').removeClass('d-none');
+					var $form = $(this);
+					var $btn = $('#ticket-checkout-register');
+					var email = $form.find('input[name=\"email\"]').val() || '';
+					var url = $overlay.data('checkout-url');
+					var token = $overlay.data('checkout-token');
+					var items = [];
+					$('.ticket-checkout-row').each(function() {
+						var $row = $(this);
+						var qty = parseInt($row.find('.ticket-qty-value').text(), 10) || 0;
+						if (qty > 0) {
+							items.push({
+								ticketId: parseInt($row.data('ticket-id'), 10),
+								quantity: qty
+							});
+						}
+					});
+					if (items.length === 0) {
+						alert('Please select at least one ticket.');
+						return;
+					}
+					$btn.prop('disabled', true).text('Processing…');
+					$.ajax({
+						url: url,
+						method: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({ _token: token, items: items }),
+						success: function (data) {
+							$('#ticket-thankyou-email').text(email);
+							var orderId = data.orderId || (data.orders && data.orders[0] && data.orders[0].id);
+							$('#ticket-thankyou-order-id').text(orderId ? 'Order #' + orderId : '').toggle(!!orderId);
+							$('#ticket-step-2').addClass('d-none');
+							$('#ticket-step-3').removeClass('d-none');
+						},
+						error: function (xhr) {
+							$btn.prop('disabled', false).text('Register');
+							var msg = 'Unable to complete registration.';
+							if (xhr.status === 401) {
+								msg = 'Please log in to complete your order.';
+								window.location.href = xhr.responseJSON && xhr.responseJSON.login_url
+									? xhr.responseJSON.login_url
+									: '{{ path('app_login') }}?redirect=' + encodeURIComponent(window.location.href);
+								return;
+							}
+							if (xhr.responseJSON && xhr.responseJSON.error) {
+								msg = xhr.responseJSON.error;
+							}
+							alert(msg);
+						}
+					});
 				});
 
 				$('#ticket-thankyou-close').on('click', function () {

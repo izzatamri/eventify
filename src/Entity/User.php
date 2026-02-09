@@ -55,9 +55,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Organizer::class, mappedBy: 'user')]
     private Collection $organizers;
 
+    /** @var Collection<int, Order> */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->organizers = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -199,5 +204,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getOrganizers(): Collection
     {
         return $this->organizers;
+    }
+
+    /** @return Collection<int, Order> */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
     }
 }

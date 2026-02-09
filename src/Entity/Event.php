@@ -76,10 +76,21 @@ class Event
     #[ORM\JoinTable(name: 'event_category')]
     private Collection $categories;
 
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    private int $sold = 0;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2, options: ['default' => 0])]
+    private string $gross = '0.00';
+
+    /** @var Collection<int, Order> */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'event')]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -293,5 +304,33 @@ class Event
         $currency = $this->tickets->first() ? $this->tickets->first()->getCurrency() : 'USD';
         $symbol = $currency === 'EUR' ? '€' : ($currency === 'USD' ? '$' : $currency . ' ');
         return 'From ' . $symbol . number_format((float) $min, 2);
+    }
+
+    public function getSold(): int
+    {
+        return $this->sold;
+    }
+
+    public function setSold(int $sold): static
+    {
+        $this->sold = $sold;
+        return $this;
+    }
+
+    public function getGross(): string
+    {
+        return $this->gross;
+    }
+
+    public function setGross(string $gross): static
+    {
+        $this->gross = $gross;
+        return $this;
+    }
+
+    /** @return Collection<int, Order> */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
     }
 }

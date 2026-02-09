@@ -199,17 +199,18 @@
 										</li>
 										{% if app.user %}
 										<li>
-											<a href="#">{{ app.user.displayName }} <i class="fa-solid fa-angle-down"></i></a>
+											<a href="#"><i class="fa-solid fa-user"></i> {{ app.user.email }} <i class="fa-solid fa-angle-down"></i></a>
 											<ul class="dropdown-padding">
+												<li><a href="{{ path('app_orders_index') }}"><i class="fa-solid fa-ticket"></i> My orders</a></li>
 												{% if is_granted('ROLE_ADMIN') %}
-												<li><a href="{{ path('app_admin_dashboard') }}">Admin</a></li>
+												<li><a href="{{ path('app_admin_dashboard') }}"><i class="fa-solid fa-gear"></i> Admin</a></li>
 												{% endif %}
-												<li><a href="{{ path('app_logout') }}">Logout</a></li>
+												<li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
 											</ul>
 										</li>
 										{% else %}
-										<li><a href="{{ path('app_login') }}">Log in</a></li>
-										<li><a href="{{ path('app_register') }}">Register</a></li>
+										<li><a href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
+										<li><a href="{{ path('app_register') }}"><i class="fa-solid fa-user-plus"></i> Register</a></li>
 										{% endif %}
 
 										<li>
@@ -325,18 +326,19 @@
 							<li><a href="{{ path('app_events') }}">Events</a></li>
 							{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 							<li><a href="{{ path('app_my_events') }}">My Events</a></li>
+							<li><a href="{{ path('app_orders_index') }}">My orders</a></li>
 							<li><a href="{{ path('app_event_create') }}">Create Events</a></li>
 							{% endif %}
 						</ul>
 					</li>
 					{% if app.user %}
 					{% if is_granted('ROLE_ADMIN') %}
-					<li><a href="{{ path('app_admin_dashboard') }}">Admin</a></li>
+					<li><a href="{{ path('app_admin_dashboard') }}"><i class="fa-solid fa-gear"></i> Admin</a></li>
 					{% endif %}
-					<li><a href="{{ path('app_logout') }}">Logout</a></li>
+					<li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
 					{% else %}
-					<li><a href="{{ path('app_login') }}">Log in</a></li>
-					<li><a href="{{ path('app_register') }}">Register</a></li>
+					<li><a href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
+					<li><a href="{{ path('app_register') }}"><i class="fa-solid fa-user-plus"></i> Register</a></li>
 					{% endif %}
 					<li>
 						<a href="features.html">Schedule</a>
