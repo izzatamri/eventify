@@ -74,6 +74,7 @@ class RegistrationController extends AbstractController
             $request->getSession()->set('pending_verify_user_id', $user->getId());
             $this->addFlash('success', 'Account created. We sent a 6-digit code to your email. Enter it below to verify and sign in.');
             return $this->redirectToRoute('app_verify_email');
+        // FIXME: Handle edge cases
         }
 
         return $this->render('security/register.html.twig', [

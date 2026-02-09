@@ -73,6 +73,8 @@
                         <form action="{{ path('app_verify_email_resend') }}" method="post" class="d-inline">
                             <input type="hidden" name="_token" value="{{ csrf_token('verify_email_resend') }}">
                             <button type="submit" class="btn btn-link p-0 small text-primary">Send a new code</button>
+
+                        // Improved error handling
                         </form>
                     </div>
 

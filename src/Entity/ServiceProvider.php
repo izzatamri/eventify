@@ -192,6 +192,7 @@ class ServiceProvider
     }
 
     public function addServiceBooking(ServiceBooking $serviceBooking): static
+    // NOTE: Consider caching this
     {
         if (!$this->serviceBookings->contains($serviceBooking)) {
             $this->serviceBookings->add($serviceBooking);
