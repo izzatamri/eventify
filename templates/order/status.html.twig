@@ -1,0 +1,28 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Update order status #{{ order.id }} - Eventify{% endblock %}
+{% block page_heading %}Update order status{% endblock %}
+{% block page_breadcrumb %}<a href="{{ path('app_orders_event', { id: order.event.id }) }}">Orders</a> <i class="fa-solid fa-angle-right"></i> Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="row justify-content-center">
+		<div class="col-lg-5">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body p-4">
+					<h2 class="h5 fw-bold mb-2">Update order #{{ order.id }}</h2>
+					<p class="text-muted small mb-4">{{ order.event.title }} · {{ order.ticket.name }} (×{{ order.quantity }})</p>
+
+					{{ form_start(form) }}
+						{{ form_row(form.status) }}
+						<div class="d-flex gap-2 mt-4">
+							<button type="submit" class="btn btn-primary">Save</button>
+							<a href="{{ path('app_orders_event', { id: order.event.id }) }}" class="btn btn-outline-secondary">Cancel</a>
+						</div>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

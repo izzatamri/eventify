@@ -33,6 +33,7 @@ security:
         - { path: ^/events/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/events/\d+/tickets, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/events/\d+/publish, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/orders, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
 

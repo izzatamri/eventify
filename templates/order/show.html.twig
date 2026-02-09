@@ -1,0 +1,50 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Order #{{ order.id }} - Eventify{% endblock %}
+{% block page_heading %}Order details{% endblock %}
+{% block page_breadcrumb %}{% if order.event %}<a href="{{ path('app_event_show', { id: order.event.id }) }}">{{ order.event.title }}</a> <i class="fa-solid fa-angle-right"></i>{% endif %} Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="row justify-content-center">
+		<div class="col-lg-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body p-4">
+					<h2 class="h5 fw-bold mb-4">Order #{{ order.id }}</h2>
+					<dl class="row mb-0">
+						<dt class="col-sm-4 text-muted">Event</dt>
+						<dd class="col-sm-8">
+							{% if order.event %}
+								<a href="{{ path('app_event_show', { id: order.event.id }) }}" class="text-decoration-none">{{ order.event.title }}</a>
+							{% else %}
+								—
+							{% endif %}
+						</dd>
+						<dt class="col-sm-4 text-muted">Ticket</dt>
+						<dd class="col-sm-8">{{ order.ticket.name }}</dd>
+						<dt class="col-sm-4 text-muted">Quantity</dt>
+						<dd class="col-sm-8">{{ order.quantity }}</dd>
+						<dt class="col-sm-4 text-muted">Total</dt>
+						<dd class="col-sm-8">${{ order.totalPrice|number_format(2) }}</dd>
+						<dt class="col-sm-4 text-muted">Status</dt>
+						<dd class="col-sm-8">
+							<span class="badge {% if order.status == 'confirmed' %}bg-success{% elseif order.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ order.status|capitalize }}</span>
+						</dd>
+						<dt class="col-sm-4 text-muted">Placed on</dt>
+						<dd class="col-sm-8">{{ order.createdAt|date('F j, Y \\a\\t g:i A') }}</dd>
+					</dl>
+					<div class="mt-4 pt-3 border-top d-flex gap-2">
+						<a href="{{ path('app_orders_index') }}" class="btn btn-outline-secondary">My orders</a>
+						{% if order.event %}
+							<a href="{{ path('app_event_show', { id: order.event.id }) }}" class="btn btn-outline-primary">Event page</a>
+						{% endif %}
+						{% if is_granted('ORDER_UPDATE', order) and order.status != 'cancelled' %}
+							<a href="{{ path('app_order_status', { id: order.id }) }}" class="btn btn-primary ms-auto">Update status</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

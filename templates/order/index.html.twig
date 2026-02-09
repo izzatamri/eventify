@@ -1,0 +1,60 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}My Orders - Eventify{% endblock %}
+{% block page_heading %}My Orders{% endblock %}
+{% block page_breadcrumb %}My Orders{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h2 class="h4 fw-bold mb-0">My Orders</h2>
+		<a href="{{ path('app_events') }}" class="btn btn-outline-primary btn-sm">Browse events</a>
+	</div>
+
+	{% if orders|length > 0 %}
+	<div class="card border-0 shadow-sm">
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead class="table-light">
+					<tr>
+						<th class="border-0 py-3">Event</th>
+						<th class="border-0 py-3">Ticket</th>
+						<th class="border-0 py-3">Quantity</th>
+						<th class="border-0 py-3">Total</th>
+						<th class="border-0 py-3">Status</th>
+						<th class="border-0 py-3">Date</th>
+						<th class="border-0 py-3 text-end">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for order in orders %}
+					<tr>
+						<td class="py-3">
+							<a href="{{ path('app_event_show', { id: order.event.id }) }}" class="fw-semibold text-dark text-decoration-none">{{ order.event.title }}</a>
+						</td>
+						<td class="py-3">{{ order.ticket.name }}</td>
+						<td class="py-3">{{ order.quantity }}</td>
+						<td class="py-3">${{ order.totalPrice|number_format(2) }}</td>
+						<td class="py-3">
+							<span class="badge {% if order.status == 'confirmed' %}bg-success{% elseif order.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ order.status|capitalize }}</span>
+						</td>
+						<td class="py-3 text-muted small">{{ order.createdAt|date('M j, Y') }}</td>
+						<td class="py-3 text-end">
+							<a href="{{ path('app_order_show', { id: order.id }) }}" class="btn btn-sm btn-outline-primary">View</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{% else %}
+	<div class="card border-0 shadow-sm">
+		<div class="card-body text-center py-5">
+			<p class="text-muted mb-3">You haven't placed any orders yet.</p>
+			<a href="{{ path('app_events') }}" class="btn btn-primary">Browse events</a>
+		</div>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

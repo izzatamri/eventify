@@ -1,47 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>{% block title %}Eventify{% endblock %}</title>
-		<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
-		<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/aos.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/magnific-popup.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/mobile.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/owlcarousel.min.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/sidebar.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/slick-slider.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/nice-select.css" />
-		<link rel="stylesheet" href="/assets/css/vendor/odometer.css" />
-		<link rel="stylesheet" href="/assets/css/main.css" />
-		<link rel="stylesheet" href="/assets/css/eventify-design.css" />
-		{% block page_styles %}{% endblock %}
-		<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
-	</head>
-	<body class="homepage1-body">
-		{% include 'partials/header_events.html.twig' %}
+{% extends 'base.html.twig' %}
 
-		{% block inner_hero %}
-		<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png)">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-5 m-auto">
-						<div class="heading1 text-center">
-							<h1>{% block page_heading %}Our Events{% endblock %}</h1>
-							<div class="space20"></div>
-							<a href="{{ path('app_home') }}">Home <i class="fa-solid fa-angle-right"></i> <span>{% block page_breadcrumb %}Our Events{% endblock %}</span></a>
-						</div>
+{% block body %}
+	{% block inner_hero %}
+	<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png)">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-5 m-auto">
+					<div class="heading1 text-center">
+						<h1>{% block page_heading %}Our Events{% endblock %}</h1>
+						<div class="space20"></div>
+						<a href="{{ path('app_home') }}">Home <i class="fa-solid fa-angle-right"></i> <span>{% block page_breadcrumb %}Our Events{% endblock %}</span></a>
 					</div>
 				</div>
 			</div>
 		</div>
-		{% endblock %}
+	</div>
+	{% endblock %}
 
-		{% block content %}{% endblock %}
+	{% block content %}{% endblock %}
 
-		{% include 'partials/footer_events.html.twig' %}
-		{% block page_scripts %}{% endblock %}
-	</body>
-</html>
+	{% include 'partials/footer_events.html.twig' %}
+{% endblock %}

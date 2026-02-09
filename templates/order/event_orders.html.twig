@@ -1,0 +1,67 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Orders - {{ event.title }} - Eventify{% endblock %}
+{% block page_heading %}Event orders{% endblock %}
+{% block page_breadcrumb %}<a href="{{ path('app_event_show', { id: event.id }) }}">{{ event.title }}</a> <i class="fa-solid fa-angle-right"></i> Orders{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h2 class="h4 fw-bold mb-0">Orders for {{ event.title }}</h2>
+		<a href="{{ path('app_event_show', { id: event.id }) }}" class="btn btn-outline-secondary btn-sm">Back to event</a>
+	</div>
+
+	{% if orders|length > 0 %}
+	<div class="card border-0 shadow-sm">
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead class="table-light">
+					<tr>
+						<th class="border-0 py-3">Buyer</th>
+						<th class="border-0 py-3">Ticket</th>
+						<th class="border-0 py-3">Qty</th>
+						<th class="border-0 py-3">Total</th>
+						<th class="border-0 py-3">Status</th>
+						<th class="border-0 py-3">Date</th>
+						<th class="border-0 py-3 text-end">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for order in orders %}
+					<tr>
+						<td class="py-3">
+							{% if order.user %}
+								<span class="fw-semibold">{{ order.user.email }}</span>
+							{% else %}
+								—
+							{% endif %}
+						</td>
+						<td class="py-3">{{ order.ticket.name }}</td>
+						<td class="py-3">{{ order.quantity }}</td>
+						<td class="py-3">${{ order.totalPrice|number_format(2) }}</td>
+						<td class="py-3">
+							<span class="badge {% if order.status == 'confirmed' %}bg-success{% elseif order.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ order.status|capitalize }}</span>
+						</td>
+						<td class="py-3 text-muted small">{{ order.createdAt|date('M j, Y H:i') }}</td>
+						<td class="py-3 text-end">
+							<a href="{{ path('app_order_show', { id: order.id }) }}" class="btn btn-sm btn-outline-primary me-1">View</a>
+							{% if order.status != 'cancelled' %}
+							<a href="{{ path('app_order_status', { id: order.id }) }}" class="btn btn-sm btn-outline-secondary">Update status</a>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{% else %}
+	<div class="card border-0 shadow-sm">
+		<div class="card-body text-center py-5">
+			<p class="text-muted mb-0">No orders for this event yet.</p>
+			<a href="{{ path('app_event_show', { id: event.id }) }}" class="btn btn-outline-primary mt-3">Back to event</a>
+		</div>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

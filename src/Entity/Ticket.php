@@ -61,8 +61,13 @@ class Ticket
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Event $event = null;
 
+    /** @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Order> */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'ticket')]
+    private \Doctrine\Common\Collections\Collection $orders;
+
     public function __construct()
     {
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -213,5 +218,11 @@ class Ticket
     {
         $at = $at ?? new \DateTimeImmutable();
         return $at >= $this->saleStart && $at <= $this->saleEnd;
+    }
+
+    /** @return \Doctrine\Common\Collections\Collection<int, \App\Entity\Order> */
+    public function getOrders(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->orders;
     }
 }

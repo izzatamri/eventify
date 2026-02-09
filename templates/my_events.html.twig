@@ -102,12 +102,8 @@
 				<tbody>
 					{% for event in events %}
 						{% set capacity = 0 %}
-						{% set sold = 0 %}
-						{% set gross = 0 %}
 						{% for t in event.tickets %}
 							{% set capacity = capacity + t.quantityAvailable %}
-							{% set sold = sold + t.quantitySold %}
-							{% set gross = gross + (t.price|default(0) * t.quantitySold) %}
 						{% endfor %}
 					<tr class="event-row" data-title="{{ event.title|lower }}">
 						<td class="py-3">
@@ -129,8 +125,8 @@
 								</div>
 							</div>
 						</td>
-						<td class="py-3">{{ sold }}/{{ capacity }}</td>
-						<td class="py-3">${{ gross|number_format(2) }}</td>
+						<td class="py-3">{{ event.sold }}/{{ capacity }}</td>
+						<td class="py-3">${{ event.gross|number_format(2) }}</td>
 						<td class="py-3">
 							<span class="badge {% if event.status == 'published' %}bg-primary{% elseif event.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">{{ event.status|capitalize }}</span>
 						</td>
@@ -141,6 +137,7 @@
 									<li><a class="dropdown-item" href="{{ path('app_event_show', { id: event.id }) }}"><i class="fa-solid fa-eye me-2"></i>View</a></li>
 									<li><a class="dropdown-item" href="{{ path('app_event_edit', { id: event.id }) }}"><i class="fa-solid fa-pen me-2"></i>Edit</a></li>
 									<li><a class="dropdown-item" href="{{ path('app_event_tickets', { id: event.id }) }}"><i class="fa-solid fa-ticket me-2"></i>Tickets</a></li>
+									<li><a class="dropdown-item" href="{{ path('app_orders_event', { id: event.id }) }}"><i class="fa-solid fa-shopping-cart me-2"></i>View orders</a></li>
 									<li><hr class="dropdown-divider"></li>
 									<li>
 										<form method="post" action="{{ path('app_event_delete', { id: event.id }) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
