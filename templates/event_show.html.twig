@@ -386,6 +386,7 @@
 							<p class="h5 fw-bold mb-1">{{ event.priceLabel }}</p>
 							<p class="text-muted small mb-3">{% if event.startDatetime %}{{ event.startDatetime|date('M d') }} · {{ event.startDatetime|date('g:i a') }}{% endif %}</p>
 							<button type="button" class="btn vl-btn4 w-100 mb-2" id="open-ticket-checkout">Reserve a spot</button>
+							{% if is_granted('EVENT_EDIT', event) %}
 							<div class="pt-3 border-top mt-3">
 								<a href="{{ path('app_event_edit', { id: event.id }) }}" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
 								<form method="post" action="{{ path('app_event_delete', { id: event.id }) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
@@ -393,6 +394,7 @@
 									<button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
 								</form>
 							</div>
+							{% endif %}
 						</div>
 					</div>
 				</div>

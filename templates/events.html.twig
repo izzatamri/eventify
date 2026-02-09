@@ -224,9 +224,9 @@
 										<li>
 											<a href="#">Schedule <i class="fa-solid fa-angle-down"></i></a>
 											<ul class="dropdown-padding">
-												<li><a href="event.html">Our Event</a></li>
-												<li><a href="event-schedule.html">Event Schedule</a></li>
-												<li><a href="event-single.html">Event Details</a></li>
+												<li><a href="{{ path('app_events') }}">Our Event</a></li>
+												<li><a href="{{ path('app_event_schedule') }}">Event Schedule</a></li>
+												<li><a href="{{ path('app_event_single') }}">Event Details</a></li>
 											</ul>
 										</li>
 										<li>
@@ -338,9 +338,9 @@
 					<li>
 						<a href="features.html">Schedule</a>
 						<ul class="sub-menu">
-							<li><a href="event.html">Our Event</a></li>
-							<li><a href="event-schedule.html">Event Schedule</a></li>
-							<li><a href="event-single.html">Event Details</a></li>
+							<li><a href="{{ path('app_events') }}">Our Event</a></li>
+							<li><a href="{{ path('app_event_schedule') }}">Event Schedule</a></li>
+							<li><a href="{{ path('app_event_single') }}">Event Details</a></li>
 						</ul>
 					</li>
 					<li>
@@ -508,11 +508,13 @@
 								</a>
 								<div class="event-card-actions p-3 border-top bg-light d-flex flex-wrap gap-1">
 									<a href="{{ path('app_event_show', { id: event.id }) }}" class="btn btn-sm btn-outline-primary">View</a>
+									{% if is_granted('EVENT_EDIT', event) %}
 									<a href="{{ path('app_event_edit', { id: event.id }) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
 									<form method="post" action="{{ path('app_event_delete', { id: event.id }) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
 										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}" />
 										<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
 									</form>
+									{% endif %}
 								</div>
 							</div>
 						</div>
@@ -653,7 +655,7 @@
 							<ul>
 								<li><a href="about.html">About Us</a></li>
 								<li><a href="blog.html">Our Blogs</a></li>
-								<li><a href="event.html">Event Listing</a></li>
+								<li><a href="{{ path('app_events') }}">Event Listing</a></li>
 								<li><a href="pricing-plan.html">Pricing Plan</a></li>
 								<li><a href="contact.html">Contact Us</a></li>
 							</ul>

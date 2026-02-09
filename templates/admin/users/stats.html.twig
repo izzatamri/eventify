@@ -1,0 +1,31 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Stats - Eventify Admin{% endblock %}
+{% block page_heading %}System stats{% endblock %}
+{% block page_breadcrumb %}<a href="{{ path('app_admin_dashboard') }}">Admin</a> / Stats{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<p class="mb-3"><a href="{{ path('app_admin_dashboard') }}">&larr; Back to dashboard</a></p>
+	<div class="row g-3">
+		<div class="col-md-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body">
+					<h5 class="card-title">Users</h5>
+					<p class="mb-0">Total: <strong>{{ total_users }}</strong></p>
+					<p class="mb-0">Active: <strong>{{ active_users }}</strong></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body">
+					<h5 class="card-title">Events</h5>
+					<p class="mb-0">Total: <strong>{{ total_events }}</strong></p>
+					<p class="mb-0">Published: <strong>{{ published_events }}</strong></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

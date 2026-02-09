@@ -1,0 +1,228 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}My Events - Eventify{% endblock %}
+{% block page_heading %}Events{% endblock %}
+{% block page_breadcrumb %}My Events{% endblock %}
+
+{% block page_styles %}
+{{ parent() }}
+<style>
+.event-actions-dropdown { position: relative; }
+.event-actions-menu {
+	display: none;
+	position: absolute;
+	right: 0;
+	bottom: 100%;
+	top: auto;
+	margin: 0 0 0.25rem 0;
+	z-index: 1060;
+	min-width: 180px;
+	padding: 0.5rem 0;
+	font-size: 0.875rem;
+	color: #212529;
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,.15);
+	border-radius: 0.375rem;
+	box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+	list-style: none;
+}
+.event-actions-dropdown.show .event-actions-menu { display: block; }
+.event-actions-menu.event-actions-menu-fixed { position: fixed; }
+.event-actions-menu.event-actions-menu-fixed.show { display: block; }
+.event-actions-menu .dropdown-item {
+	display: block;
+	width: 100%;
+	padding: 0.35rem 1rem;
+	clear: both;
+	font-weight: 400;
+	color: #212529;
+	text-align: inherit;
+	text-decoration: none;
+	white-space: nowrap;
+	background-color: transparent;
+	border: 0;
+}
+.event-actions-menu .dropdown-item:hover { background-color: #f8f9fa; }
+.event-actions-menu .dropdown-divider { height: 0; margin: 0.5rem 0; overflow: hidden; border-top: 1px solid rgba(0,0,0,.15); }
+.event-actions-menu li { display: block; }
+.event-actions-menu li form { margin: 0; }
+.event-actions-menu li form .dropdown-item { cursor: pointer; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	{# Toolbar: tabs, search, view toggle, filter, Create Event #}
+	<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+		<div class="d-flex align-items-center gap-2 flex-wrap">
+			<ul class="nav nav-tabs border-0 mb-0">
+				<li class="nav-item">
+					<a class="nav-link active fw-semibold text-primary border-0 pb-2" href="{{ path('app_my_events') }}">Events</a>
+				</li>
+				<li class="nav-item">
+					<span class="nav-link text-muted border-0 pb-2">Collections</span>
+				</li>
+			</ul>
+		</div>
+		<div class="d-flex align-items-center gap-2 flex-wrap">
+			<div class="input-group input-group-sm" style="max-width: 220px;">
+				<span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+				<input type="text" class="form-control border-start-0" placeholder="Search events" id="search-events" />
+			</div>
+			<div class="btn-group btn-group-sm" role="group">
+				<a href="{{ path('app_my_events') }}" class="btn btn-primary">List</a>
+				<button type="button" class="btn btn-outline-primary" disabled>Calendar</button>
+			</div>
+			<div class="dropdown">
+				<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ current_status == '' ? 'All' : current_status|capitalize }}</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item {{ current_status == '' ? 'active' : '' }}" href="{{ path('app_my_events') }}">All</a></li>
+					<li><a class="dropdown-item {{ current_status == 'draft' ? 'active' : '' }}" href="{{ path('app_my_events', { status: 'draft' }) }}">Draft</a></li>
+					<li><a class="dropdown-item {{ current_status == 'published' ? 'active' : '' }}" href="{{ path('app_my_events', { status: 'published' }) }}">Published</a></li>
+					<li><a class="dropdown-item {{ current_status == 'cancelled' ? 'active' : '' }}" href="{{ path('app_my_events', { status: 'cancelled' }) }}">Cancelled</a></li>
+				</ul>
+			</div>
+			<a href="{{ path('app_event_create') }}" class="btn btn-warning text-dark fw-semibold">Create Event</a>
+		</div>
+	</div>
+
+	{# Table: My Events #}
+	<div class="card border-0 shadow-sm">
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead class="table-light">
+					<tr>
+						<th class="border-0 py-3">Event</th>
+						<th class="border-0 py-3">Sold</th>
+						<th class="border-0 py-3">Gross</th>
+						<th class="border-0 py-3">Status</th>
+						<th class="border-0 py-3 text-end" style="width: 60px;"></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for event in events %}
+						{% set capacity = 0 %}
+						{% set sold = 0 %}
+						{% set gross = 0 %}
+						{% for t in event.tickets %}
+							{% set capacity = capacity + t.quantityAvailable %}
+							{% set sold = sold + t.quantitySold %}
+							{% set gross = gross + (t.price|default(0) * t.quantitySold) %}
+						{% endfor %}
+					<tr class="event-row" data-title="{{ event.title|lower }}">
+						<td class="py-3">
+							<div class="d-flex align-items-center gap-3">
+								<div class="flex-shrink-0 text-center text-muted small fw-semibold" style="width: 44px; line-height: 1.2;">
+									{{ event.startDatetime ? event.startDatetime|date('M')|upper }}<br>{{ event.startDatetime ? event.startDatetime|date('d') }}
+								</div>
+								<div class="flex-shrink-0 rounded overflow-hidden" style="width: 56px; height: 56px; background: #e9ecef;">
+									{% if event.image %}
+										<img src="{{ event.image }}" alt="" class="w-100 h-100" style="object-fit: cover;" />
+									{% else %}
+										<div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted"><i class="fa-solid fa-calendar-days"></i></div>
+									{% endif %}
+								</div>
+								<div class="min-width-0">
+									<a href="{{ path('app_event_show', { id: event.id }) }}" class="fw-bold text-dark text-decoration-none text-truncate d-block">{{ event.title }}</a>
+									<p class="small text-muted mb-0 text-truncate">{{ event.venue ? event.venue.name : (event.organizer ? event.organizer.name : '') }}</p>
+									<p class="small text-muted mb-0">{{ event.startDatetime ? event.startDatetime|date('l, F j, Y \\a\\t g:i A') : '' }}</p>
+								</div>
+							</div>
+						</td>
+						<td class="py-3">{{ sold }}/{{ capacity }}</td>
+						<td class="py-3">${{ gross|number_format(2) }}</td>
+						<td class="py-3">
+							<span class="badge {% if event.status == 'published' %}bg-primary{% elseif event.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">{{ event.status|capitalize }}</span>
+						</td>
+						<td class="py-3 text-end">
+							<div class="dropdown event-actions-dropdown">
+								<button class="btn btn-link text-dark p-0 event-actions-btn" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Event actions"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+								<ul class="dropdown-menu dropdown-menu-end event-actions-menu" role="menu" onclick="event.stopPropagation()">
+									<li><a class="dropdown-item" href="{{ path('app_event_show', { id: event.id }) }}"><i class="fa-solid fa-eye me-2"></i>View</a></li>
+									<li><a class="dropdown-item" href="{{ path('app_event_edit', { id: event.id }) }}"><i class="fa-solid fa-pen me-2"></i>Edit</a></li>
+									<li><a class="dropdown-item" href="{{ path('app_event_tickets', { id: event.id }) }}"><i class="fa-solid fa-ticket me-2"></i>Tickets</a></li>
+									<li><hr class="dropdown-divider"></li>
+									<li>
+										<form method="post" action="{{ path('app_event_delete', { id: event.id }) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}" />
+											<button type="submit" class="dropdown-item text-danger border-0 bg-none w-100 text-start"><i class="fa-solid fa-trash me-2"></i>Delete</button>
+										</form>
+									</li>
+								</ul>
+							</div>
+						</td>
+					</tr>
+					{% else %}
+					<tr>
+						<td colspan="5" class="py-5 text-center text-muted">
+							<p class="mb-2">You don't have any events yet.</p>
+							<a href="{{ path('app_event_create') }}" class="btn btn-warning text-dark">Create Event</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		{% if events|length > 0 %}
+		<div class="card-footer bg-white border-0 border-top py-2">
+			<a href="#" class="small text-muted"><i class="fa-solid fa-download me-1"></i>CSV Export</a>
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	// Search filter
+	var search = document.getElementById('search-events');
+	var rows = document.querySelectorAll('.event-row');
+	if (search && rows.length) {
+		search.addEventListener('input', function() {
+			var q = (this.value || '').toLowerCase();
+			rows.forEach(function(row) {
+				var title = row.getAttribute('data-title') || '';
+				row.style.display = q === '' || title.indexOf(q) !== -1 ? '' : 'none';
+			});
+		});
+	}
+
+	// Three-dots dropdown: use fixed position so menu is never clipped by table overflow
+	var dropdowns = document.querySelectorAll('.event-actions-dropdown');
+	dropdowns.forEach(function(drop) {
+		var btn = drop.querySelector('.event-actions-btn');
+		var menu = drop.querySelector('.event-actions-menu');
+		if (!btn || !menu) return;
+		btn.addEventListener('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			var isOpen = drop.classList.contains('show');
+			dropdowns.forEach(function(d) {
+				d.classList.remove('show');
+				var m = d.querySelector('.event-actions-menu');
+				if (m) { m.classList.remove('event-actions-menu-fixed'); m.style.top = ''; m.style.left = ''; m.style.transform = ''; }
+			});
+			if (!isOpen) {
+				menu.classList.add('event-actions-menu-fixed');
+				var rect = btn.getBoundingClientRect();
+				menu.style.left = Math.max(8, rect.right - 180) + 'px';
+				menu.style.top = (rect.top - 4) + 'px';
+				menu.style.transform = 'translateY(-100%)';
+				menu.style.right = 'auto';
+				menu.style.bottom = 'auto';
+				drop.classList.add('show');
+			}
+		});
+	});
+	document.addEventListener('click', function() {
+		dropdowns.forEach(function(d) {
+			d.classList.remove('show');
+			var m = d.querySelector('.event-actions-menu');
+			if (m) { m.classList.remove('event-actions-menu-fixed'); m.style.top = ''; m.style.left = ''; m.style.transform = ''; }
+		});
+	});
+});
+</script>
+{% endblock %}

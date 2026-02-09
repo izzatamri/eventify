@@ -58,12 +58,16 @@ class EventType extends AbstractType
                 'required' => false,
                 'attr' => ['placeholder' => 'https://...'],
             ])
-            ->add('organizer', EntityType::class, [
+        ;
+        if ($options['allow_organizer_choice']) {
+            $builder->add('organizer', EntityType::class, [
                 'class' => Organizer::class,
                 'choice_label' => 'name',
                 'label' => 'Organizer',
                 'placeholder' => '-- Select organizer --',
-            ])
+            ]);
+        }
+        $builder
             ->add('venue', EntityType::class, [
                 'class' => Venue::class,
                 'choice_label' => 'name',
@@ -86,6 +90,7 @@ class EventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
+            'allow_organizer_choice' => true,
         ]);
     }
 }

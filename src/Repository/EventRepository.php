@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,5 +41,24 @@ class EventRepository extends ServiceEntityRepository
             ->orderBy('e.startDatetime', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Events where the given user is the organizer (via organizer.user).
+     * Optionally filter by status.
+     *
+     * @return Event[]
+     */
+    public function findByOrganizerUserOrderByStart(User $user, ?string $status = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->innerJoin('e.organizer', 'o')
+            ->andWhere('o.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('e.startDatetime', 'ASC');
+        if ($status !== null && $status !== '') {
+            $qb->andWhere('e.status = :status')->setParameter('status', $status);
+        }
+        return $qb->getQuery()->getResult();
     }
 }

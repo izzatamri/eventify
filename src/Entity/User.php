@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_CLIENT = 'ROLE_CLIENT';
     public const ROLE_ORGANIZER = 'ROLE_ORGANIZER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
@@ -24,17 +29,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    /**
-     * @var list<string>
-     */
-    #[ORM\Column]
+    /** @var list<string> */
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(length: 100)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $isActive = true;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    /** @var Collection<int, Organizer> */
+    #[ORM\OneToMany(targetEntity: Organizer::class, mappedBy: 'user')]
+    private Collection $organizers;
+
     public function __construct()
     {
+        $this->organizers = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -53,15 +89,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     * @return list<string>
-     */
+    /** @return list<string> */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        $roles[] = self::ROLE_USER;
-        return array_unique($roles);
+        return array_values(array_unique($this->roles));
     }
 
     /**
@@ -116,4 +147,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): static
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): static
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function getDisplayName(): string
+    {
+        return trim($this->firstName . ' ' . $this->lastName) ?: (string) $this->email;
+    }
+
+    /** @return Collection<int, Organizer> */
+    public function getOrganizers(): Collection
+    {
+        return $this->organizers;
+    }
 }

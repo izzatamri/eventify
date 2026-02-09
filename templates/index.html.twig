@@ -223,9 +223,9 @@
 										<li>
 											<a href="#">Schedule <i class="fa-solid fa-angle-down"></i></a>
 											<ul class="dropdown-padding">
-												<li><a href="event.html">Our Event</a></li>
-												<li><a href="event-schedule.html">Event Schedule</a></li>
-												<li><a href="event-single.html">Event Details</a></li>
+												<li><a href="{{ path('app_events') }}">Our Event</a></li>
+												<li><a href="{{ path('app_event_schedule') }}">Event Schedule</a></li>
+												<li><a href="{{ path('app_event_single') }}">Event Details</a></li>
 											</ul>
 										</li>
 										<li>
@@ -337,9 +337,9 @@
 					<li>
 						<a href="features.html">Schedule</a>
 						<ul class="sub-menu">
-							<li><a href="event.html">Our Event</a></li>
-							<li><a href="event-schedule.html">Event Schedule</a></li>
-							<li><a href="event-single.html">Event Details</a></li>
+							<li><a href="{{ path('app_events') }}">Our Event</a></li>
+							<li><a href="{{ path('app_event_schedule') }}">Event Schedule</a></li>
+							<li><a href="{{ path('app_event_single') }}">Event Details</a></li>
 						</ul>
 					</li>
 					<li>
@@ -437,7 +437,7 @@
 							</p>
 							<div class="space32"></div>
 							<div class="btn-area1" data-aos="fade-left" data-aos-duration="1000">
-								<a href="event-schedule.html" class="vl-btn4">Reserve My Seat</a>
+								<a href="{{ path('app_event_schedule') }}" class="vl-btn4">Reserve My Seat</a>
 							</div>
 						</div>
 					</div>
@@ -565,7 +565,7 @@
 							</ul>
 							<div class="space32"></div>
 							<div class="btn-area1" data-aos="fade-left" data-aos-duration="1200">
-								<a href="event-schedule.html" class="vl-btn4">Reserve My Seat</a>
+								<a href="{{ path('app_event_schedule') }}" class="vl-btn4">Reserve My Seat</a>
 							</div>
 						</div>
 					</div>
@@ -1550,7 +1550,7 @@
 							<ul>
 								<li><a href="about.html">About Us</a></li>
 								<li><a href="blog.html">Our Blogs</a></li>
-								<li><a href="event.html">Event Listing</a></li>
+								<li><a href="{{ path('app_events') }}">Event Listing</a></li>
 								<li><a href="pricing-plan.html">Pricing Plan</a></li>
 								<li><a href="contact.html">Contact Us</a></li>
 							</ul>

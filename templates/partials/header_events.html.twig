@@ -191,16 +191,33 @@
 											<a href="#">Events <i class="fa-solid fa-angle-down"></i></a>
 											<ul class="dropdown-padding">
 												<li><a href="{{ path('app_events') }}">Events</a></li>
+												{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+												<li><a href="{{ path('app_my_events') }}">My Events</a></li>
 												<li><a href="{{ path('app_event_create') }}">Create Events</a></li>
+												{% endif %}
 											</ul>
 										</li>
+										{% if app.user %}
+										<li>
+											<a href="#">{{ app.user.displayName }} <i class="fa-solid fa-angle-down"></i></a>
+											<ul class="dropdown-padding">
+												{% if is_granted('ROLE_ADMIN') %}
+												<li><a href="{{ path('app_admin_dashboard') }}">Admin</a></li>
+												{% endif %}
+												<li><a href="{{ path('app_logout') }}">Logout</a></li>
+											</ul>
+										</li>
+										{% else %}
+										<li><a href="{{ path('app_login') }}">Log in</a></li>
+										<li><a href="{{ path('app_register') }}">Register</a></li>
+										{% endif %}
 
 										<li>
 											<a href="#">Schedule <i class="fa-solid fa-angle-down"></i></a>
 											<ul class="dropdown-padding">
-												<li><a href="event.html">Our Event</a></li>
-												<li><a href="event-schedule.html">Event Schedule</a></li>
-												<li><a href="event-single.html">Event Details</a></li>
+												<li><a href="{{ path('app_events') }}">Our Event</a></li>
+												<li><a href="{{ path('app_event_schedule') }}">Event Schedule</a></li>
+												<li><a href="{{ path('app_event_single') }}">Event Details</a></li>
 											</ul>
 										</li>
 										<li>
@@ -306,15 +323,27 @@
 						<a href="features.html">Events</a>
 						<ul class="sub-menu">
 							<li><a href="{{ path('app_events') }}">Events</a></li>
+							{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+							<li><a href="{{ path('app_my_events') }}">My Events</a></li>
 							<li><a href="{{ path('app_event_create') }}">Create Events</a></li>
+							{% endif %}
 						</ul>
 					</li>
+					{% if app.user %}
+					{% if is_granted('ROLE_ADMIN') %}
+					<li><a href="{{ path('app_admin_dashboard') }}">Admin</a></li>
+					{% endif %}
+					<li><a href="{{ path('app_logout') }}">Logout</a></li>
+					{% else %}
+					<li><a href="{{ path('app_login') }}">Log in</a></li>
+					<li><a href="{{ path('app_register') }}">Register</a></li>
+					{% endif %}
 					<li>
 						<a href="features.html">Schedule</a>
 						<ul class="sub-menu">
-							<li><a href="event.html">Our Event</a></li>
-							<li><a href="event-schedule.html">Event Schedule</a></li>
-							<li><a href="event-single.html">Event Details</a></li>
+							<li><a href="{{ path('app_events') }}">Our Event</a></li>
+							<li><a href="{{ path('app_event_schedule') }}">Event Schedule</a></li>
+							<li><a href="{{ path('app_event_single') }}">Event Details</a></li>
 						</ul>
 					</li>
 					<li>
