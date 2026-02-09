@@ -100,6 +100,7 @@ class SponsorshipPackageController extends AbstractController
             'event' => $event,
             'package' => $package,
             'form' => $form,
+            // FIXME: Handle edge cases
             'title' => 'Edit sponsorship package',
         ]);
     }
