@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reponse index{% endblock %}
+
+{% block body %}
+<h1>Reponse index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Réponse</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for reponse in reponses %}
+        <tr>
+            <td>{{ reponse.id }}</td>
+            <td>{{ reponse.reponseRep }}</td>
+            <td>{{ reponse.nomRep }}</td>
+            <td>{{ reponse.adressmailRep }}</td>
+            <td>
+                {{ reponse.dateReponse ? reponse.dateReponse|date('Y-m-d H:i') : '—' }}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="6">no records found</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

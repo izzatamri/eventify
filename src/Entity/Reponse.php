@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReponseRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Reponse
 {
     #[ORM\Id]
@@ -93,5 +94,14 @@ class Reponse
         $this->reclamation = $reclamation;
 
         return $this;
+    }
+
+    #[ORM\PrePersist] 
+    public function setDefaultValues(): void
+    {
+
+        if ($this->date_reponse === null) {
+            $this->date_reponse = new \DateTime(); 
+        }
     }
 }
