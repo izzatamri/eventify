@@ -65,6 +65,7 @@ class SponsorRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s')
             ->leftJoin('s.sponsorshipPackage', 'pkg')
             ->andWhere('s.event = :event')
+
             ->setParameter('event', $event);
 
         if ($searchName !== null && $searchName !== '') {

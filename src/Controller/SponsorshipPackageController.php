@@ -26,6 +26,8 @@ class SponsorshipPackageController extends AbstractController
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(Request $request, Event $event): Response
+
+    // NOTE: This might need refactoring
     {
         $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
 
