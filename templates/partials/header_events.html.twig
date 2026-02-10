@@ -54,138 +54,7 @@
 								</div>
 								<div class="main-menu">
 									<ul>
-										<li>
-											<a href="#">Home <i class="fa-solid fa-angle-down"></i></a>
-											<div class="tp-submenu">
-												<div class="row">
-													<div class="col-lg-12">
-														<div class="all-images-menu">
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img1.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index.html">Eventify-Homepage 01</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img2.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index2.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index2.html">Eventify-Homepage 02</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img3.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index3.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index3.html">Eventify-Homepage 03</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img4.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index4.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index4.html">Eventify-Homepage 04</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb" style="margin: 0">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img5.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index5.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index5.html">Eventify-Homepage 05</a>
-																</div>
-															</div>
-														</div>
-
-														<div class="all-images-menu">
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img6.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index6.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index6.html">Eventify-Homepage 06</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img7.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index7.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index7.html">Eventify-Homepage 07</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img8.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index8.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index8.html">Eventify-Homepage 08</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img9.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index9.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index9.html">Eventify-Homepage 09</a>
-																</div>
-															</div>
-
-															<div class="homemenu-thumb" style="margin: 0">
-																<div class="img1">
-																	<img src="/assets/img/all-images/demo/demo-img10.png" alt="" />
-																</div>
-																<div class="homemenu-btn">
-																	<a class="vl-btn4" href="index10.html">View Demo </a>
-																</div>
-																<div class="homemenu-text">
-																	<a href="index10.html">Eventify-Homepage 10</a>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</li>
+										<li><a href="{{ path('app_home') }}">Home</a></li>
 										<li><a href="about.html">About Event</a></li>
 										<li>
 											<a href="#">Events <i class="fa-solid fa-angle-down"></i></a>
@@ -193,26 +62,10 @@
 												<li><a href="{{ path('app_events') }}">Events</a></li>
 												{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 												<li><a href="{{ path('app_my_events') }}">My Events</a></li>
+												{% endif %}
 												<li><a href="{{ path('app_event_create') }}">Create Events</a></li>
-												{% endif %}
 											</ul>
 										</li>
-										{% if app.user %}
-										<li>
-											<a href="#"><i class="fa-solid fa-user"></i> {{ app.user.email }} <i class="fa-solid fa-angle-down"></i></a>
-											<ul class="dropdown-padding">
-												<li><a href="{{ path('app_orders_index') }}"><i class="fa-solid fa-ticket"></i> My orders</a></li>
-												{% if is_granted('ROLE_ADMIN') %}
-												<li><a href="{{ path('app_admin_dashboard') }}"><i class="fa-solid fa-gear"></i> Admin</a></li>
-												{% endif %}
-												<li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-											</ul>
-										</li>
-										{% else %}
-										<li><a href="{{ path('app_login') }}"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
-										<li><a href="{{ path('app_register') }}"><i class="fa-solid fa-user-plus"></i> Register</a></li>
-										{% endif %}
-
 										<li>
 											<a href="#">Schedule <i class="fa-solid fa-angle-down"></i></a>
 											<ul class="dropdown-padding">
@@ -239,31 +92,41 @@
 										</li>
 									</ul>
 								</div>
-								<div class="btn-area">
+								<div class="btn-area d-flex align-items-center gap-3">
 									<div class="search-icon header__search header-search-btn">
 										<a href="#"><img src="/assets/img/icons/search1.svg" alt="" /></a>
 									</div>
-									<ul>
-										<li>
-											<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-										</li>
-										<li>
-											<a href="#"><i class="fa-brands fa-instagram"></i></a>
-										</li>
-										<li>
-											<a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-										</li>
-										<li>
-											<a href="#" class="m-0"><i class="fa-brands fa-pinterest-p"></i></a>
-										</li>
-									</ul>
+									<div class="d-flex align-items-center gap-2">
+										{% if app.user %}
+											{# Authenticated: show profile/user icon on the right #}
+											<a href="{{ path('app_my_events') }}" class="btn btn-sm btn-outline-primary d-flex align-items-center">
+												<i class="fa-solid fa-user me-1"></i>
+												<span class="d-none d-md-inline">Profile</span>
+											</a>
+										{% else %}
+											{# Guest: show Sign In / Sign Up actions on the right #}
+											<a href="{{ path('app_login') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center">
+												<i class="fa-solid fa-right-to-bracket me-1"></i>
+												<span>Sign In</span>
+											</a>
+											<a href="{{ path('app_register') }}" class="btn btn-sm btn-primary d-flex align-items-center">
+												<i class="fa-solid fa-user-plus me-1"></i>
+												<span>Sign Up</span>
+											</a>
+										{% endif %}
+									</div>
 								</div>
 
 								<div class="header-search-form-wrapper">
 									<div class="tx-search-close tx-close"><i class="fa-solid fa-xmark"></i></div>
 									<div class="header-search-container">
-										<form role="search" class="search-form">
-											<input type="search" class="search-field" placeholder="Search …" value="" name="s" />
+										<form role="search" class="search-form" method="get" action="{{ path('app_events') }}">
+											<input
+												type="search"
+												class="search-field"
+												placeholder="Search events or location"
+												name="q"
+											/>
 											<button type="submit" class="search-submit"><img src="/assets/img/icons/search1.svg" alt="" /></button>
 										</form>
 									</div>
@@ -304,21 +167,7 @@
 			</div>
 			<div class="mobile-nav mobile-nav1">
 				<ul class="mobile-nav-list nav-list1">
-					<li>
-						<a href="#">Home </a>
-						<ul class="sub-menu">
-							<li><a href="index.html">Home One</a></li>
-							<li><a href="index2.html">Home Two</a></li>
-							<li><a href="index3.html">Home Three</a></li>
-							<li><a href="index4.html">Home Four</a></li>
-							<li><a href="index5.html">Home Five</a></li>
-							<li><a href="index6.html">Home Six</a></li>
-							<li><a href="index7.html">Home Seven</a></li>
-							<li><a href="index8.html">Home Eight</a></li>
-							<li><a href="index9.html">Home Nine</a></li>
-							<li><a href="index10.html">Home Ten</a></li>
-						</ul>
-					</li>
+					<li><a href="{{ path('app_home') }}">Home</a></li>
 					<li><a href="about.html">About Event</a></li>
 					<li>
 						<a href="features.html">Events</a>
@@ -327,8 +176,8 @@
 							{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 							<li><a href="{{ path('app_my_events') }}">My Events</a></li>
 							<li><a href="{{ path('app_orders_index') }}">My orders</a></li>
-							<li><a href="{{ path('app_event_create') }}">Create Events</a></li>
 							{% endif %}
+							<li><a href="{{ path('app_event_create') }}">Create Events</a></li>
 						</ul>
 					</li>
 					{% if app.user %}

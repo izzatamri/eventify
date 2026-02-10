@@ -21,6 +21,18 @@ ul li {
   list-style: none;
 }
 
+/* Disable legacy homepage mega-menu dropdown under "Home" */
+.header-area .main-menu .tp-submenu {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+.header-area .main-menu ul li:hover .tp-submenu {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 h2, p {
   margin-bottom: 0;
 }

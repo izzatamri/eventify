@@ -20,14 +20,37 @@ class EventRepository extends ServiceEntityRepository
     }
 
     /**
+     * List events with optional search and sort.
+     *
+     * @param string|null $search Free-text search on title, description, organizer, and venue/location
+     * @param string      $sort   One of 'date_asc', 'date_desc'
+     *
      * @return Event[]
      */
-    public function findAllOrderByStart(): array
+    public function searchEvents(?string $search, string $sort = 'date_asc'): array
     {
-        return $this->createQueryBuilder('e')
-            ->orderBy('e.startDatetime', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $qb = $this->createQueryBuilder('e')
+            ->leftJoin('e.venue', 'v')
+            ->leftJoin('e.organizer', 'o');
+
+        if ($search !== null && $search !== '') {
+            $qb
+                ->andWhere(
+                    'LOWER(e.title) LIKE :q
+                    OR LOWER(COALESCE(e.description, \'\')) LIKE :q
+                    OR LOWER(COALESCE(v.name, \'\')) LIKE :q
+                    OR LOWER(COALESCE(v.city, \'\')) LIKE :q
+                    OR LOWER(COALESCE(v.country, \'\')) LIKE :q
+                    OR LOWER(COALESCE(o.name, \'\')) LIKE :q'
+                )
+                ->setParameter('q', '%' . mb_strtolower($search) . '%');
+        }
+
+        $direction = $sort === 'date_desc' ? 'DESC' : 'ASC';
+
+        $qb->orderBy('e.startDatetime', $direction);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

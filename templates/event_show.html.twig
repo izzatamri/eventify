@@ -700,7 +700,15 @@
 
 				// Step 1 -> Step 2 transition
 				$('#ticket-checkout-continue').on('click', function () {
-					if ($('#ticket-summary-total-amount').text() === '$0.00') {
+					var hasTickets = false;
+					$('.ticket-checkout-row').each(function () {
+						var qty = parseInt($(this).find('.ticket-qty-value').text(), 10) || 0;
+						if (qty > 0) {
+							hasTickets = true;
+							return false; // break
+						}
+					});
+					if (!hasTickets) {
 						alert('Please select at least one ticket.');
 						return;
 					}

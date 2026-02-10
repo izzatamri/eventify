@@ -30,12 +30,24 @@ class EventController extends AbstractController
     }
 
     #[Route('', name: 'app_events', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $events = $this->eventRepository->findAllOrderByStart();
+        $search = $request->query->getString('q');
+        $sort = $request->query->getString('sort', 'date_asc');
+
+        if (!\in_array($sort, ['date_asc', 'date_desc'], true)) {
+            $sort = 'date_asc';
+        }
+
+        $events = $this->eventRepository->searchEvents(
+            $search === '' ? null : $search,
+            $sort,
+        );
 
         return $this->render('events.html.twig', [
             'events' => $events,
+            'search' => $search,
+            'sort' => $sort,
         ]);
     }
 
