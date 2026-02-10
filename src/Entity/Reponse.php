@@ -15,14 +15,27 @@ class Reponse
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $reponse_rep = null;
-
     #[ORM\Column(length: 150)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
+    #[Assert\Length(
+        min: 2,
+        max: 150,
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ \-']+$/",
+        message: "Le nom ne peut contenir que des lettres et des espaces."
+    )]
     private ?string $nom_rep = null;
 
     #[ORM\Column(length: 150)]
+    #[Assert\NotBlank(message: "L’email est obligatoire.")]
+    #[Assert\Email(message: "L’email '{{ value }}' n’est pas valide.")]
     private ?string $adressmail_rep = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $reponse_rep = null;
 
     #[ORM\Column]
     private ?\DateTime $date_reponse = null;
