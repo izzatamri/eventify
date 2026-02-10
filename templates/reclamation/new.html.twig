@@ -1,0 +1,19 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Create Reclamation{% endblock %}
+{% block page_heading %}Reclamation{% endblock %}
+{% block page_breadcrumb %}
+    <span>Create</span>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            {{ include('reclamation/_form.html.twig') }}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

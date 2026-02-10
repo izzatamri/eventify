@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ReclamationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReclamationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Reclamation
 {
     #[ORM\Id]
@@ -17,10 +19,25 @@ class Reclamation
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-ZÀ-ÿ \-']+$/",
+        message: "Le nom ne peut contenir que des lettres et des espaces."
+    )]
     private ?string $nomrec = null;
 
+
     #[ORM\Column(length: 150)]
+    #[Assert\NotBlank(message: "L’email est obligatoire.")]
+    #[Assert\Email(message: "L’email '{{ value }}' n’est pas valide.")]
     private ?string $adressmail = null;
+
 
     #[ORM\Column(length: 150)]
     private ?string $sujetrec = null;
@@ -150,5 +167,17 @@ class Reclamation
         $this->descriptionrec = $descriptionrec;
 
         return $this;
+    }
+
+    #[ORM\PrePersist] 
+    public function setDefaultValues(): void
+    {
+        if ($this->etat === null) {
+            $this->etat = 'Pending'; 
+        }
+
+        if ($this->date_creation === null) {
+            $this->date_creation = new \DateTime(); 
+        }
     }
 }
