@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\ReponseRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ReponseRepository::class)]
+class Reponse
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $reponse_rep = null;
+
+    #[ORM\Column(length: 150)]
+    private ?string $nom_rep = null;
+
+    #[ORM\Column(length: 150)]
+    private ?string $adressmail_rep = null;
+
+    #[ORM\Column]
+    private ?\DateTime $date_reponse = null;
+
+    #[ORM\ManyToOne(inversedBy: 'yes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Reclamation $reclamation = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getReponseRep(): ?string
+    {
+        return $this->reponse_rep;
+    }
+
+    public function setReponseRep(string $reponse_rep): static
+    {
+        $this->reponse_rep = $reponse_rep;
+
+        return $this;
+    }
+
+    public function getNomRep(): ?string
+    {
+        return $this->nom_rep;
+    }
+
+    public function setNomRep(string $nom_rep): static
+    {
+        $this->nom_rep = $nom_rep;
+
+        return $this;
+    }
+
+    public function getAdressmailRep(): ?string
+    {
+        return $this->adressmail_rep;
+    }
+
+    public function setAdressmailRep(string $adressmail_rep): static
+    {
+        $this->adressmail_rep = $adressmail_rep;
+
+        return $this;
+    }
+
+    public function getDateReponse(): ?\DateTime
+    {
+        return $this->date_reponse;
+    }
+
+    public function setDateReponse(\DateTime $date_reponse): static
+    {
+        $this->date_reponse = $date_reponse;
+
+        return $this;
+    }
+
+    public function getReclamation(): ?Reclamation
+    {
+        return $this->reclamation;
+    }
+
+    public function setReclamation(?Reclamation $reclamation): static
+    {
+        $this->reclamation = $reclamation;
+
+        return $this;
+    }
+}
