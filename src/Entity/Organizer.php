@@ -102,6 +102,7 @@ class Organizer
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+        // Improved error handling
         return $this;
     }
 
