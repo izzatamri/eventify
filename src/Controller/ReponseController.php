@@ -38,7 +38,7 @@ final class ReponseController extends AbstractController
 
         return $this->render('reponse/new.html.twig', [
             'reponse' => $reponse,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -51,31 +51,34 @@ final class ReponseController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_reponse_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Reponse $reponse, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ReponseType::class, $reponse);
-        $form->handleRequest($request);
+public function edit(Request $request, Reponse $reponse, EntityManagerInterface $em): Response
+{
+    $form = $this->createForm(ReponseType::class, $reponse);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reponse_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('reponse/edit.html.twig', [
-            'reponse' => $reponse,
-            'form' => $form,
-        ]);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $em->flush();
+        return $this->redirectToRoute('app_reponse_index');
     }
+
+    return $this->render('reponse/edit.html.twig', [
+        'reponse' => $reponse,
+        'form' => $form->createView(),
+    ]);
+}
+
+    
 
     #[Route('/{id}', name: 'app_reponse_delete', methods: ['POST'])]
-    public function delete(Request $request, Reponse $reponse, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$reponse->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($reponse);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_reponse_index', [], Response::HTTP_SEE_OTHER);
+public function delete(Request $request, Reponse $reponse, EntityManagerInterface $em): Response
+{
+    if ($this->isCsrfTokenValid('delete'.$reponse->getId(), $request->request->get('_token'))) {
+        $em->remove($reponse);
+        $em->flush();
     }
+
+    return $this->redirectToRoute('app_reponse_index');
+}
+
+    
 }

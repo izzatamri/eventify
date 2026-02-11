@@ -1,11 +1,85 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Reponse{% endblock %}
+{% block title %}Back Office — reponse{% endblock %}
 
+{% block page_styles %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+header, .preloader { display:none !important; }
+body { background:#f5f7fb; }
+
+.wrapper {
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar {
+    width:230px;
+    background:#0f172a;
+    color:white;
+    padding:20px;
+}
+
+.sidebar a {
+    color:white;
+    display:block;
+    padding:10px;
+    border-radius:10px;
+    text-decoration:none;
+}
+
+.sidebar a:hover {
+    background:#1e293b;
+}
+
+.content {
+    flex:1;
+    padding:30px;
+}
+
+.grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.card-box {
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+</style>
+{% endblock %}
 {% block body %}
-    <h1>Create new Reponse</h1>
+<div class="container mt-5">
+    <h2>Ajouter une réponse</h2>
 
-    {{ include('reponse/_form.html.twig') }}
+    {{ form_start(form) }}
 
-    <a href="{{ path('app_reponse_index') }}">back to list</a>
+    <div class="mb-3">
+        {{ form_label(form.nom_rep) }}
+        {{ form_widget(form.nom_rep, {'attr': {'class':'form-control'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.adressmail_rep) }}
+        {{ form_widget(form.adressmail_rep, {'attr': {'class':'form-control'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.reponse_rep) }}
+        {{ form_widget(form.reponse_rep, {'attr': {'class':'form-control', 'rows':3}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.reclamation) }}
+        {{ form_widget(form.reclamation, {'attr': {'class':'form-select'}}) }}
+    </div>
+
+    <button class="btn btn-primary">Enregistrer</button>
+
+    {{ form_end(form) }}
+</div>
 {% endblock %}

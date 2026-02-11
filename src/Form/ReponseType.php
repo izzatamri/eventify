@@ -17,10 +17,9 @@ class ReponseType extends AbstractType
             ->add('reponse_rep')
             ->add('nom_rep')
             ->add('adressmail_rep')
-            ->add('date_reponse')
             ->add('reclamation', EntityType::class, [
                 'class' => Reclamation::class,
-                'choice_label' => 'id',
+                'choice_label' => 'id', 
             ])
         ;
     }

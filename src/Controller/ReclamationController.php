@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reclamation;
+use App\Repository\ReponseRepository;
 use App\Form\ReclamationType;
 use App\Repository\ReclamationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,7 +80,32 @@ final class ReclamationController extends AbstractController
 
         return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
     }
-    
 
-    
+#[Route('/admin/back', name: 'app_back_reclamation', methods: ['GET', 'POST'])]
+public function backOffice(
+    Request $request,
+    ReclamationRepository $reclamationRepository,
+    ReponseRepository $reponseRepository,
+    EntityManagerInterface $em
+): Response {
+
+    // FORM RECLAMATION
+    $reclamation = new Reclamation();
+    $reclamationForm = $this->createForm(ReclamationType::class, $reclamation);
+    $reclamationForm->handleRequest($request);
+
+    if ($reclamationForm->isSubmitted() && $reclamationForm->isValid()) {
+        $em->persist($reclamation);
+        $em->flush();
+
+        return $this->redirectToRoute('app_back_reclamation');
+    }
+
+    return $this->render('back/backReclamation.html.twig', [
+        'reclamations' => $reclamationRepository->findBy([], ['date_creation' => 'DESC']),
+        'reponses' => $reponseRepository->findBy([], ['date_reponse' => 'DESC']),
+        'reclamationForm' => $reclamationForm->createView(),
+    ]);
+}
+
 }
