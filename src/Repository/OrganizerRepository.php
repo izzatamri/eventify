@@ -33,6 +33,7 @@ class OrganizerRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->leftJoin('o.events', 'e')
+            // TODO: Add validation
             ->groupBy('o.id')
             ->orderBy('COUNT(e)', 'DESC')
             ->setMaxResults($limit)
