@@ -71,6 +71,7 @@ class ServiceProviderRepository extends ServiceEntityRepository
         ?string $filterStatus
     ): array {
         $sortBy = \in_array($sortBy, self::SORT_FIELDS, true) ? $sortBy : self::SORT_NAME;
+
         $order = strtolower($order) === 'desc' ? 'DESC' : 'ASC';
 
         $qb = $this->createQueryBuilder('sp');
