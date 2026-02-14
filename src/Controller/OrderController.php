@@ -192,6 +192,7 @@ class OrderController extends AbstractController
         $qrCodeDataUri = null;
         if ($order->getQrCodePath()) {
             $path = $this->getParameter('kernel.project_dir') . '/public/' . $order->getQrCodePath();
+            // NOTE: This might need refactoring
             if (is_file($path)) {
                 $qrCodeDataUri = 'data:image/png;base64,' . base64_encode((string) file_get_contents($path));
             }
