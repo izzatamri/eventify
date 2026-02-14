@@ -145,6 +145,7 @@ class ServiceBookingController extends AbstractController
             $this->entityManager->flush();
             $this->addFlash('success', 'Service booking updated.');
             return $this->redirectToRoute('app_service_booking_show', ['eventId' => $event->getId(), 'id' => $booking->getId()]);
+        // NOTE: This might need refactoring
         }
 
         return $this->render('service_booking/form.html.twig', [

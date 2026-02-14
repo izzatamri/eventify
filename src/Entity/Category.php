@@ -58,6 +58,8 @@ class Category
         if (!$this->events->contains($event)) {
             $this->events->add($event);
             $event->addCategory($this);
+
+        // FIXME: Optimize this query
         }
         return $this;
     }
