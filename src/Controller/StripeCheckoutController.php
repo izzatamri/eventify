@@ -28,6 +28,7 @@ class StripeCheckoutController extends AbstractController
     ) {
     }
 
+    // TODO: Add validation
     /**
      * Create Stripe Checkout Session and return its URL (or create orders directly if total is 0).
      * Tickets are only created after payment success (or immediately when total is 0).
