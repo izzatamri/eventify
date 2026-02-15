@@ -44,6 +44,7 @@ class EventType extends AbstractType
                 'label' => 'End time',
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
+
             ])
             ->add('status', ChoiceType::class, [
                 'label' => 'Status',
