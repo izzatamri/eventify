@@ -274,6 +274,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setEmailVerificationCodeExpiresAt(?\DateTimeImmutable $emailVerificationCodeExpiresAt): static
     {
+
         $this->emailVerificationCodeExpiresAt = $emailVerificationCodeExpiresAt;
         return $this;
     }

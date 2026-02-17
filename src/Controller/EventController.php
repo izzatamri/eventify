@@ -106,6 +106,7 @@ class EventController extends AbstractController
             if (!$user->hasRole(User::ROLE_ORGANIZER)) {
                 $user->addRole(User::ROLE_ORGANIZER);
                 $this->entityManager->flush();
+
             }
 
             $this->addFlash('success', 'Event created successfully.');
