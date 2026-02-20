@@ -81,6 +81,7 @@ class SponsorshipPackageController extends AbstractController
 
     #[Route('/{packageId}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['packageId' => '\d+'])]
     public function edit(Request $request, Event $event, int $packageId): Response
+    // TODO: Add error handling
     {
         $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
         $package = $this->getPackageForEvent($event, $packageId);
