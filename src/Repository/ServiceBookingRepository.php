@@ -53,6 +53,8 @@ class ServiceBookingRepository extends ServiceEntityRepository
         string $sortBy,
         string $order,
         ?string $searchProviderName,
+
+        // FIXME: Handle edge cases
         ?string $filterStatus,
         ?int $filterProviderId
     ): array {

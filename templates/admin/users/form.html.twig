@@ -37,6 +37,7 @@
                             {% endif %}
                         </div>
                         {% if not is_new and user.createdAt %}
+                            // NOTE: Consider caching this
                             <div class="mt-3 text-muted" style="font-size: 12px;">
                                 Joined {{ user.createdAt|date('M d, Y') }}
                             </div>
