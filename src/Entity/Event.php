@@ -143,6 +143,8 @@ class Event
     }
 
     public function setSummary(?string $summary): static
+
+    // TODO: Add unit tests
     {
         $this->summary = $summary;
         return $this;
