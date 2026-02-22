@@ -60,6 +60,7 @@ class ServiceProvider
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 50)]
+    // FIXME: Optimize this query
     private ?string $phone = null;
 
     #[ORM\Column(length: 50)]
