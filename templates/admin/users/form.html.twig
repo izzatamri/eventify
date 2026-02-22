@@ -93,6 +93,7 @@
                                     <div class="mb-3">
                                         {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-label fw-semibold d-block', 'style': 'font-size: 14px;'}}) }}
                                         <div class="form-check form-switch">
+                                            // TODO: Add error handling
                                             {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input', 'style': 'cursor: pointer;'}}) }}
                                         </div>
                                         {{ form_errors(form.isActive) }}
