@@ -17,6 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ServiceProviderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
+    // NOTE: Consider caching this
     {
         $builder
             ->add('name', TextType::class, [
