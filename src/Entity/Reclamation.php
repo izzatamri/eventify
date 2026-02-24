@@ -32,12 +32,10 @@ class Reclamation
     )]
     private ?string $nomrec = null;
 
-
     #[ORM\Column(length: 150)]
     #[Assert\NotBlank(message: "L’email est obligatoire.")]
     #[Assert\Email(message: "L’email '{{ value }}' n’est pas valide.")]
     private ?string $adressmail = null;
-
 
     #[ORM\Column(length: 150)]
     private ?string $sujetrec = null;
@@ -75,7 +73,6 @@ class Reclamation
     public function setNomrec(string $nomrec): static
     {
         $this->nomrec = $nomrec;
-
         return $this;
     }
 
@@ -87,7 +84,6 @@ class Reclamation
     public function setAdressmail(string $adressmail): static
     {
         $this->adressmail = $adressmail;
-
         return $this;
     }
 
@@ -99,7 +95,6 @@ class Reclamation
     public function setSujetrec(string $sujetrec): static
     {
         $this->sujetrec = $sujetrec;
-
         return $this;
     }
 
@@ -111,7 +106,6 @@ class Reclamation
     public function setDateCreation(\DateTime $date_creation): static
     {
         $this->date_creation = $date_creation;
-
         return $this;
     }
 
@@ -123,7 +117,6 @@ class Reclamation
     public function setEtat(string $etat): static
     {
         $this->etat = $etat;
-
         return $this;
     }
 
@@ -141,19 +134,16 @@ class Reclamation
             $this->yes->add($ye);
             $ye->setReclamation($this);
         }
-
         return $this;
     }
 
     public function removeYe(Reponse $ye): static
     {
         if ($this->yes->removeElement($ye)) {
-            // set the owning side to null (unless already changed)
             if ($ye->getReclamation() === $this) {
                 $ye->setReclamation(null);
             }
         }
-
         return $this;
     }
 
@@ -165,19 +155,47 @@ class Reclamation
     public function setDescriptionrec(string $descriptionrec): static
     {
         $this->descriptionrec = $descriptionrec;
-
         return $this;
     }
 
-    #[ORM\PrePersist] 
+    /**
+     * Vérifie si la réclamation a des réponses
+     */
+    public function hasResponses(): bool
+    {
+        return !$this->yes->isEmpty();
+    }
+
+    /**
+     * Compte le nombre de réponses
+     */
+    public function getResponsesCount(): int
+    {
+        return $this->yes->count();
+    }
+
+    /**
+     * Met à jour l'état en fonction des réponses
+     */
+    public function updateEtatBasedOnResponses(): self
+    {
+        if ($this->hasResponses()) {
+            $this->etat = 'Resolved';
+        } else {
+            $this->etat = 'Pending';
+        }
+        return $this;
+    }
+
+    #[ORM\PrePersist]
     public function setDefaultValues(): void
     {
         if ($this->etat === null) {
-            $this->etat = 'Pending'; 
+            $this->etat = 'Pending';
         }
 
         if ($this->date_creation === null) {
-            $this->date_creation = new \DateTime(); 
+            $this->date_creation = new \DateTime();
         }
     }
 }

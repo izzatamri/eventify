@@ -4,6 +4,7 @@
 
 {% block page_styles %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
 header, .preloader { display:none !important; }
@@ -50,43 +51,153 @@ body { background:#f5f7fb; }
     padding:20px;
     box-shadow:0 8px 20px rgba(0,0,0,.06);
 }
+
+.search-box {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.sort-link {
+    color: #0f172a;
+    text-decoration: none;
+    margin-right: 15px;
+    font-size: 0.9rem;
+}
+
+.sort-link:hover {
+    color: #3b82f6;
+}
+
+.sort-link.active {
+    color: #3b82f6;
+    font-weight: bold;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
 </style>
 {% endblock %}
+
 {% block body %}
 <div class="wrapper">
-<div class="sidebar">
+    <div class="sidebar">
         <h4>🛠 Back Office</h4>
         <hr>
         <a href="{{ path('app_back_reclamation') }}">📩 Réclamations</a>
         <a href="{{ path('app_reponse_index') }}">💬 Réponses</a>
     </div>
-<div class="container mt-5">
-    <h2>Liste des Réponses</h2>
+    
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Gestion des Réponses</h2>
+            <a href="{{ path('app_reponse_new') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nouvelle réponse
+            </a>
+        </div>
 
-    <a href="{{ path('app_reponse_new') }}" class="btn btn-primary mb-3">+ Ajouter une réponse</a>
-
-    {% for rep in reponses %}
-        <div class="border rounded p-3 mb-2">
-            <strong>#{{ rep.id }} - {{ rep.nomRep }}</strong>
-            <div class="small text-muted">{{ rep.dateReponse|date('d/m/Y H:i') }}</div>
-            <p>{{ rep.reponseRep|slice(0,120) }}...</p>
-            <small>↳ Réclamation #{{ rep.reclamation.id }} - {{ rep.reclamation.sujetrec }}</small>
-
-            <div class="mt-2">
-                <!-- EDIT -->
-                <a href="{{ path('app_reponse_edit', {id: rep.id}) }}" class="btn btn-warning btn-sm">✏ Edit</a>
-
-                <!-- DELETE -->
-                <form method="post" action="{{ path('app_reponse_delete', {id: rep.id}) }}" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rep.id) }}">
-                    <button class="btn btn-danger btn-sm">🗑 Delete</button>
-                </form>
+        <!-- Statistiques -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <h5>Total réponses</h5>
+                    <h2>{{ reponses|length }}</h2>
+                </div>
             </div>
         </div>
-    {% else %}
-        <p class="text-muted">Aucune réponse.</p>
-    {% endfor %}
-</div></div>
+
+        <!-- Barre de recherche et tri -->
+        <div class="search-box">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Rechercher par nom, email, réponse, sujet..." 
+                               value="{{ search }}">
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                        {% if search %}
+                            <a href="{{ path('app_reponse_index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Effacer
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <span class="me-2">Trier par:</span>
+                        <a href="{{ path('app_reponse_index', {sort: 'id', order: (sort == 'id' and order == 'ASC') ? 'DESC' : 'ASC', search: search}) }}" 
+                           class="sort-link {% if sort == 'id' %}active{% endif %}">
+                            ID <i class="bi bi-arrow-{% if sort == 'id' %}{{ order == 'ASC' ? 'up' : 'down' }}{% else %}up-down{% endif %}"></i>
+                        </a>
+                        <a href="{{ path('app_reponse_index', {sort: 'nom_rep', order: (sort == 'nom_rep' and order == 'ASC') ? 'DESC' : 'ASC', search: search}) }}" 
+                           class="sort-link {% if sort == 'nom_rep' %}active{% endif %}">
+                            Nom <i class="bi bi-arrow-{% if sort == 'nom_rep' %}{{ order == 'ASC' ? 'up' : 'down' }}{% else %}up-down{% endif %}"></i>
+                        </a>
+                        <a href="{{ path('app_reponse_index', {sort: 'date_reponse', order: (sort == 'date_reponse' and order == 'ASC') ? 'DESC' : 'ASC', search: search}) }}" 
+                           class="sort-link {% if sort == 'date_reponse' %}active{% endif %}">
+                            Date <i class="bi bi-arrow-{% if sort == 'date_reponse' %}{{ order == 'ASC' ? 'up' : 'down' }}{% else %}up-down{% endif %}"></i>
+                        </a>
+                        <a href="{{ path('app_reponse_index', {sort: 'reclamation', order: (sort == 'reclamation' and order == 'ASC') ? 'DESC' : 'ASC', search: search}) }}" 
+                           class="sort-link {% if sort == 'reclamation' %}active{% endif %}">
+                            Réclamation # <i class="bi bi-arrow-{% if sort == 'reclamation' %}{{ order == 'ASC' ? 'up' : 'down' }}{% else %}up-down{% endif %}"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Liste des réponses -->
+        <div class="card-box">
+            {% if reponses is empty %}
+                <div class="text-center py-5">
+                    <i class="bi bi-chat-square-text" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">Aucune réponse trouvée</p>
+                    {% if search %}
+                        <p class="text-muted">Aucun résultat pour "{{ search }}"</p>
+                        <a href="{{ path('app_reponse_index') }}" class="btn btn-outline-primary">Effacer la recherche</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                {% for rep in reponses %}
+                    <div class="border rounded p-3 mb-3 {% if loop.index is odd %}bg-light{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1">
+                                    #{{ rep.id }} - {{ rep.nomRep }}
+                                    <small class="text-muted">{{ rep.dateReponse|date('d/m/Y H:i') }}</small>
+                                </h5>
+                                <p class="mb-2">{{ rep.reponseRep }}</p>
+                                <div class="small">
+                                    <span class="badge bg-info">Réclamation #{{ rep.reclamation.id }}</span>
+                                    <span class="badge bg-secondary">{{ rep.reclamation.sujetrec }}</span>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <a href="{{ path('app_reponse_edit', {id: rep.id}) }}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="post" action="{{ path('app_reponse_delete', {id: rep.id}) }}" class="d-inline" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rep.id) }}">
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
-
-

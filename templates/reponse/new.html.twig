@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Back Office — reponse{% endblock %}
+{% block title %}Back Office — Nouvelle réponse{% endblock %}
 
 {% block page_styles %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
 header, .preloader { display:none !important; }
@@ -15,22 +16,25 @@ body { background:#f5f7fb; }
 }
 
 .sidebar {
-    width:230px;
-    background:#0f172a;
+    width:260px;
+    background: linear-gradient(180deg, #0f172a 0%, #1a2639 100%);
     color:white;
-    padding:20px;
+    padding:25px 15px;
 }
 
 .sidebar a {
-    color:white;
-    display:block;
-    padding:10px;
-    border-radius:10px;
-    text-decoration:none;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 12px;
+    text-decoration: none;
 }
 
-.sidebar a:hover {
-    background:#1e293b;
+.sidebar a:hover, .sidebar a.active {
+    background: #3b82f6;
+    color: white;
 }
 
 .content {
@@ -38,48 +42,234 @@ body { background:#f5f7fb; }
     padding:30px;
 }
 
-.grid {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px;
+.card-box {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.card-box {
-    background:white;
-    border-radius:18px;
-    padding:20px;
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
+.form-section {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label i {
+    color: #3b82f6;
+}
+
+.form-label .required {
+    color: #dc3545;
+    margin-left: 3px;
+}
+
+.form-control, .form-select {
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 12px 15px;
+    background: #f9fafb;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+.form-control.is-invalid, .form-select.is-invalid {
+    border-color: #dc3545;
+    background-image: none;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+    display: block;
+    width: 100%;
+}
+
+.alert-info {
+    background: #e0f2fe;
+    border-left: 4px solid #0ea5e9;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+    background: #6b7280;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
 }
 </style>
 {% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <h2>Ajouter une réponse</h2>
-
-    {{ form_start(form) }}
-
-    <div class="mb-3">
-        {{ form_label(form.nom_rep) }}
-        {{ form_widget(form.nom_rep, {'attr': {'class':'form-control'}}) }}
+<div class="wrapper">
+    <div class="sidebar">
+        <h4 style="color: white;">🛠 Back Office</h4>
+        <hr style="border-color: #334155;">
+        <a href="{{ path('app_back_reclamation') }}">
+            <i class="bi bi-envelope"></i> Réclamations
+        </a>
+        <a href="{{ path('app_reponse_index') }}" class="active">
+            <i class="bi bi-chat"></i> Réponses
+        </a>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.adressmail_rep) }}
-        {{ form_widget(form.adressmail_rep, {'attr': {'class':'form-control'}}) }}
+    <div class="content">
+        <div class="card-box">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="bi bi-chat-dots text-primary"></i>
+                    Ajouter une réponse
+                </h2>
+                <a href="{{ path('app_reponse_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+            </div>
+
+            {# Affichage des messages flash #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show mb-4" role="alert">
+                        <i class="bi bi-{% if label == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {# Informations sur la réclamation sélectionnée #}
+            {% if reponse.reclamation is defined and reponse.reclamation %}
+                <div class="alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Répondre à la réclamation #{{ reponse.reclamation.id }}</strong><br>
+                    <small>De : {{ reponse.reclamation.nomrec }} ({{ reponse.reclamation.adressmail }})</small><br>
+                    <small>Sujet : {{ reponse.reclamation.sujetrec }}</small>
+                </div>
+            {% endif %}
+
+            {# Formulaire avec validation Symfony #}
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-section">
+                <label class="form-label">
+                    <i class="bi bi-person"></i>
+                    {{ form_label(form.nom_rep) }}
+                    <span class="required">*</span>
+                </label>
+                {{ form_widget(form.nom_rep, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.nom_rep.vars.valid ? '' : ' is-invalid'),
+                        'placeholder': 'Entrez votre nom complet'
+                    }
+                }) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.nom_rep) }}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">
+                    <i class="bi bi-envelope"></i>
+                    {{ form_label(form.adressmail_rep) }}
+                    <span class="required">*</span>
+                </label>
+                {{ form_widget(form.adressmail_rep, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.adressmail_rep.vars.valid ? '' : ' is-invalid'),
+                        'placeholder': 'exemple@email.com'
+                    }
+                }) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.adressmail_rep) }}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">
+                    <i class="bi bi-chat-text"></i>
+                    {{ form_label(form.reponse_rep) }}
+                    <span class="required">*</span>
+                </label>
+                {{ form_widget(form.reponse_rep, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.reponse_rep.vars.valid ? '' : ' is-invalid'),
+                        'rows': 5,
+                        'placeholder': 'Écrivez votre réponse ici...'
+                    }
+                }) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.reponse_rep) }}
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">
+                    <i class="bi bi-envelope-open"></i>
+                    {{ form_label(form.reclamation) }}
+                    <span class="required">*</span>
+                </label>
+                {{ form_widget(form.reclamation, {
+                    'attr': {
+                        'class': 'form-select' ~ (form.reclamation.vars.valid ? '' : ' is-invalid')
+                    }
+                }) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.reclamation) }}
+                </div>
+                <small class="text-muted mt-2 d-block">
+                    <i class="bi bi-info-circle"></i>
+                    Sélectionnez la réclamation à laquelle vous répondez
+                </small>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> Envoyer la réponse
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
     </div>
-
-    <div class="mb-3">
-        {{ form_label(form.reponse_rep) }}
-        {{ form_widget(form.reponse_rep, {'attr': {'class':'form-control', 'rows':3}}) }}
-    </div>
-
-    <div class="mb-3">
-        {{ form_label(form.reclamation) }}
-        {{ form_widget(form.reclamation, {'attr': {'class':'form-select'}}) }}
-    </div>
-
-    <button class="btn btn-primary">Enregistrer</button>
-
-    {{ form_end(form) }}
 </div>
 {% endblock %}

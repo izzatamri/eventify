@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Reclamation;
-use App\Repository\ReponseRepository;
 use App\Form\ReclamationType;
 use App\Repository\ReclamationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,25 +23,24 @@ final class ReclamationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
-        public function new(Request $request, EntityManagerInterface $entityManager): Response
-        {
-            $reclamation = new Reclamation();
-            $form = $this->createForm(ReclamationType::class, $reclamation);
-            $form->handleRequest($request);
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $reclamation = new Reclamation();
+        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $entityManager->persist($reclamation);
-                $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($reclamation);
+            $entityManager->flush();
 
-                $this->addFlash('success', 'Reclamation envoyée avec succès !');
-                $reclamation = new Reclamation();
-                $form = $this->createForm(ReclamationType::class, $reclamation);
-            }
-
-            return $this->render('reclamation/new.html.twig', [
-                'form' => $form->createView(),
-            ]);
+            $this->addFlash('success', 'Reclamation envoyée avec succès !');
+            return $this->redirectToRoute('app_back_reclamation');
         }
+
+        return $this->render('reclamation/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
     #[Route('/{id}', name: 'app_reclamation_show', methods: ['GET'])]
     public function show(Reclamation $reclamation): Response
@@ -59,9 +57,13 @@ final class ReclamationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($reclamation->hasResponses() && $reclamation->getEtat() !== 'Resolved') {
+                $reclamation->setEtat('Resolved');
+            }
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Réclamation modifiée avec succès !');
+            return $this->redirectToRoute('app_back_reclamation');
         }
 
         return $this->render('reclamation/edit.html.twig', [
@@ -73,39 +75,44 @@ final class ReclamationController extends AbstractController
     #[Route('/{id}', name: 'app_reclamation_delete', methods: ['POST'])]
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reclamation->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($reclamation);
             $entityManager->flush();
+            $this->addFlash('success', 'Réclamation supprimée avec succès !');
         }
-
-        return $this->redirectToRoute('app_reclamation_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-#[Route('/admin/back', name: 'app_back_reclamation', methods: ['GET', 'POST'])]
-public function backOffice(
-    Request $request,
-    ReclamationRepository $reclamationRepository,
-    ReponseRepository $reponseRepository,
-    EntityManagerInterface $em
-): Response {
-
-    // FORM RECLAMATION
-    $reclamation = new Reclamation();
-    $reclamationForm = $this->createForm(ReclamationType::class, $reclamation);
-    $reclamationForm->handleRequest($request);
-
-    if ($reclamationForm->isSubmitted() && $reclamationForm->isValid()) {
-        $em->persist($reclamation);
-        $em->flush();
 
         return $this->redirectToRoute('app_back_reclamation');
     }
 
-    return $this->render('back/backReclamation.html.twig', [
-        'reclamations' => $reclamationRepository->findBy([], ['date_creation' => 'DESC']),
-        'reponses' => $reponseRepository->findBy([], ['date_reponse' => 'DESC']),
-        'reclamationForm' => $reclamationForm->createView(),
-    ]);
-}
+    #[Route('/admin/back', name: 'app_back_reclamation', methods: ['GET', 'POST'])]
+    public function backOffice(
+        Request $request,
+        ReclamationRepository $reclamationRepository,
+        EntityManagerInterface $em
+    ): Response {
+        $searchRec = $request->query->get('search_rec', '');
+        $sortRec = $request->query->get('sort_rec', 'date_creation');
+        $orderRec = $request->query->get('order_rec', 'DESC');
 
+        $reclamation = new Reclamation();
+        $reclamationForm = $this->createForm(ReclamationType::class, $reclamation);
+        $reclamationForm->handleRequest($request);
+
+        if ($reclamationForm->isSubmitted() && $reclamationForm->isValid()) {
+            $em->persist($reclamation);
+            $em->flush();
+            $this->addFlash('success', 'Réclamation ajoutée avec succès !');
+            return $this->redirectToRoute('app_back_reclamation');
+        }
+
+        $reclamations = $reclamationRepository->findBySearchAndSort($searchRec, $sortRec, $orderRec);
+
+        return $this->render('back/backReclamation.html.twig', [
+            'reclamations' => $reclamations,
+            'reclamationForm' => $reclamationForm->createView(),
+            'search_rec' => $searchRec,
+            'sort_rec' => $sortRec,
+            'order_rec' => $orderRec,
+        ]);
+    }
 }

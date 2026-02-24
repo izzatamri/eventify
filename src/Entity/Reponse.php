@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReponseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReponseRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -30,11 +31,12 @@ class Reponse
     private ?string $nom_rep = null;
 
     #[ORM\Column(length: 150)]
-    #[Assert\NotBlank(message: "L’email est obligatoire.")]
-    #[Assert\Email(message: "L’email '{{ value }}' n’est pas valide.")]
+    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
     private ?string $adressmail_rep = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "La réponse est obligatoire.")]
     private ?string $reponse_rep = null;
 
     #[ORM\Column]
@@ -42,7 +44,13 @@ class Reponse
 
     #[ORM\ManyToOne(inversedBy: 'yes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Veuillez sélectionner une réclamation.")]
     private ?Reclamation $reclamation = null;
+
+    public function __construct()
+    {
+        $this->date_reponse = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -57,7 +65,6 @@ class Reponse
     public function setReponseRep(string $reponse_rep): static
     {
         $this->reponse_rep = $reponse_rep;
-
         return $this;
     }
 
@@ -69,7 +76,6 @@ class Reponse
     public function setNomRep(string $nom_rep): static
     {
         $this->nom_rep = $nom_rep;
-
         return $this;
     }
 
@@ -81,7 +87,6 @@ class Reponse
     public function setAdressmailRep(string $adressmail_rep): static
     {
         $this->adressmail_rep = $adressmail_rep;
-
         return $this;
     }
 
@@ -93,7 +98,6 @@ class Reponse
     public function setDateReponse(\DateTime $date_reponse): static
     {
         $this->date_reponse = $date_reponse;
-
         return $this;
     }
 
@@ -105,16 +109,18 @@ class Reponse
     public function setReclamation(?Reclamation $reclamation): static
     {
         $this->reclamation = $reclamation;
-
         return $this;
     }
 
-    #[ORM\PrePersist] 
+    #[ORM\PrePersist]
     public function setDefaultValues(): void
     {
-
-        if ($this->date_reponse === null) {
-            $this->date_reponse = new \DateTime(); 
+        if (!$this->date_reponse instanceof \DateTime) {
+            try {
+                $this->date_reponse = new \DateTime();
+            } catch (\Exception $e) {
+                $this->date_reponse = \DateTime::createFromFormat('U', (string)time());
+            }
         }
     }
 }
