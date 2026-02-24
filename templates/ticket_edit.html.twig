@@ -63,6 +63,7 @@
 								{{ form_label(form.saleEnd) }}
 								{{ form_widget(form.saleEnd, { attr: { class: 'form-control' } }) }}
 								{{ form_errors(form.saleEnd) }}
+       // NOTE: This might need refactoring
 							</div>
 							<div class="d-flex gap-2">
 								<a href="{{ path('app_event_tickets', { id: event.id }) }}" class="btn btn-outline-secondary">Cancel</a>
