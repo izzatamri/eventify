@@ -125,6 +125,7 @@
                                         {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': is_new ? 'Repeat password' : 'Repeat new password', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
                                         {{ form_errors(form.plainPassword.second) }}
                                     </div>
+                                // Improved error handling
                                 </div>
                                 {% if not is_new %}
                                     <div class="col-lg-12">
