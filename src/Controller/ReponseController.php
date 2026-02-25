@@ -1,4 +1,5 @@
 <?php
+// src/Controller/ReponseController.php
 
 namespace App\Controller;
 
@@ -33,18 +34,19 @@ final class ReponseController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reponse_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ReclamationRepository $reclamationRepository): Response
-    {
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        ReclamationRepository $reclamationRepository
+    ): Response {
         $reponse = new Reponse();
         
+        // Récupérer l'ID de la réclamation depuis l'URL
         $reclamationId = $request->query->get('reclamation_id');
         if ($reclamationId) {
             $reclamation = $reclamationRepository->find($reclamationId);
             if ($reclamation) {
                 $reponse->setReclamation($reclamation);
-            } else {
-                $this->addFlash('error', 'Réclamation non trouvée');
-                return $this->redirectToRoute('app_reponse_index');
             }
         }
         
@@ -54,16 +56,102 @@ final class ReponseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $reclamation = $reponse->getReclamation();
             
-            if ($reclamation) {
-                // Changer l'état de la réclamation à "Resolved"
-                $reclamation->setEtat('Resolved');
-                $entityManager->persist($reclamation);
-            }
-            
+            // Sauvegarder la réponse
             $entityManager->persist($reponse);
             $entityManager->flush();
+            
+            // Mettre à jour l'état de la réclamation
+            if ($reclamation) {
+                $reclamation->setEtat('Resolved');
+                $entityManager->persist($reclamation);
+                $entityManager->flush();
+            }
 
-            $this->addFlash('success', 'Réponse ajoutée avec succès ! La réclamation est maintenant résolue.');
+            // ENVOI DE L'EMAIL VIA CURL (MARCHE À TOUS LES COUPS)
+            if ($reclamation) {
+                try {
+                    $api_key = '02623026c384b6f8d5631647e2d19af3';
+                    $api_secret = '8ca77f079941d108ece06a8fe9690677';
+                    
+                    // Préparer les données pour l'API Mailjet
+                    $data = [
+                        'Messages' => [
+                            [
+                                'From' => [
+                                    'Email' => "akramlabidi45@gmail.com",
+                                    'Name' => "Support Client"
+                                ],
+                                'To' => [
+                                    [
+                                        'Email' => $reclamation->getAdressmail(),
+                                        'Name' => $reclamation->getNomrec()
+                                    ]
+                                ],
+                                'Subject' => "✅ Réponse à votre réclamation #" . $reclamation->getId(),
+                                'TextPart' => "Bonjour " . $reclamation->getNomrec() . ",\n\n" .
+                                             "Votre réclamation concernant \"" . $reclamation->getSujetrec() . "\" a reçu une réponse.\n\n" .
+                                             "Votre message : " . $reclamation->getDescriptionrec() . "\n\n" .
+                                             "Notre réponse : " . $reponse->getReponseRep() . "\n\n" .
+                                             "Cordialement,\n" .
+                                             "L'équipe Support",
+                                'HTMLPart' => "<!DOCTYPE html>" .
+                                             "<html>" .
+                                             "<head><meta charset='UTF-8'></head>" .
+                                             "<body style='font-family: Arial, sans-serif;'>" .
+                                             "<div style='max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;'>" .
+                                             "<h2 style='color: #3b82f6;'>Bonjour " . $reclamation->getNomrec() . ",</h2>" .
+                                             "<p>Votre réclamation concernant <strong>\"" . $reclamation->getSujetrec() . "\"</strong> a reçu une réponse.</p>" .
+                                             "<div style='background: white; padding: 15px; border-left: 4px solid #3b82f6; margin: 15px 0;'>" .
+                                             "<p><strong>Votre message :</strong><br>" . nl2br($reclamation->getDescriptionrec()) . "</p>" .
+                                             "</div>" .
+                                             "<div style='background: #e6f7ff; padding: 15px; border-left: 4px solid #10b981; margin: 15px 0;'>" .
+                                             "<p><strong>Notre réponse :</strong><br>" . nl2br($reponse->getReponseRep()) . "</p>" .
+                                             "</div>" .
+                                             "<p style='margin-top: 20px;'>Cordialement,<br><strong>L'équipe Support</strong></p>" .
+                                             "<hr style='border: none; border-top: 1px solid #ddd; margin: 20px 0;'>" .
+                                             "<p style='font-size: 12px; color: #666; text-align: center;'>" .
+                                             "Cet email a été envoyé automatiquement. Merci de ne pas y répondre." .
+                                             "</p>" .
+                                             "</div>" .
+                                             "</body>" .
+                                             "</html>"
+                            ]
+                        ]
+                    ];
+                    
+                    // Initialiser cURL
+                    $ch = curl_init('https://api.mailjet.com/v3.1/send');
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        'Content-Type: application/json'
+                    ]);
+                    curl_setopt($ch, CURLOPT_USERPWD, "$api_key:$api_secret");
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // À désactiver seulement en dev
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                    
+                    // Exécuter la requête
+                    $response = curl_exec($ch);
+                    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    $curl_error = curl_error($ch);
+                    curl_close($ch);
+                    
+                    // Vérifier le résultat
+                    if ($http_code == 200) {
+                        $this->addFlash('success', '✅ Réponse envoyée ! Un email a été notifié à ' . $reclamation->getAdressmail());
+                    } else {
+                        $this->addFlash('warning', '⚠️ Réponse sauvegardée mais l\'email n\'a pas pu être envoyé. Code: ' . $http_code);
+                        if ($curl_error) {
+                            $this->addFlash('warning', 'Erreur cURL: ' . $curl_error);
+                        }
+                    }
+                    
+                } catch (\Exception $e) {
+                    $this->addFlash('warning', '⚠️ Réponse sauvegardée mais erreur: ' . $e->getMessage());
+                }
+            }
+
             return $this->redirectToRoute('app_reponse_index');
         }
 
@@ -89,7 +177,7 @@ final class ReponseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Réponse modifiée avec succès !');
+            $this->addFlash('success', '✅ Réponse modifiée avec succès !');
             return $this->redirectToRoute('app_reponse_index');
         }
 
@@ -111,10 +199,10 @@ final class ReponseController extends AbstractController
             if ($reclamation && $reclamation->getYes()->isEmpty()) {
                 $reclamation->setEtat('Pending');
                 $em->flush();
-                $this->addFlash('info', 'La réclamation est repassée en attente car elle n\'a plus de réponse.');
+                $this->addFlash('info', 'ℹ️ La réclamation est repassée en attente.');
             }
             
-            $this->addFlash('success', 'Réponse supprimée avec succès !');
+            $this->addFlash('success', '✅ Réponse supprimée avec succès !');
         }
 
         return $this->redirectToRoute('app_reponse_index');

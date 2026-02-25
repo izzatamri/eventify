@@ -338,11 +338,6 @@ body {
             <i class="bi bi-chat"></i>
             Réponses
         </a>
-        <hr>
-        <a href="{{ path('app_reclamation_index') }}">
-            <i class="bi bi-box-arrow-right"></i>
-            Front Office
-        </a>
     </div>
 
     <!-- CONTENT -->
@@ -354,10 +349,6 @@ body {
                 <h2 class="mb-1">Gestion des Réclamations</h2>
                 <p class="text-muted">Gérez toutes les réclamations et leurs réponses</p>
             </div>
-            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addReclamationModal">
-                <i class="bi bi-plus-circle"></i>
-                Nouvelle réclamation
-            </button>
         </div>
 
         <!-- Statistiques -->
@@ -517,13 +508,7 @@ body {
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-end gap-1">
-                                            <!-- Voir détails -->
-                                            <a href="{{ path('app_reclamation_show', {id: rec.id}) }}" 
-                                               class="btn btn-sm btn-info" 
-                                               title="Voir détails"
-                                               data-bs-toggle="tooltip">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
+                                            
                                             
                                             <!-- Répondre ou Voir réponse -->
                                             {% if rec.etat == 'Pending' %}
@@ -535,7 +520,7 @@ body {
                                                     <span class="d-none d-lg-inline ms-1">Répondre</span>
                                                 </a>
                                             {% else %}
-                                                <a href="{{ path('app_reponse_index') }}?search={{ rec.id }}" 
+                                                <a href="{{ path('app_reponse_index') }}?search={{ rec.nomrec }}" 
                                                    class="btn btn-sm btn-outline-success" 
                                                    title="Voir les réponses"
                                                    data-bs-toggle="tooltip">
@@ -543,13 +528,7 @@ body {
                                                 </a>
                                             {% endif %}
                                             
-                                            <!-- Modifier -->
-                                            <a href="{{ path('app_reclamation_edit', {id: rec.id}) }}" 
-                                               class="btn btn-sm btn-warning" 
-                                               title="Modifier"
-                                               data-bs-toggle="tooltip">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
+                                           
                                             
                                             <!-- Supprimer -->
                                             <form method="post" action="{{ path('app_reclamation_delete', {id: rec.id}) }}" 

@@ -1,6 +1,7 @@
+{# templates/reponse/new.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Back Office — Nouvelle réponse{% endblock %}
+{% block title %}Ajouter une réponse{% endblock %}
 
 {% block page_styles %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,6 +23,11 @@ body { background:#f5f7fb; }
     padding:25px 15px;
 }
 
+.sidebar h4 {
+    color: white;
+    margin-bottom: 20px;
+}
+
 .sidebar a {
     color: #cbd5e1;
     display: flex;
@@ -30,6 +36,8 @@ body { background:#f5f7fb; }
     padding: 12px 15px;
     border-radius: 12px;
     text-decoration: none;
+    margin-bottom: 5px;
+    transition: all 0.3s;
 }
 
 .sidebar a:hover, .sidebar a.active {
@@ -38,11 +46,11 @@ body { background:#f5f7fb; }
 }
 
 .content {
-    flex:1;
-    padding:30px;
+    flex: 1;
+    padding: 30px;
 }
 
-.card-box {
+.card {
     background: white;
     border-radius: 20px;
     padding: 30px;
@@ -51,26 +59,10 @@ body { background:#f5f7fb; }
     margin: 0 auto;
 }
 
-.form-section {
-    margin-bottom: 25px;
-}
-
 .form-label {
     font-weight: 600;
     color: #374151;
     margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.form-label i {
-    color: #3b82f6;
-}
-
-.form-label .required {
-    color: #dc3545;
-    margin-left: 3px;
 }
 
 .form-control, .form-select {
@@ -78,6 +70,7 @@ body { background:#f5f7fb; }
     border: 1px solid #e5e7eb;
     padding: 12px 15px;
     background: #f9fafb;
+    transition: all 0.3s;
 }
 
 .form-control:focus, .form-select:focus {
@@ -86,34 +79,11 @@ body { background:#f5f7fb; }
     background: white;
 }
 
-.form-control.is-invalid, .form-select.is-invalid {
-    border-color: #dc3545;
-    background-image: none;
-}
-
-.invalid-feedback {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 5px;
-    display: block;
-    width: 100%;
-}
-
-.alert-info {
-    background: #e0f2fe;
-    border-left: 4px solid #0ea5e9;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-}
-
 .btn {
     padding: 12px 25px;
     border-radius: 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
+    font-weight: 500;
+    transition: all 0.3s;
 }
 
 .btn-primary {
@@ -135,13 +105,27 @@ body { background:#f5f7fb; }
     background: #4b5563;
     transform: translateY(-2px);
 }
+
+.info-reclamation {
+    background: #e0f2fe;
+    border-left: 4px solid #0ea5e9;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.alert {
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="wrapper">
+    <!-- SIDEBAR -->
     <div class="sidebar">
-        <h4 style="color: white;">🛠 Back Office</h4>
+        <h4>🛠 Back Office</h4>
         <hr style="border-color: #334155;">
         <a href="{{ path('app_back_reclamation') }}">
             <i class="bi bi-envelope"></i> Réclamations
@@ -151,118 +135,99 @@ body { background:#f5f7fb; }
         </a>
     </div>
 
+    <!-- CONTENU PRINCIPAL -->
     <div class="content">
-        <div class="card-box">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">
-                    <i class="bi bi-chat-dots text-primary"></i>
-                    Ajouter une réponse
-                </h2>
-                <a href="{{ path('app_reponse_index') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Retour
-                </a>
-            </div>
+        <div class="card">
+            <h2 class="mb-4">
+                <i class="bi bi-chat-dots text-primary"></i>
+                Ajouter une réponse
+            </h2>
 
-            {# Affichage des messages flash #}
+            <!-- MESSAGES FLASH -->
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show mb-4" role="alert">
-                        <i class="bi bi-{% if label == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
-                        {{ message }}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
             {% endfor %}
 
-            {# Informations sur la réclamation sélectionnée #}
+            <!-- INFOS RÉCLAMATION -->
             {% if reponse.reclamation is defined and reponse.reclamation %}
-                <div class="alert-info">
-                    <i class="bi bi-info-circle"></i>
-                    <strong>Répondre à la réclamation #{{ reponse.reclamation.id }}</strong><br>
-                    <small>De : {{ reponse.reclamation.nomrec }} ({{ reponse.reclamation.adressmail }})</small><br>
-                    <small>Sujet : {{ reponse.reclamation.sujetrec }}</small>
+                <div class="info-reclamation">
+                    <h5 class="mb-2">
+                        <i class="bi bi-envelope"></i>
+                        Répondre à la réclamation #{{ reponse.reclamation.id }}
+                    </h5>
+                    <p class="mb-1">
+                        <strong>De :</strong> {{ reponse.reclamation.nomrec }} 
+                        ({{ reponse.reclamation.adressmail }})
+                    </p>
+                    <p class="mb-1"><strong>Sujet :</strong> {{ reponse.reclamation.sujetrec }}</p>
+                    <p class="mb-0"><strong>Description :</strong> {{ reponse.reclamation.descriptionrec }}</p>
                 </div>
             {% endif %}
 
-            {# Formulaire avec validation Symfony #}
+            <!-- FORMULAIRE -->
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-            <div class="form-section">
+            <div class="mb-3">
                 <label class="form-label">
-                    <i class="bi bi-person"></i>
-                    {{ form_label(form.nom_rep) }}
-                    <span class="required">*</span>
+                    <i class="bi bi-person"></i> {{ form_label(form.nom_rep) }}
                 </label>
                 {{ form_widget(form.nom_rep, {
                     'attr': {
-                        'class': 'form-control' ~ (form.nom_rep.vars.valid ? '' : ' is-invalid'),
-                        'placeholder': 'Entrez votre nom complet'
+                        'class': 'form-control',
+                        'placeholder': 'akram'
                     }
                 }) }}
-                <div class="invalid-feedback">
-                    {{ form_errors(form.nom_rep) }}
-                </div>
+                <div class="text-danger small">{{ form_errors(form.nom_rep) }}</div>
             </div>
 
-            <div class="form-section">
+            <div class="mb-3">
                 <label class="form-label">
-                    <i class="bi bi-envelope"></i>
-                    {{ form_label(form.adressmail_rep) }}
-                    <span class="required">*</span>
+                    <i class="bi bi-envelope"></i> {{ form_label(form.adressmail_rep) }}
                 </label>
                 {{ form_widget(form.adressmail_rep, {
                     'attr': {
-                        'class': 'form-control' ~ (form.adressmail_rep.vars.valid ? '' : ' is-invalid'),
-                        'placeholder': 'exemple@email.com'
+                        'class': 'form-control',
+                        'placeholder': 'akramlabidi45@gmail.com'
                     }
                 }) }}
-                <div class="invalid-feedback">
-                    {{ form_errors(form.adressmail_rep) }}
-                </div>
+                <div class="text-danger small">{{ form_errors(form.adressmail_rep) }}</div>
             </div>
 
-            <div class="form-section">
+            <div class="mb-3">
                 <label class="form-label">
-                    <i class="bi bi-chat-text"></i>
-                    {{ form_label(form.reponse_rep) }}
-                    <span class="required">*</span>
+                    <i class="bi bi-chat-text"></i> {{ form_label(form.reponse_rep) }}
                 </label>
                 {{ form_widget(form.reponse_rep, {
                     'attr': {
-                        'class': 'form-control' ~ (form.reponse_rep.vars.valid ? '' : ' is-invalid'),
+                        'class': 'form-control',
                         'rows': 5,
-                        'placeholder': 'Écrivez votre réponse ici...'
+                        'placeholder': 'Reclamation Traiter'
                     }
                 }) }}
-                <div class="invalid-feedback">
-                    {{ form_errors(form.reponse_rep) }}
-                </div>
+                <div class="text-danger small">{{ form_errors(form.reponse_rep) }}</div>
             </div>
 
-            <div class="form-section">
+            <div class="mb-3" {% if reponse.reclamation is defined and reponse.reclamation %}style="display: none;"{% endif %}>
                 <label class="form-label">
-                    <i class="bi bi-envelope-open"></i>
-                    {{ form_label(form.reclamation) }}
-                    <span class="required">*</span>
+                    <i class="bi bi-envelope-open"></i> {{ form_label(form.reclamation) }}
                 </label>
                 {{ form_widget(form.reclamation, {
                     'attr': {
-                        'class': 'form-select' ~ (form.reclamation.vars.valid ? '' : ' is-invalid')
+                        'class': 'form-select'
                     }
                 }) }}
-                <div class="invalid-feedback">
-                    {{ form_errors(form.reclamation) }}
-                </div>
-                <small class="text-muted mt-2 d-block">
-                    <i class="bi bi-info-circle"></i>
-                    Sélectionnez la réclamation à laquelle vous répondez
-                </small>
+                <div class="text-danger small">{{ form_errors(form.reclamation) }}</div>
             </div>
 
-            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
-                    <i class="bi bi-x-circle"></i> Annuler
-                </button>
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ path('app_reponse_index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Annuler
+                </a>
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-send"></i> Envoyer la réponse
                 </button>

@@ -89,10 +89,19 @@ body { background:#f5f7fb; }
 {% block body %}
 <div class="wrapper">
     <div class="sidebar">
-        <h4>🛠 Back Office</h4>
+        <h4>
+            <i class="bi bi-tools"></i>
+            Back Office
+        </h4>
         <hr>
-        <a href="{{ path('app_back_reclamation') }}">📩 Réclamations</a>
-        <a href="{{ path('app_reponse_index') }}">💬 Réponses</a>
+        <a href="{{ path('app_back_reclamation') }}" class="active">
+            <i class="bi bi-envelope"></i>
+            Réclamations
+        </a>
+        <a href="{{ path('app_reponse_index') }}">
+            <i class="bi bi-chat"></i>
+            Réponses
+        </a>
     </div>
     
     <div class="content">

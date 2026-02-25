@@ -1,4 +1,5 @@
 <?php
+// src/Form/ReponseType.php
 
 namespace App\Form;
 
@@ -20,27 +21,17 @@ class ReponseType extends AbstractType
             ->add('nom_rep', TextType::class, [
                 'label' => 'Nom',
                 'required' => true,
-                'attr' => [
-                    'placeholder' => 'Votre nom',
-                    'class' => 'form-control'
-                ]
+                'attr' => ['placeholder' => 'Votre nom']
             ])
             ->add('adressmail_rep', EmailType::class, [
                 'label' => 'Email',
                 'required' => true,
-                'attr' => [
-                    'placeholder' => 'votre@email.com',
-                    'class' => 'form-control'
-                ]
+                'attr' => ['placeholder' => 'votre@email.com']
             ])
             ->add('reponse_rep', TextareaType::class, [
                 'label' => 'Réponse',
                 'required' => true,
-                'attr' => [
-                    'rows' => 5,
-                    'placeholder' => 'Votre réponse...',
-                    'class' => 'form-control'
-                ]
+                'attr' => ['rows' => 5, 'placeholder' => 'Votre réponse...']
             ])
             ->add('reclamation', EntityType::class, [
                 'class' => Reclamation::class,
@@ -53,9 +44,6 @@ class ReponseType extends AbstractType
                 },
                 'placeholder' => 'Choisir une réclamation',
                 'required' => true,
-                'attr' => [
-                    'class' => 'form-select'
-                ]
             ])
         ;
     }
