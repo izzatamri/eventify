@@ -143,15 +143,7 @@ body { background:#f5f7fb; }
                 Ajouter une réponse
             </h2>
 
-            <!-- MESSAGES FLASH -->
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message|raw }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
+            
 
             <!-- INFOS RÉCLAMATION -->
             {% if reponse.reclamation is defined and reponse.reclamation %}

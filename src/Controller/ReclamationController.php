@@ -34,7 +34,7 @@ final class ReclamationController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Reclamation envoyée avec succès !');
-            return $this->redirectToRoute('app_back_reclamation');
+            return $this->redirectToRoute('app_reclamation_new');
         }
 
         return $this->render('reclamation/new.html.twig', [

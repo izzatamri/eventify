@@ -23,7 +23,7 @@ class ReponseRepository extends ServiceEntityRepository
             ->addSelect('rec');
 
         if (!empty($search)) {
-            $qb->andWhere('rep.nom_rep LIKE :search OR rep.reponse_rep LIKE :search OR rep.adressmail_rep LIKE :search OR rec.sujetrec LIKE :search')
+            $qb->andWhere('rep.nom_rep LIKE :search OR rep.reponse_rep LIKE :search OR rep.adressmail_rep LIKE :search OR rec.sujetrec LIKE :search OR rec.id LIKE :search')
                ->setParameter('search', '%' . $search . '%');
         }
 
