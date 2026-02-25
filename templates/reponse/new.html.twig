@@ -143,9 +143,6 @@ body { background:#f5f7fb; }
                 Ajouter une réponse
             </h2>
 
-            
-
-            <!-- INFOS RÉCLAMATION -->
             {% if reponse.reclamation is defined and reponse.reclamation %}
                 <div class="info-reclamation">
                     <h5 class="mb-2">
@@ -161,7 +158,6 @@ body { background:#f5f7fb; }
                 </div>
             {% endif %}
 
-            <!-- FORMULAIRE -->
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
             <div class="mb-3">

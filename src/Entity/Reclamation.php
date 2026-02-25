@@ -158,25 +158,16 @@ class Reclamation
         return $this;
     }
 
-    /**
-     * Vérifie si la réclamation a des réponses
-     */
     public function hasResponses(): bool
     {
         return !$this->yes->isEmpty();
     }
 
-    /**
-     * Compte le nombre de réponses
-     */
     public function getResponsesCount(): int
     {
         return $this->yes->count();
     }
 
-    /**
-     * Met à jour l'état en fonction des réponses
-     */
     public function updateEtatBasedOnResponses(): self
     {
         if ($this->hasResponses()) {

@@ -191,13 +191,23 @@ body { background:#f5f7fb; }
                                 </div>
                             </div>
                             <div class="btn-group">
-                                <a href="{{ path('app_reponse_edit', {id: rep.id}) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ path('app_reponse_show', {id: rep.id}) }}" 
+                                class="btn btn-sm btn-info" 
+                                title="Voir les détails">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                
+                                <a href="{{ path('app_reponse_edit', {id: rep.id}) }}" 
+                                class="btn btn-sm btn-warning" 
+                                title="Modifier">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form method="post" action="{{ path('app_reponse_delete', {id: rep.id}) }}" class="d-inline" 
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');">
+                                
+                                <form method="post" action="{{ path('app_reponse_delete', {id: rep.id}) }}" 
+                                    class="d-inline" 
+                                    onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rep.id) }}">
-                                    <button class="btn btn-sm btn-danger">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

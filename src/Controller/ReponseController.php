@@ -1,5 +1,4 @@
 <?php
-// src/Controller/ReponseController.php
 
 namespace App\Controller;
 
@@ -41,7 +40,6 @@ final class ReponseController extends AbstractController
     ): Response {
         $reponse = new Reponse();
         
-        // Récupérer l'ID de la réclamation depuis l'URL
         $reclamationId = $request->query->get('reclamation_id');
         if ($reclamationId) {
             $reclamation = $reclamationRepository->find($reclamationId);
@@ -56,24 +54,20 @@ final class ReponseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $reclamation = $reponse->getReclamation();
             
-            // Sauvegarder la réponse
             $entityManager->persist($reponse);
             $entityManager->flush();
             
-            // Mettre à jour l'état de la réclamation
             if ($reclamation) {
                 $reclamation->setEtat('Resolved');
                 $entityManager->persist($reclamation);
                 $entityManager->flush();
             }
 
-            // ENVOI DE L'EMAIL VIA CURL (MARCHE À TOUS LES COUPS)
             if ($reclamation) {
                 try {
                     $api_key = '02623026c384b6f8d5631647e2d19af3';
                     $api_secret = '8ca77f079941d108ece06a8fe9690677';
                     
-                    // Préparer les données pour l'API Mailjet
                     $data = [
                         'Messages' => [
                             [
@@ -119,7 +113,6 @@ final class ReponseController extends AbstractController
                         ]
                     ];
                     
-                    // Initialiser cURL
                     $ch = curl_init('https://api.mailjet.com/v3.1/send');
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_POST, true);
@@ -128,27 +121,25 @@ final class ReponseController extends AbstractController
                         'Content-Type: application/json'
                     ]);
                     curl_setopt($ch, CURLOPT_USERPWD, "$api_key:$api_secret");
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // À désactiver seulement en dev
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
                     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
                     
-                    // Exécuter la requête
                     $response = curl_exec($ch);
                     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                     $curl_error = curl_error($ch);
                     curl_close($ch);
                     
-                    // Vérifier le résultat
                     if ($http_code == 200) {
-                        $this->addFlash('success', '✅ Réponse envoyée ! Un email a été notifié à ' . $reclamation->getAdressmail());
+                        $this->addFlash('success', ' Réponse envoyée ! Un email a été notifié à ' . $reclamation->getAdressmail());
                     } else {
-                        $this->addFlash('warning', '⚠️ Réponse sauvegardée mais l\'email n\'a pas pu être envoyé. Code: ' . $http_code);
+                        $this->addFlash('warning', ' Réponse sauvegardée mais l\'email n\'a pas pu être envoyé. Code: ' . $http_code);
                         if ($curl_error) {
                             $this->addFlash('warning', 'Erreur cURL: ' . $curl_error);
                         }
                     }
                     
                 } catch (\Exception $e) {
-                    $this->addFlash('warning', '⚠️ Réponse sauvegardée mais erreur: ' . $e->getMessage());
+                    $this->addFlash('warning', ' Réponse sauvegardée mais erreur: ' . $e->getMessage());
                 }
             }
 
