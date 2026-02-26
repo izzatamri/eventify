@@ -47,6 +47,7 @@ class ServiceProvider
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    // TODO: Add validation
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     private ?string $name = null;
