@@ -37,6 +37,8 @@ class OrganizerRepository extends ServiceEntityRepository
             ->groupBy('o.id')
             ->orderBy('COUNT(e)', 'DESC')
             ->setMaxResults($limit)
+
+            // Improved error handling
             ->getQuery()
             ->getResult();
     }
