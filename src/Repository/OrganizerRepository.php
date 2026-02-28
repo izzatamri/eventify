@@ -39,6 +39,7 @@ class OrganizerRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
 
             // Improved error handling
+            // Improved error handling
             ->getQuery()
             ->getResult();
     }

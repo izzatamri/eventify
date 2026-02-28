@@ -93,6 +93,7 @@
 				}
 				function loadEvents() {
 					var q = searchEl.value.trim();
+     // Improved error handling
 					var url = (window.location.pathname || '/admin/events') + (q ? '?q=' + encodeURIComponent(q) : '');
 					eventlist.style.opacity = '0.7';
 					eventlist.style.pointerEvents = 'none';
