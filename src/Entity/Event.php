@@ -86,11 +86,26 @@ class Event
     #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'event')]
     private Collection $orders;
 
+    /** @var Collection<int, SponsorshipPackage> */
+    #[ORM\OneToMany(targetEntity: SponsorshipPackage::class, mappedBy: 'event', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $sponsorshipPackages;
+
+    /** @var Collection<int, Sponsor> */
+    #[ORM\OneToMany(targetEntity: Sponsor::class, mappedBy: 'event', cascade: ['persist'], orphanRemoval: false)]
+    private Collection $sponsors;
+
+    /** @var Collection<int, ServiceBooking> */
+    #[ORM\OneToMany(targetEntity: ServiceBooking::class, mappedBy: 'event', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $serviceBookings;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->sponsorshipPackages = new ArrayCollection();
+        $this->sponsors = new ArrayCollection();
+        $this->serviceBookings = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -287,7 +302,7 @@ class Event
         $min = null;
         foreach ($this->tickets as $ticket) {
             $p = $ticket->getPrice();
-            if ($p !== null && ($min === null || bccomp((string) $p, (string) $min, 2) < 0)) {
+            if ($p !== null && ($min === null || (float) $p < (float) $min)) {
                 $min = $p;
             }
         }
@@ -298,7 +313,7 @@ class Event
     public function getPriceLabel(): string
     {
         $min = $this->getMinPrice();
-        if ($min === null || bccomp($min, '0', 2) === 0) {
+        if ($min === null || (float) $min <= 0) {
             return 'Free';
         }
         $currency = $this->tickets->first() ? $this->tickets->first()->getCurrency() : 'USD';
@@ -332,5 +347,80 @@ class Event
     public function getOrders(): Collection
     {
         return $this->orders;
+    }
+
+    /** @return Collection<int, SponsorshipPackage> */
+    public function getSponsorshipPackages(): Collection
+    {
+        return $this->sponsorshipPackages;
+    }
+
+    public function addSponsorshipPackage(SponsorshipPackage $sponsorshipPackage): static
+    {
+        if (!$this->sponsorshipPackages->contains($sponsorshipPackage)) {
+            $this->sponsorshipPackages->add($sponsorshipPackage);
+            $sponsorshipPackage->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeSponsorshipPackage(SponsorshipPackage $sponsorshipPackage): static
+    {
+        if ($this->sponsorshipPackages->removeElement($sponsorshipPackage)) {
+            if ($sponsorshipPackage->getEvent() === $this) {
+                $sponsorshipPackage->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    /** @return Collection<int, Sponsor> */
+    public function getSponsors(): Collection
+    {
+        return $this->sponsors;
+    }
+
+    public function addSponsor(Sponsor $sponsor): static
+    {
+        if (!$this->sponsors->contains($sponsor)) {
+            $this->sponsors->add($sponsor);
+            $sponsor->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeSponsor(Sponsor $sponsor): static
+    {
+        if ($this->sponsors->removeElement($sponsor)) {
+            if ($sponsor->getEvent() === $this) {
+                $sponsor->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    /** @return Collection<int, ServiceBooking> */
+    public function getServiceBookings(): Collection
+    {
+        return $this->serviceBookings;
+    }
+
+    public function addServiceBooking(ServiceBooking $serviceBooking): static
+    {
+        if (!$this->serviceBookings->contains($serviceBooking)) {
+            $this->serviceBookings->add($serviceBooking);
+            $serviceBooking->setEvent($this);
+        }
+        return $this;
+    }
+
+    public function removeServiceBooking(ServiceBooking $serviceBooking): static
+    {
+        if ($this->serviceBookings->removeElement($serviceBooking)) {
+            if ($serviceBooking->getEvent() === $this) {
+                $serviceBooking->setEvent(null);
+            }
+        }
+        return $this;
     }
 }

@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\OrderRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -41,7 +42,7 @@ class Order
     private ?string $totalPrice = null;
 
     #[ORM\Column(length: 20)]
-    private string $status = self::STATUS_PENDING;
+    private string $status = self::STATUS_CONFIRMED;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
@@ -49,17 +50,48 @@ class Order
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+        #[ORM\Column(length: 36, unique: true)]
+        private ?string $uuid = null;
+
+        #[ORM\Column(length: 255, nullable: true)]
+        private ?string $qrCodePath = null;
+
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+            if ($this->uuid === null) {
+                $this->uuid = Uuid::v4()->toRfc4122();
+            }
     }
 
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(string $uuid): static
+    {
+        $this->uuid = $uuid;
+        return $this;
+    }
+
+    public function getQrCodePath(): ?string
+    {
+        return $this->qrCodePath;
+    }
+
+    public function setQrCodePath(?string $qrCodePath): static
+    {
+        $this->qrCodePath = $qrCodePath;
+        return $this;
     }
 
     public function getId(): ?int

@@ -11,23 +11,23 @@
 	.event-create-page { background: var(--ztc-bg-bg-1, #fff); min-height: 100vh; }
 	.event-form-layout { display: flex; gap: 0; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem 2rem; }
 	.event-form-sidebar {
-		width: 280px; flex-shrink: 0; position: sticky; top: 1.5rem; align-self: start;
+		width: 320px; flex-shrink: 0; position: sticky; top: 1rem; align-self: start;
 		border-right: 1px solid rgba(0,0,0,.08); padding-right: 1.5rem; margin-right: 2rem;
 	}
-	.event-form-main { flex: 1; min-width: 0; padding-bottom: 100px; }
+	.event-form-main { flex: 1; min-width: 0; padding-bottom: 2rem; }
 	@media (max-width: 991px) {
 		.event-form-layout { flex-direction: column; padding: 0 1rem 2rem; }
-		.event-form-sidebar { width: 100%; position: static; border-right: none; padding-right: 0; margin-right: 0; border-bottom: 1px solid rgba(0,0,0,.08); padding-bottom: 1.5rem; margin-bottom: 1rem; }
+		.event-form-sidebar { width: 100%; position: static; border-right: none; padding-right: 0; margin-right: 0; border-bottom: 1px solid rgba(0,0,0,.08); padding-bottom: 1rem; margin-bottom: 1rem; }
 		.event-form-sticky-save { left: 1rem; right: 1rem; bottom: 1rem; }
 	}
 	.event-form-sidebar .back-link {
-		display: block; margin-bottom: 1.25rem; color: var(--ztc-bg-bg-9, #2E4DFD); text-decoration: none; font-size: 0.9375rem; font-weight: 600;
+		display: block; margin-bottom: 1rem; color: var(--ztc-bg-bg-9, #2E4DFD); text-decoration: none; font-size: 0.875rem; font-weight: 600;
 		transition: color 0.3s ease;
 	}
 	.event-form-sidebar .back-link:hover { color: var(--ztc-bg-bg-8, #002466); }
 	.event-form-top-bar {
-		display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 0.75rem;
-		margin-bottom: 1.5rem; padding-top: 0.5rem;
+		display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+		margin-bottom: 1rem; padding-top: 0.25rem;
 	}
 	.event-create-page .preview-btn {
 		display: inline-flex; align-items: center; gap: 0.5rem;
@@ -42,70 +42,80 @@
 	}
 	.event-form-sticky-save .save-btn { box-shadow: 0 4px 14px rgba(46,77,253,0.35); }
 	.event-create-page .summary-card {
-		background: var(--ztc-bg-bg-1, #fff); border-radius: 12px;
-		box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1.25rem; position: relative; overflow: hidden;
+		background: var(--ztc-bg-bg-1, #fff); border-radius: 10px;
+		box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1rem; position: relative; overflow: hidden;
 		border: 1px solid rgba(0,0,0,.04);
 	}
 	.event-create-page .summary-card::before {
-		content: ""; position: absolute; top: -20px; right: -20px; width: 100px; height: 100px;
+		content: ""; position: absolute; top: -20px; right: -20px; width: 80px; height: 80px;
 		background: linear-gradient(135deg, var(--ztc-bg-bg-9, #2E4DFD) 0%, var(--ztc-bg-bg-8, #002466) 100%);
 		border-radius: 50%; opacity: 0.12;
 	}
-	.event-create-page .summary-title { font-size: 1.2rem; font-weight: 700; color: var(--ztc-text-text-2, #1A1719); margin-bottom: 0.5rem; }
-	.event-create-page .summary-date { font-size: 0.875rem; color: var(--ztc-text-text-3, #544E51); }
+	.event-create-page .summary-title { font-size: 1.05rem; font-weight: 700; color: var(--ztc-text-text-2, #1A1719); margin-bottom: 0.4rem; }
+	.event-create-page .summary-date { font-size: 0.8125rem; color: var(--ztc-text-text-3, #544E51); }
 	.event-create-page .steps-label {
-		font-size: 0.75rem; color: var(--ztc-text-text-3, #544E51); text-transform: uppercase; letter-spacing: 0.06em; margin: 1.25rem 0 0.75rem; font-weight: 600;
+		font-size: 0.7rem; color: var(--ztc-text-text-3, #544E51); text-transform: uppercase; letter-spacing: 0.06em; margin: 1rem 0 0.5rem; font-weight: 600;
 	}
-	.event-create-page .step { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
+	.event-create-page .step { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.75rem; }
 	.event-create-page .step-radio {
-		width: 20px; height: 20px; border-radius: 50%; border: 2px solid #dee2e6; flex-shrink: 0; margin-top: 2px;
+		width: 18px; height: 18px; border-radius: 50%; border: 2px solid #dee2e6; flex-shrink: 0; margin-top: 2px;
 		transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 	}
 	.event-create-page .step.step-active .step-radio {
 		background: var(--ztc-bg-bg-9, #2E4DFD); border-color: var(--ztc-bg-bg-9, #2E4DFD);
 		box-shadow: 0 0 0 3px rgba(46,77,253,0.2);
 	}
-	.event-create-page .step-title { font-weight: 600; color: var(--ztc-text-text-2, #1A1719); }
-	.event-create-page .step-desc { font-size: 0.8125rem; color: var(--ztc-text-text-3, #544E51); margin-top: 0.15rem; }
+	.event-create-page .step-title { font-weight: 600; font-size: 0.9rem; color: var(--ztc-text-text-2, #1A1719); }
+	.event-create-page .step-desc { font-size: 0.75rem; color: var(--ztc-text-text-3, #544E51); margin-top: 0.1rem; line-height: 1.3; }
 	.event-create-page .section-card {
-		background: var(--ztc-bg-bg-1, #fff); border-radius: 12px;
-		box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1.5rem; margin-bottom: 1.25rem;
+		background: var(--ztc-bg-bg-1, #fff); border-radius: 10px;
+		box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1.25rem; margin-bottom: 1rem;
 		border: 1px solid rgba(0,0,0,.04); transition: box-shadow 0.3s ease, border-color 0.3s ease;
 	}
 	.event-create-page .section-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
 	.event-create-page .section-card.focus { border-color: rgba(46,77,253,0.35); box-shadow: 0 2px 12px rgba(46,77,253,0.08); }
 	.event-create-page .section-card h3 {
-		font-size: 1.1rem; font-weight: 700; color: var(--ztc-text-text-2, #1A1719); margin-bottom: 0;
+		font-size: 1rem; font-weight: 700; color: var(--ztc-text-text-2, #1A1719); margin-bottom: 0;
 	}
 	.event-create-page .section-card .section-add {
-		width: 32px; height: 32px; border-radius: 8px; background: var(--ztc-bg-bg-9, #2E4DFD); color: #fff; border: none;
-		font-size: 1.1rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+		width: 28px; height: 28px; border-radius: 6px; background: var(--ztc-bg-bg-9, #2E4DFD); color: #fff; border: none;
+		font-size: 1rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center;
 		transition: background 0.3s ease, transform 0.2s ease; cursor: pointer; flex-shrink: 0;
 	}
 	.event-create-page .section-card .section-add:hover { background: var(--ztc-bg-bg-8, #002466); transform: scale(1.05); }
 	.event-create-page .upload-zone {
-		border: 2px dashed rgba(46,77,253,0.4); border-radius: 12px; min-height: 220px;
+		border: 2px dashed rgba(46,77,253,0.4); border-radius: 10px; min-height: 180px;
 		display: flex; align-items: center; justify-content: center; background: rgba(46,77,253,0.03);
 		transition: border-color 0.3s ease, background 0.3s ease;
 	}
 	.event-create-page .upload-zone:hover { border-color: var(--ztc-bg-bg-9, #2E4DFD); background: rgba(46,77,253,0.06); }
-	.event-create-page .upload-zone.has-image { min-height: 200px; background-size: cover; background-position: center; }
+	.event-create-page .upload-zone.has-image { min-height: 160px; background-size: cover; background-position: center; }
 	.event-create-page .upload-inner { color: var(--ztc-text-text-3, #544E51); text-align: center; }
-	.event-create-page .upload-inner i { font-size: 2rem; color: var(--ztc-bg-bg-9, #2E4DFD); margin-bottom: 0.5rem; display: block; }
+	.event-create-page .upload-inner i { font-size: 1.75rem; color: var(--ztc-bg-bg-9, #2E4DFD); margin-bottom: 0.35rem; display: block; }
 	.event-create-page .form-control, .event-create-page .form-select {
 		border-radius: 8px; border-color: rgba(0,0,0,.12); transition: border-color 0.3s ease, box-shadow 0.3s ease;
 	}
 	.event-create-page .form-control:focus, .event-create-page .form-select:focus {
 		border-color: var(--ztc-bg-bg-9, #2E4DFD); box-shadow: 0 0 0 3px rgba(46,77,253,0.15); outline: none;
 	}
+	/* Fix nice-select dropdown appearing behind map */
+	#location-section .nice-select { position: relative; z-index: 1000; }
+	#location-section .nice-select.open { z-index: 1001; }
+	#location-section .nice-select .list { z-index: 1002 !important; position: absolute; }
+	#location-map { position: relative; z-index: 1; }
+	/* Add venue modal: sit above Bootstrap backdrop so inputs are clickable (modal is moved to body by JS) */
+	#add-venue-modal.modal { z-index: 1060 !important; }
+	#add-venue-modal .modal-dialog { position: relative; }
+	#add-venue-modal .modal-content { position: relative; }
+	#add-venue-modal input.form-control { pointer-events: auto !important; }
 	.event-create-page .form-control.is-invalid { border-color: #dc3545; }
 	.event-create-page .invalid-feedback { color: #dc3545; font-size: 0.85rem; }
-	.event-create-page .hint { font-size: 0.8125rem; color: var(--ztc-text-text-3, #544E51); margin-bottom: 0.5rem; }
+	.event-create-page .hint { font-size: 0.75rem; color: var(--ztc-text-text-3, #544E51); margin-bottom: 0.4rem; }
 	/* Primary submit: template vl-btn4 style (same as events list) - overrides design system */
 	.event-create-page .save-btn {
-		font-family: var(--ztc-family-font1, inherit) !important; font-size: var(--ztc-font-size-font-s20, 1rem) !important; font-weight: 700 !important;
+		font-family: var(--ztc-family-font1, inherit) !important; font-size: 0.9rem !important; font-weight: 700 !important;
 		text-transform: uppercase !important; letter-spacing: 0.02em;
-		padding: 16px 28px !important; border-radius: 8px !important; border: none !important;
+		padding: 12px 24px !important; border-radius: 8px !important; border: none !important;
 		background: var(--ztc-bg-bg-9, #2E4DFD) !important; color: var(--ztc-text-text-1, #fff) !important;
 		position: relative !important; overflow: hidden !important; z-index: 1; transition: color 0.4s ease;
 		box-shadow: none !important;
@@ -125,9 +135,9 @@
 	.event-create-page .status-dropdown { position: relative; display: inline-block; }
 	.event-create-page .status-dropdown .status-select-native { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
 	.event-create-page .status-dropdown-trigger {
-		display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.9rem; border-radius: 999px;
+		display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: 999px;
 		border: 1px solid rgba(0,0,0,.2); background: var(--ztc-bg-bg-1, #fff); color: var(--ztc-text-text-2, #1A1719);
-		font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: border-color 0.25s ease, box-shadow 0.25s ease;
+		font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: border-color 0.25s ease, box-shadow 0.25s ease;
 	}
 	.event-create-page .status-dropdown-trigger:hover { border-color: rgba(0,0,0,.3); }
 	.event-create-page .status-dropdown-trigger .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ztc-text-text-3, #544E51); flex-shrink: 0; }
@@ -216,35 +226,8 @@
 		</aside>
 
 		<div class="event-form-main">
-			<div class="event-form-top-bar">
-				{% if event.id %}
-					<a href="{{ path('app_event_show', { id: event.id }) }}" class="preview-btn" target="_blank" rel="noopener"><i class="fa-solid fa-eye me-1" aria-hidden="true"></i> Preview event</a>
-				{% else %}
-					<span class="preview-btn text-muted" title="Save draft first to preview"><i class="fa-solid fa-eye me-1" aria-hidden="true"></i> Preview event</span>
-				{% endif %}
-			</div>
 			<div class="section-card">
-				<div class="d-flex justify-content-between align-items-start mb-3">
-					<h3 class="mb-0">Cover image</h3>
-					<button type="button" class="section-add" title="Add image" aria-label="Add image">+</button>
-				</div>
-				<div class="upload-zone {{ form.vars.value.image ? 'has-image' : '' }}" id="upload-zone" style="{% if form.vars.value.image %}background-image: url('{{ form.vars.value.image }}');{% endif %}">
-					<div class="upload-inner" id="upload-inner">
-						<i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
-						<p class="mb-0">Upload photos and video</p>
-					</div>
-				</div>
-				<div class="mt-2" id="image-url-wrap">
-					{{ form_widget(form.image, { attr: { class: 'form-control', placeholder: 'Or paste image URL (e.g. https://...)' } }) }}
-					{{ form_errors(form.image) }}
-				</div>
-			</div>
-
-			<div class="section-card">
-				<div class="d-flex justify-content-between align-items-start mb-3">
-					<h3 class="mb-0">Event title</h3>
-					<button type="button" class="section-add" title="Add section" aria-label="Add section">+</button>
-				</div>
+				<h3 class="mb-3">Event details</h3>
 				<div class="mb-3">
 					{{ form_label(form.title) }}
 					<p class="hint">A short and sweet sentence about your event.</p>
@@ -262,100 +245,289 @@
 				</div>
 			</div>
 
-			<div class="row g-3 mb-0">
-				<div class="col-md-6">
-					<div class="section-card h-100">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Date and time</h3>
-							<button type="button" class="section-add" title="Add time" aria-label="Add time">+</button>
-						</div>
+			<div class="section-card">
+				<h3 class="mb-3">Cover image</h3>
+				<div class="upload-zone {{ form.vars.value.image ? 'has-image' : '' }}" id="upload-zone" style="{% if form.vars.value.image %}background-image: url('{{ form.vars.value.image }}');{% endif %}">
+					<div class="upload-inner" id="upload-inner">
+						<i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+						<p class="mb-0">Upload photos and video</p>
+					</div>
+				</div>
+				<div class="mt-2" id="image-url-wrap">
+					{{ form_widget(form.image, { attr: { class: 'form-control', placeholder: 'Or paste image URL (e.g. https://...)' } }) }}
+					{{ form_errors(form.image) }}
+				</div>
+			</div>
+
+			<div class="section-card">
+				<h3 class="mb-3">Date and time</h3>
+				<div class="row g-3">
+					<div class="col-md-6">
 						{{ form_label(form.startDatetime) }}
-						{{ form_widget(form.startDatetime, { attr: { class: 'form-control mb-2' ~ (form.startDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
+						{{ form_widget(form.startDatetime, { attr: { class: 'form-control' ~ (form.startDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
 						{{ form_errors(form.startDatetime) }}
+					</div>
+					<div class="col-md-6">
 						{{ form_label(form.endDatetime) }}
 						{{ form_widget(form.endDatetime, { attr: { class: 'form-control' ~ (form.endDatetime.vars.errors|length ? ' is-invalid' : '') } }) }}
 						{{ form_errors(form.endDatetime) }}
 					</div>
 				</div>
-				<div class="col-md-6">
-					<div class="section-card h-100">
-						<div class="d-flex justify-content-between align-items-start mb-3">
-							<h3 class="mb-0">Location</h3>
-							<button type="button" class="section-add" title="Add location" aria-label="Add location">+</button>
-						</div>
-						{{ form_label(form.venue) }}
-						{{ form_widget(form.venue, { attr: { class: 'form-select' ~ (form.venue.vars.errors|length ? ' is-invalid' : '') } }) }}
-						{{ form_errors(form.venue) }}
-					</div>
-				</div>
 			</div>
 
-			<div class="section-card focus">
-				<div class="d-flex justify-content-between align-items-start mb-3">
-					<h3 class="mb-0">Overview</h3>
-					<button type="button" class="section-add" title="Add content" aria-label="Add content">+</button>
+			<div class="section-card" id="location-section">
+				<h3 class="mb-3">Location</h3>
+				{{ form_label(form.venue) }}
+				<div class="input-group mb-3">
+					{{ form_widget(form.venue, { attr: { class: 'form-select' ~ (form.venue.vars.errors|length ? ' is-invalid' : ''), id: 'event_venue', style: 'border-radius: 8px 0 0 8px;' } }) }}
+					<button type="button" class="btn btn-primary" id="location-add-btn" style="border-radius: 0 8px 8px 0; padding: 0.5rem 1.25rem; font-weight: 600;">
+						<i class="fa-solid fa-plus me-1"></i> Add Venue
+					</button>
 				</div>
+				{{ form_errors(form.venue) }}
+				<div id="location-map" style="height: 300px; width: 100%; border-radius: 8px; background: #f0f0f0;"></div>
+			</div>
+
+			<div class="section-card">
+				<h3 class="mb-3">Description</h3>
 				<p class="hint">Use this section to provide more details about your event. You can include things to know, venue information, accessibility options—anything that will help people know what to expect.</p>
-				<div class="mb-2">
-					{{ form_widget(form.description, { attr: { class: 'form-control', rows: 6 } }) }}
-					{{ form_errors(form.description) }}
-				</div>
-				<p class="text-muted small mb-0"><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i> Suggest description</p>
+				{{ form_widget(form.description, { attr: { class: 'form-control', rows: 8 } }) }}
+				{{ form_errors(form.description) }}
 			</div>
 
-			<div class="section-card">
-				<div class="d-flex justify-content-between align-items-start mb-3">
-					<h3 class="mb-0">Good to know</h3>
-					<button type="button" class="section-add" title="Add" aria-label="Add">+</button>
-				</div>
-				<div class="mb-4">
-					<div class="mb-2 fw-semibold">Highlights</div>
-					<div class="d-flex flex-wrap gap-2">
-						<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add Age info</button>
-						<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add Door Time</button>
-						<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add Parking info</button>
-					</div>
-				</div>
-				<div>
-					<div class="mb-2 fw-semibold">Frequently asked questions</div>
-					<p class="small text-muted mb-2"><i class="fa-solid fa-lightbulb me-1" aria-hidden="true"></i> Events with FAQs have 8% more organic traffic.</p>
-					<button type="button" class="add-btn btn btn-sm"><i class="fa-solid fa-plus me-1" aria-hidden="true"></i> Add question</button>
-				</div>
+			<div class="text-end mt-4">
+				<button type="submit" form="event-form" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1.5rem; font-weight: 600;">
+					<i class="fa-solid fa-check me-2" aria-hidden="true"></i>{{ event.id ? 'Save changes' : 'Save and continue' }}
+				</button>
 			</div>
 
-			<div class="section-card">
-				<h3 class="mb-3">Organizer & categories</h3>
-				<div class="row g-3">
-					{% if form['organizer'] is defined %}
-					<div class="col-md-6">
-						{{ form_label(form.organizer) }}
-						{{ form_widget(form.organizer, { attr: { class: 'form-select' } }) }}
-						{{ form_errors(form.organizer) }}
-					</div>
-					{% endif %}
-					<div class="col-md-6">
-						{{ form_label(form.categories) }}
-						{{ form_widget(form.categories, { attr: { class: 'form-select' } }) }}
-						{{ form_errors(form.categories) }}
-					</div>
-				</div>
-			</div>
+		</div>
+	</div>
 
-			<div class="section-card">
-				<h3 class="mb-2">Add more sections to your event page</h3>
-				<p class="hint mb-0">Make your event stand out even more. These sections help attendees find information and answer their questions—which means more ticket sales and less time answering messages.</p>
+	<div class="modal fade" id="add-venue-modal" tabindex="-1" aria-labelledby="add-venue-modal-label" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="add-venue-modal-label">Add venue</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="venue-address-input" class="form-label">Address</label>
+						<input type="text" id="venue-address-input" class="form-control" placeholder="Street, city, country" autocomplete="off">
+					</div>
+					<div class="mb-3">
+						<label for="venue-name-input" class="form-label">Venue name</label>
+						<input type="text" id="venue-name-input" class="form-control" placeholder="Venue name" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Location</label>
+						<div id="add-venue-map" style="height: 220px; width: 100%; border-radius: 8px; background: #f0f0f0;"></div>
+					</div>
+					<div id="add-venue-error" class="alert alert-danger small d-none" role="alert"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-success" id="save-venue-btn">Save venue</button>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="event-form-sticky-save">
-		<button type="submit" form="event-form" class="btn vl-btn4 save-btn"><i class="fa-solid fa-check me-2" aria-hidden="true"></i>{{ event.id ? 'Save changes' : 'Save and continue' }}</button>
-	</div>
+	{% if form.organizer is defined %}
+		{% do form.organizer.setRendered() %}
+	{% endif %}
+	{% if form.categories is defined %}
+		{% do form.categories.setRendered() %}
+	{% endif %}
 	{{ form_end(form) }}
 </div>
 {% endblock %}
 
 {% block page_scripts %}
+<script>
+(function() {
+	/* Move Add venue modal to body so it is above the Bootstrap backdrop (fixes unclickable inputs) */
+	function moveModalToBody() {
+		var modalEl = document.getElementById('add-venue-modal');
+		if (modalEl && modalEl.parentNode && modalEl.parentNode !== document.body) {
+			document.body.appendChild(modalEl);
+		}
+	}
+	/* Remove any modal backdrop that might be blocking the main form (e.g. Venue dropdown) */
+	function removeStrayBackdrops() {
+		var backdrops = document.querySelectorAll('.modal-backdrop');
+		var openModal = document.querySelector('.modal.show');
+		if (!openModal && backdrops.length) {
+			backdrops.forEach(function(el) { el.remove(); });
+			document.body.classList.remove('modal-open');
+			document.body.style.overflow = '';
+			document.body.style.paddingRight = '';
+		}
+	}
+	document.addEventListener('DOMContentLoaded', function() {
+		moveModalToBody();
+		removeStrayBackdrops();
+		var addVenueModalEl = document.getElementById('add-venue-modal');
+		if (addVenueModalEl) {
+			addVenueModalEl.addEventListener('hidden.bs.modal', removeStrayBackdrops);
+		}
+	});
+})();
+window.eventifyMapsConfig = {
+	venueFromMapUrl: {{ path('app_venue_from_map')|json_encode|raw }},
+	venueFromMapToken: {{ csrf_token('venue_from_map')|json_encode|raw }}
+};
+function eventifyLeafletInit() {
+	var cfg = window.eventifyMapsConfig || {};
+	var venueSelect = document.getElementById('event_venue');
+	var locationMapEl = document.getElementById('location-map');
+	var mainMap = null, mainMarker = null;
+	var defaultCenter = [20, 0];
+	var defaultZoom = 2;
+	if (locationMapEl && typeof L !== 'undefined') {
+		mainMap = L.map(locationMapEl).setView(defaultCenter, defaultZoom);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '© OpenStreetMap contributors'
+		}).addTo(mainMap);
+	}
+	function updateMainMapFromVenue() {
+		if (!venueSelect || !mainMap) return;
+		var opt = venueSelect.options[venueSelect.selectedIndex];
+		var lat = opt && opt.getAttribute && opt.getAttribute('data-lat');
+		var lng = opt && opt.getAttribute && opt.getAttribute('data-lng');
+		if (mainMarker && mainMap) {
+			mainMap.removeLayer(mainMarker);
+			mainMarker = null;
+		}
+		var latNum = lat !== null && lat !== undefined ? parseFloat(lat) : NaN;
+		var lngNum = lng !== null && lng !== undefined ? parseFloat(lng) : NaN;
+		if (!isNaN(latNum) && !isNaN(lngNum)) {
+			var pos = [latNum, lngNum];
+			mainMap.setView(pos, 14);
+			mainMarker = L.marker(pos).addTo(mainMap);
+		} else {
+			mainMap.setView(defaultCenter, defaultZoom);
+		}
+	}
+	if (venueSelect && mainMap) {
+		venueSelect.addEventListener('change', updateMainMapFromVenue);
+		updateMainMapFromVenue();
+	}
+
+	var addVenueModalEl = document.getElementById('add-venue-modal');
+	var locationAddBtn = document.getElementById('location-add-btn');
+	var addVenueMapEl = document.getElementById('add-venue-map');
+	var venueAddressInput = document.getElementById('venue-address-input');
+	var venueNameInput = document.getElementById('venue-name-input');
+	var saveVenueBtn = document.getElementById('save-venue-btn');
+	var addVenueError = document.getElementById('add-venue-error');
+	var addVenueMap = null, addVenueMarker = null, lastPlaceData = null;
+
+	if (locationAddBtn && addVenueModalEl && addVenueMapEl && typeof L !== 'undefined') {
+		locationAddBtn.addEventListener('click', function() {
+			lastPlaceData = null;
+			if (venueNameInput) venueNameInput.value = '';
+			if (venueAddressInput) venueAddressInput.value = '';
+			if (addVenueError) { addVenueError.classList.add('d-none'); addVenueError.textContent = ''; }
+			var modal = typeof bootstrap !== 'undefined' && bootstrap.Modal ? bootstrap.Modal.getOrCreateInstance(addVenueModalEl) : null;
+			if (modal) modal.show();
+			setTimeout(function() {
+				if (!addVenueMap) {
+					addVenueMap = L.map(addVenueMapEl).setView(defaultCenter, 4);
+					L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+						attribution: '© OpenStreetMap contributors'
+					}).addTo(addVenueMap);
+					addVenueMap.on('click', function(e) {
+						var latlng = e.latlng;
+						if (addVenueMarker) {
+							addVenueMap.removeLayer(addVenueMarker);
+						}
+						addVenueMarker = L.marker(latlng).addTo(addVenueMap);
+						lastPlaceData = {
+							name: venueNameInput ? (venueNameInput.value.trim() || 'Venue') : 'Venue',
+							address: venueAddressInput ? venueAddressInput.value.trim() : '',
+							city: '',
+							state: '',
+							country: '',
+							postalCode: '',
+							latitude: latlng.lat,
+							longitude: latlng.lng
+						};
+					});
+				}
+			}, 200);
+		});
+	}
+
+	if (saveVenueBtn && cfg.venueFromMapUrl && cfg.venueFromMapToken) {
+		saveVenueBtn.addEventListener('click', function() {
+			var name = venueNameInput ? venueNameInput.value.trim() : '';
+			if (!name) {
+				if (addVenueError) {
+					addVenueError.textContent = 'Please enter a venue name.';
+					addVenueError.classList.remove('d-none');
+				}
+				return;
+			}
+			var payload = lastPlaceData || {};
+			if (!payload.latitude || !payload.longitude) {
+				if (addVenueError) {
+					addVenueError.textContent = 'Please click on the map to choose a location.';
+					addVenueError.classList.remove('d-none');
+				}
+				return;
+			}
+			var body = new FormData();
+			body.append('_token', cfg.venueFromMapToken);
+			body.append('name', name);
+			body.append('address', payload.address || '');
+			body.append('city', payload.city || '');
+			body.append('state', payload.state || '');
+			body.append('country', payload.country || '');
+			body.append('postalCode', payload.postalCode || '');
+			body.append('latitude', payload.latitude);
+			body.append('longitude', payload.longitude);
+			if (addVenueError) { addVenueError.classList.add('d-none'); addVenueError.textContent = ''; }
+			saveVenueBtn.disabled = true;
+			fetch(cfg.venueFromMapUrl, { method: 'POST', body: body })
+				.then(function(r) { return r.json().then(function(j) { return { ok: r.ok, json: j }; }); })
+				.then(function(res) {
+					saveVenueBtn.disabled = false;
+					if (res.ok && res.json.id) {
+						var opt = document.createElement('option');
+						opt.value = res.json.id;
+						opt.setAttribute('data-lat', res.json.latitude || '');
+						opt.setAttribute('data-lng', res.json.longitude || '');
+						opt.textContent = res.json.name;
+						if (venueSelect) {
+							venueSelect.appendChild(opt);
+							venueSelect.value = res.json.id;
+							updateMainMapFromVenue();
+						}
+						var modal = typeof bootstrap !== 'undefined' && bootstrap.Modal ? bootstrap.Modal.getInstance(addVenueModalEl) : null;
+						if (modal) modal.hide();
+					} else {
+						if (addVenueError) {
+							addVenueError.textContent = res.json.error || 'Failed to save venue.';
+							addVenueError.classList.remove('d-none');
+						}
+					}
+				})
+				.catch(function() {
+					saveVenueBtn.disabled = false;
+					if (addVenueError) {
+						addVenueError.textContent = 'Network error. Please try again.';
+						addVenueError.classList.remove('d-none');
+					}
+				});
+		});
+	}
+}
+if (typeof L !== 'undefined') {
+	document.addEventListener('DOMContentLoaded', eventifyLeafletInit);
+}
+</script>
 <script>
 (function() {
 	/* Status dropdown: pill trigger + menu (Draft / Publish now / Cancelled) */

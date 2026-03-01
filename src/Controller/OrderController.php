@@ -14,11 +14,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\OrderRepository;
 use App\Security\OrderVoter;
 use App\Service\OrderService;
+use App\Service\TicketQrCodeGenerator;
+use Dompdf\Dompdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
 #[Route('/orders')]
 class OrderController extends AbstractController
@@ -27,6 +30,8 @@ class OrderController extends AbstractController
         private readonly OrderRepository $orderRepository,
         private readonly OrderService $orderService,
         private readonly EntityManagerInterface $entityManager,
+        private readonly TicketQrCodeGenerator $ticketQrCodeGenerator,
+        private readonly Environment $twig,
     ) {
     }
 
@@ -44,12 +49,11 @@ class OrderController extends AbstractController
         ]);
     }
 
-    /** Client: create order for an event (buy ticket) */
+    /** Create order for an event (buy ticket) – any authenticated user */
     #[Route('/create/{eventId}', name: 'app_order_create', requirements: ['eventId' => '\d+'], methods: ['GET', 'POST'])]
     public function create(Request $request, int $eventId): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted(User::ROLE_CLIENT);
         $event = $this->entityManager->getRepository(Event::class)->find($eventId);
         if (!$event instanceof Event) {
             throw $this->createNotFoundException('Event not found.');
@@ -80,12 +84,11 @@ class OrderController extends AbstractController
         ]);
     }
 
-    /** Client: checkout from modal (JSON) – creates one order per ticket line */
+    /** Checkout from modal (JSON) – creates one order per ticket line; any authenticated user */
     #[Route('/checkout/{eventId}', name: 'app_order_checkout', requirements: ['eventId' => '\d+'], methods: ['POST'])]
     public function checkout(Request $request, int $eventId): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $this->denyAccessUnlessGranted(User::ROLE_CLIENT);
 
         $event = $this->entityManager->getRepository(Event::class)->find($eventId);
         if (!$event instanceof Event) {
@@ -119,9 +122,19 @@ class OrderController extends AbstractController
             }
             try {
                 $order = $this->orderService->createOrder($user, $event, $ticket, $quantity);
-                $created[] = ['id' => $order->getId()];
+                $created[] = [
+                    'id' => $order->getId(),
+                    'uuid' => $order->getUuid(),
+                    'qrCodePath' => $order->getQrCodePath(),
+                    'qrCodeUrl' => $order->getUuid() ? $this->generateUrl('app_qrcode_serve', ['uuid' => $order->getUuid()]) : null,
+                ];
             } catch (\InvalidArgumentException $e) {
                 return new JsonResponse(['success' => false, 'error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+            } catch (\Throwable $e) {
+                return new JsonResponse([
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -131,11 +144,15 @@ class OrderController extends AbstractController
 
         $orderIds = array_column($created, 'id');
         $firstOrderId = $orderIds[0];
+        $firstOrder = $created[0];
 
         return new JsonResponse([
             'success' => true,
             'orders' => $created,
             'orderId' => $firstOrderId,
+            'uuid' => $firstOrder['uuid'],
+            'qrCodePath' => $firstOrder['qrCodePath'],
+            'qrCodeUrl' => $firstOrder['qrCodeUrl'] ?? null,
             'message' => 'Order placed successfully.',
         ], Response::HTTP_CREATED);
     }
@@ -153,11 +170,74 @@ class OrderController extends AbstractController
         ]);
     }
 
+    /** Download ticket as PDF */
+    #[Route('/{id}/ticket.pdf', name: 'app_order_ticket_pdf', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function ticketPdf(Order $order): Response
+    {
+        $this->denyAccessUnlessGranted(OrderVoter::VIEW, $order);
+
+        if ($order->getUuid()) {
+            $qrPath = $order->getQrCodePath();
+            $qrAbsolute = $qrPath ? $this->getParameter('kernel.project_dir') . '/public/' . $qrPath : null;
+            if (!$qrPath || ($qrAbsolute && !is_file($qrAbsolute))) {
+                try {
+                    $this->ticketQrCodeGenerator->generateForOrder($order);
+                    $this->entityManager->flush();
+                } catch (\Throwable $e) {
+                    // continue without QR in PDF
+                }
+            }
+        }
+
+        $qrCodeDataUri = null;
+        if ($order->getQrCodePath()) {
+            $path = $this->getParameter('kernel.project_dir') . '/public/' . $order->getQrCodePath();
+            if (is_file($path)) {
+                $qrCodeDataUri = 'data:image/png;base64,' . base64_encode((string) file_get_contents($path));
+            }
+        }
+
+        $html = $this->twig->render('order/ticket_pdf.html.twig', [
+            'order' => $order,
+            'qrCodeDataUri' => $qrCodeDataUri,
+        ]);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $filename = sprintf('ticket-order-%s.pdf', $order->getId());
+
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]
+        );
+    }
+
     /** Organizer / Admin: view single order */
     #[Route('/{id}', name: 'app_order_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Order $order): Response
     {
         $this->denyAccessUnlessGranted(OrderVoter::VIEW, $order);
+
+        // Ensure QR code exists: generate if missing or if file was never created
+        if ($order->getUuid()) {
+            $qrPath = $order->getQrCodePath();
+            $qrAbsolute = $qrPath ? $this->getParameter('kernel.project_dir') . '/public/' . $qrPath : null;
+            if (!$qrPath || ($qrAbsolute && !is_file($qrAbsolute))) {
+                try {
+                    $this->ticketQrCodeGenerator->generateForOrder($order);
+                    $this->entityManager->flush();
+                } catch (\Throwable $e) {
+                    // Don't break the page if QR generation fails
+                }
+            }
+        }
 
         return $this->render('order/show.html.twig', [
             'order' => $order,

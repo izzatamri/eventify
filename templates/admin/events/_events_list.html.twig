@@ -1,0 +1,93 @@
+<div class="team-list grid-view-filter row" id="event-card-list">
+	{% for event in events %}
+		<div class="col event-card">
+			<div class="card team-box" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); overflow: hidden;">
+				<div class="team-cover">
+					{% if event.image %}
+						<img src="{{ asset(event.image) }}" alt="" class="img-fluid" style="height:120px;width:100%;object-fit:cover;">
+					{% else %}
+						<div style="height:120px;width:100%;background:linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);"></div>
+					{% endif %}
+				</div>
+				<div class="card-body" style="padding: 1.25rem;">
+					<div class="row align-items-center team-row">
+						<div class="col team-settings">
+							<div class="row">
+								<div class="col"></div>
+								<div class="col text-end dropdown">
+									<a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false">
+										<i class="ri-more-fill fs-17"></i>
+									</a>
+									<ul class="dropdown-menu dropdown-menu-end">
+										<li>
+											<a class="dropdown-item" href="{{ path('app_event_show', { id: event.id }) }}" target="_blank">
+												<i class="ri-external-link-line me-2 align-bottom text-muted"></i>View on site
+											</a>
+										</li>
+										<li>
+											<form method="post" action="{{ path('app_admin_events_ban', { id: event.id }) }}" class="d-inline" id="form-ban-{{ event.id }}">
+												<input type="hidden" name="_token" value="{{ csrf_token('event_ban_' ~ event.id) }}">
+												<button type="submit" class="dropdown-item {{ event.status == 'cancelled' ? 'text-success' : 'text-danger' }}">
+													<i class="ri-forbid-line me-2 align-bottom text-muted"></i>
+													{{ event.status == 'cancelled' ? 'Unban event' : 'Ban event' }}
+												</button>
+											</form>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col">
+							<div class="team-profile-img">
+								<div class="avatar-lg img-thumbnail rounded-circle flex-shrink-0" style="border-radius: 50% !important;">
+									<div class="avatar-title border bg-light text-primary rounded-circle text-uppercase" style="font-size: 16px; font-weight: 600;">{{ event.title|slice(0,2)|upper }}</div>
+								</div>
+								<div class="team-content">
+									<h5 class="mb-1 member-name fw-bold" style="font-size: 15px;">{{ event.title }}</h5>
+									<p class="text-muted member-designation mb-0" style="font-size: 13px;">{{ event.organizer ? event.organizer.name : '—' }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col">
+							<div class="row text-muted text-center">
+								<div class="col-6 border-end" style="border-color: rgba(0,0,0,0.08) !important;">
+									<h5 class="mb-1 fw-bold" style="font-size: 18px;">{{ event.sold }}</h5>
+									<p class="text-muted mb-0" style="font-size: 12px;">Sold</p>
+								</div>
+								<div class="col-6">
+									<h5 class="mb-1">
+										{% if event.status == 'published' %}
+											<span class="badge bg-success" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Published</span>
+										{% elseif event.status == 'draft' %}
+											<span class="badge bg-warning" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Draft</span>
+										{% else %}
+											<span class="badge bg-danger" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Cancelled</span>
+										{% endif %}
+									</h5>
+									<p class="text-muted mb-0" style="font-size: 12px;">Status</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col">
+							<div class="text-end">
+								<small class="text-muted d-block fw-semibold" style="font-size: 12px;">{{ event.startDatetime ? event.startDatetime|date('M d, Y') : '—' }}</small>
+								<a href="{{ path('app_event_show', { id: event.id }) }}" class="btn btn-primary btn-sm mt-2" target="_blank" style="border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 12px; font-weight: 600;">View</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="col-12">
+			<div class="text-center py-5 text-muted">
+				<i class="ri-calendar-event-line fs-1"></i>
+				<p class="mt-2 mb-0">No events found.</p>
+			</div>
+		</div>
+	{% endfor %}
+</div>
+<div class="py-4 mt-4 text-center {{ events|length > 0 ? 'd-none' : '' }}" id="noresult">
+	<lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:72px;height:72px"></lord-icon>
+	<h5 class="mt-4">No events match your search.</h5>
+</div>

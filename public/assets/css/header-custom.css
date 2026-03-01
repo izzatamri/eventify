@@ -1,0 +1,140 @@
+/* Custom Header Styling */
+.header-elements {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.site-logo {
+    flex-shrink: 0;
+}
+
+.main-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.main-menu ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+}
+
+.user-menu-area {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.user-menu-area ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 15px;
+}
+
+.user-menu-area li {
+    position: relative;
+}
+
+.user-menu-area > ul > li > a {
+    font-family: var(--ztc-family-font1) !important;
+    font-size: var(--ztc-font-size-font-s16);
+    font-weight: var(--ztc-weight-medium);
+    color: var(--ztc-text-text-1);
+    display: block;
+    transition: all 0.4s;
+    padding: 0 20px;
+    text-decoration: none;
+}
+
+.user-menu-area > ul > li > a:hover {
+    color: var(--ztc-text-text-4) !important;
+    transition: all 0.4s;
+}
+
+.user-menu-area .user-menu-link i {
+    font-size: var(--ztc-font-size-font-s12) !important;
+}
+
+.user-menu-area .btn-login,
+.user-menu-area .btn-register {
+    font-family: var(--ztc-family-font1) !important;
+    font-size: var(--ztc-font-size-font-s16);
+    font-weight: var(--ztc-weight-medium);
+    color: var(--ztc-text-text-1);
+    display: block;
+    transition: all 0.4s;
+    padding: 0 20px;
+    text-decoration: none;
+}
+
+.user-menu-area .btn-login:hover,
+.user-menu-area .btn-register:hover {
+    opacity: 0.9;
+}
+
+.user-menu-area > ul > li {
+    position: relative;
+}
+
+.user-menu-area > ul > li::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 15px;
+    background: transparent;
+    z-index: 999;
+}
+
+.user-menu-area .dropdown-padding {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 220px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    padding: 10px 0;
+    display: none;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.user-menu-area > ul > li:hover .dropdown-padding {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.user-menu-area .dropdown-padding li {
+    display: block;
+    width: 100%;
+}
+
+.user-menu-area .dropdown-padding a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s;
+    font-size: 15px;
+}
+
+.user-menu-area .dropdown-padding a:hover {
+    background: #f5f5f5;
+}
+
+.user-menu-area .dropdown-padding i {
+    margin-right: 8px;
+    width: 16px;
+    display: inline-block;
+}

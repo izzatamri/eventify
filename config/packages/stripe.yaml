@@ -1,0 +1,3 @@
+parameters:
+    stripe_secret_key: '%env(default::STRIPE_SECRET_KEY)%'
+    stripe_public_key: '%env(default::STRIPE_PUBLIC_KEY)%'

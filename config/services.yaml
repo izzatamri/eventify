@@ -19,5 +19,32 @@ services:
     App\:
         resource: '../src/'
 
+    App\EventListener\RecaptchaLoginListener:
+        arguments:
+            $recaptchaSecretKey: '%recaptcha_secret_key%'
+
+    App\Controller\SecurityController:
+        arguments:
+            $recaptchaSiteKey: '%recaptcha_site_key%'
+
+    App\Controller\RegistrationController:
+        arguments:
+            $recaptchaSiteKey: '%recaptcha_site_key%'
+
+    App\Service\TicketQrCodeGenerator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Controller\StripeCheckoutController:
+        arguments:
+            $stripeSecretKey: '%stripe_secret_key%'
+
+    App\Command\TestMailerCommand:
+        arguments:
+            $mailerFrom: '%mailer_from%'
+
+    App\DependencyInjection\MailerDsnEnvVarProcessor:
+        tags: ['container.env_var_processor']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

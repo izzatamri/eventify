@@ -39,10 +39,6 @@ class EventVoter extends Voter
         /** @var Event $event */
         $event = $subject;
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-
         $organizer = $event->getOrganizer();
         if ($organizer === null) {
             return false;
@@ -50,6 +46,16 @@ class EventVoter extends Voter
         $owner = $organizer->getUser();
         if ($owner === null) {
             return false;
+        }
+
+        // Only the event creator can edit their event
+        if ($attribute === self::EDIT) {
+            return $owner->getId() === $user->getId();
+        }
+
+        // Admins can delete events and manage tickets/publishing
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
         }
 
         return $owner->getId() === $user->getId();

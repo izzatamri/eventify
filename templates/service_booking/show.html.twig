@@ -1,0 +1,60 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Booking #{{ booking.id }} - {{ event.title }} - Eventify{% endblock %}
+{% block page_heading %}Booking details{% endblock %}
+{% block page_breadcrumb %}Booking{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="mb-3">
+		<a href="{{ path('app_service_booking_index', { eventId: event.id }) }}" class="text-primary text-decoration-none small"><i class="fa-solid fa-chevron-left me-1"></i> Back to bookings</a>
+		<span class="mx-2 text-muted">/</span>
+		<a href="{{ path('app_event_show', { id: event.id }) }}" class="text-dark text-decoration-none">{{ event.title }}</a>
+	</div>
+
+	<div class="card border-0 shadow-sm">
+		<div class="card-body p-4">
+			<div class="d-flex justify-content-between align-items-start mb-4">
+				<h2 class="h5 fw-bold mb-0">Booking #{{ booking.id }}</h2>
+				<div>
+					{% if booking.status != 'cancelled' %}
+					<a href="{{ path('app_service_booking_edit', { eventId: event.id, id: booking.id }) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+					<form method="post" action="{{ path('app_service_booking_delete', { eventId: event.id, id: booking.id }) }}" class="d-inline" onsubmit="return confirm('Cancel this booking?');">
+						<input type="hidden" name="_token" value="{{ csrf_token('service_booking_delete_' ~ booking.id) }}">
+						<button type="submit" class="btn btn-sm btn-outline-danger">Cancel booking</button>
+					</form>
+					{% endif %}
+				</div>
+			</div>
+			<dl class="row mb-0">
+				<dt class="col-sm-3 text-muted">Provider</dt>
+				<dd class="col-sm-9">{{ booking.serviceProvider.name }} ({{ booking.serviceProvider.serviceType }})</dd>
+				<dt class="col-sm-3 text-muted">Email</dt>
+				<dd class="col-sm-9">{{ booking.serviceProvider.email }}</dd>
+				<dt class="col-sm-3 text-muted">Phone</dt>
+				<dd class="col-sm-9">{{ booking.serviceProvider.phone }}</dd>
+				<dt class="col-sm-3 text-muted">Scheduled date</dt>
+				<dd class="col-sm-9">{{ booking.scheduledDate|date('l, F j, Y') }}</dd>
+				<dt class="col-sm-3 text-muted">Time</dt>
+				<dd class="col-sm-9">{{ booking.startTime|date('H:i') }} – {{ booking.endTime|date('H:i') }}</dd>
+				<dt class="col-sm-3 text-muted">Quantity</dt>
+				<dd class="col-sm-9">{{ booking.quantity }}</dd>
+				<dt class="col-sm-3 text-muted">Agreed price</dt>
+				<dd class="col-sm-9">{{ booking.agreedPrice|number_format(2) }} USD</dd>
+				<dt class="col-sm-3 text-muted">Status</dt>
+				<dd class="col-sm-9">
+					{% if booking.status == 'pending' %}<span class="badge bg-warning text-dark">Pending</span>
+					{% elseif booking.status == 'confirmed' %}<span class="badge bg-success">Confirmed</span>
+					{% elseif booking.status == 'cancelled' %}<span class="badge bg-danger">Cancelled</span>
+					{% else %}<span class="badge bg-info">Completed</span>
+					{% endif %}
+				</dd>
+				{% if booking.notes %}
+				<dt class="col-sm-3 text-muted">Notes</dt>
+				<dd class="col-sm-9">{{ booking.notes }}</dd>
+				{% endif %}
+			</dl>
+		</div>
+	</div>
+</div>
+{% endblock %}

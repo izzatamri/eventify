@@ -1,0 +1,150 @@
+{% extends 'admin/layout_velzon.html.twig' %}
+
+{% block title %}{{ is_new ? 'Add user' : 'Edit user' }}{% endblock %}
+{% block page_heading %}{{ is_new ? 'Add user' : 'Edit user' }}{% endblock %}
+{% block page_breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{ path('app_admin_users_index') }}">Users</a></li>
+    <li class="breadcrumb-item active">{{ is_new ? 'Add user' : 'Edit user' }}</li>
+{% endblock %}
+
+{% block content %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-xxl-3">
+            <div class="card" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+                <div class="card-body" style="padding: 1.5rem;">
+                    <div class="text-center">
+                        <div class="position-relative d-inline-block">
+                            <div class="avatar-lg img-thumbnail rounded-circle">
+                                <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-2 text-uppercase">
+                                    {{ user.displayName|slice(0,1)|default(user.email|slice(0,1))|upper }}
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="mt-3 mb-1 fw-bold" style="font-size: 16px;">{{ user.displayName ?: 'New user' }}</h5>
+                        <p class="text-muted mb-0" style="font-size: 13px;">{{ user.email }}</p>
+                        <div class="mt-3">
+                            {% if user.isActive %}
+                                <span class="badge bg-success" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Inactive</span>
+                            {% endif %}
+                        </div>
+                        {% if not is_new and user.createdAt %}
+                            <div class="mt-3 text-muted" style="font-size: 12px;">
+                                Joined {{ user.createdAt|date('M d, Y') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-9">
+            <div class="card" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+                <div class="card-header" style="padding: 1.25rem;">
+                    <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab">
+                                <i class="fas fa-home"></i> Personal Details
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#changePassword" role="tab">
+                                <i class="far fa-user"></i> {{ is_new ? 'Password' : 'Change Password' }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body" style="padding: 1.5rem;">
+                    {{ form_start(form) }}
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="personalDetails" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        {{ form_label(form.firstName, null, {'label_attr': {'class': 'form-label fw-semibold', 'style': 'font-size: 14px;'}}) }}
+                                        {{ form_widget(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'First name', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
+                                        {{ form_errors(form.firstName) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        {{ form_label(form.lastName, null, {'label_attr': {'class': 'form-label fw-semibold', 'style': 'font-size: 14px;'}}) }}
+                                        {{ form_widget(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Last name', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
+                                        {{ form_errors(form.lastName) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label fw-semibold', 'style': 'font-size: 14px;'}}) }}
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'user@example.com', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
+                                        {{ form_errors(form.email) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        {{ form_label(form.isActive, null, {'label_attr': {'class': 'form-label fw-semibold d-block', 'style': 'font-size: 14px;'}}) }}
+                                        <div class="form-check form-switch">
+                                            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input', 'style': 'cursor: pointer;'}}) }}
+                                        </div>
+                                        {{ form_errors(form.isActive) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        {{ form_label(form.roles, null, {'label_attr': {'class': 'form-label fw-semibold', 'style': 'font-size: 14px;'}}) }}
+                                        {{ form_widget(form.roles, {'attr': {'class': 'form-control', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
+                                        {{ form_errors(form.roles) }}
+                                        <div class="form-text" style="font-size: 12px;">Select one or more roles for this user.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="changePassword" role="tabpanel">
+                            <div class="row g-2">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        {{ form_label(form.plainPassword.first, null, {'label_attr': {'class': 'form-label fw-semibold', 'style': 'font-size: 14px;'}}) }}
+                                        {{ form_widget(form.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': is_new ? 'Password' : 'New password', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
+                                        {{ form_errors(form.plainPassword.first) }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        {{ form_label(form.plainPassword.second, null, {'label_attr': {'class': 'form-label fw-semibold', 'style': 'font-size: 14px;'}}) }}
+                                        {{ form_widget(form.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': is_new ? 'Repeat password' : 'Repeat new password', 'style': 'border-radius: 8px; padding: 0.5rem 0.75rem;'}}) }}
+                                        {{ form_errors(form.plainPassword.second) }}
+                                    </div>
+                                </div>
+                                {% if not is_new %}
+                                    <div class="col-lg-12">
+                                        <p class="text-muted mb-0" style="font-size: 12px;">Leave password fields empty to keep the current password.</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{{ path('app_admin_users_index') }}" class="btn btn-outline-secondary" style="border-radius: 8px; padding: 0.5rem 1.5rem;">Cancel</a>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1.5rem; font-weight: 600;">
+                            <i class="ri-save-line me-1"></i>{{ is_new ? 'Create User' : 'Save Changes' }}
+                        </button>
+                    </div>
+
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

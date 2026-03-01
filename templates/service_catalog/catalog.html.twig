@@ -1,0 +1,145 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Browse services - Eventify{% endblock %}
+{% block page_heading %}Browse services{% endblock %}
+{% block page_breadcrumb %}<a href="{{ path('app_home') }}">Home</a> / Browse services{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+	{# Page Header #}
+	<div class="section-header mb-4">
+		<div class="row align-items-center">
+			<div class="col-md-8">
+				<h2 style="font-size: 32px; font-weight: 600; margin-bottom: 5px;">Service Providers</h2>
+				<p style="font-size: 15px; color: #666; margin-bottom: 0;">Browse and discover professional service providers for your events</p>
+			</div>
+		</div>
+	</div>
+
+	{# Info Banner #}
+	<div class="alert alert-info border-0 mb-4" style="background: #e7f3ff; border-radius: 10px;">
+		<i class="fa-solid fa-info-circle me-2"></i>
+		<strong>How it works:</strong> To book a service for your event, go to your event's management page and use the <strong>Service bookings</strong> section.
+	</div>
+
+	{# Search Toolbar #}
+	<div class="events-toolbar mb-5">
+		<div class="row align-items-center g-3">
+			<div class="col-lg-6">
+				<label for="search-services" class="form-label fw-semibold mb-2"><i class="fa-solid fa-search me-2"></i>Search Services</label>
+				<div class="input-group input-group-lg">
+					<span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+					<input type="text" class="form-control" placeholder="Search by provider name, type, or location..." id="search-services" />
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<label class="form-label fw-semibold mb-2"><i class="fa-solid fa-filter me-2"></i>Service Type</label>
+				<select class="form-select form-select-lg" id="filter-type">
+					<option value="">All Types</option>
+					<option value="catering">Catering</option>
+					<option value="photography">Photography</option>
+					<option value="venue">Venue</option>
+					<option value="audio-visual">Audio/Visual</option>
+					<option value="decoration">Decoration</option>
+				</select>
+			</div>
+			<div class="col-lg-3">
+				<label class="form-label fw-semibold mb-2"><i class="fa-solid fa-arrow-down-short-wide me-2"></i>Sort By</label>
+				<select class="form-select form-select-lg" id="sort-services">
+					<option value="name">Name (A-Z)</option>
+					<option value="rate-asc">Price (Low to High)</option>
+					<option value="rate-desc">Price (High to Low)</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="row g-4" id="services-container">
+		{% for provider in providers %}
+		<div class="col-md-6 col-lg-4 service-card" data-name="{{ provider.name|lower }}" data-type="{{ provider.serviceType|lower }}">
+			<div class="card border-0 h-100" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+				<div class="card-body p-4">
+					<div class="d-flex justify-content-between align-items-start mb-3">
+						<span class="badge" style="background: #0d6efd; padding: 6px 12px; font-size: 12px; font-weight: 600; text-transform: capitalize;">{{ provider.serviceType }}</span>
+						<div class="text-end">
+							<div style="font-size: 24px; font-weight: 700; color: #0d6efd; line-height: 1;">${{ provider.hourlyRate|number_format(0) }}</div>
+							<small class="text-muted">per hour</small>
+						</div>
+					</div>
+					<h3 class="h5 fw-bold mb-3" style="color: #333;">{{ provider.name }}</h3>
+					<div class="mb-3">
+						<p class="small text-muted mb-2"><i class="fa-solid fa-envelope me-2" style="color: #0d6efd; width: 16px;"></i>{{ provider.email }}</p>
+						<p class="small text-muted mb-0"><i class="fa-solid fa-phone me-2" style="color: #0d6efd; width: 16px;"></i>{{ provider.phone }}</p>
+					</div>
+					<div class="d-grid mt-auto">
+						<button class="btn btn-outline-primary" disabled>
+							<i class="fa-solid fa-info-circle me-2"></i>Book via Event Page
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% else %}
+		<div class="col-12">
+			<div class="card border-0" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+				<div class="card-body text-center" style="padding: 80px 20px;">
+					<i class="fa-solid fa-briefcase" style="font-size: 64px; color: #dee2e6; margin-bottom: 20px;"></i>
+					<h4 style="color: #6c757d; margin-bottom: 10px;">No Service Providers Available</h4>
+					<p class="text-muted mb-0">Check back later as we add more service providers to our platform.</p>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	var searchInput = document.getElementById('search-services');
+	var filterType = document.getElementById('filter-type');
+	var sortSelect = document.getElementById('sort-services');
+	var cards = document.querySelectorAll('.service-card');
+	
+	function filterAndSort() {
+		var searchTerm = searchInput.value.toLowerCase();
+		var selectedType = filterType.value.toLowerCase();
+		var visibleCards = [];
+		
+		cards.forEach(function(card) {
+			var name = card.getAttribute('data-name') || '';
+			var type = card.getAttribute('data-type') || '';
+			var matchesSearch = searchTerm === '' || name.includes(searchTerm) || type.includes(searchTerm);
+			var matchesType = selectedType === '' || type === selectedType;
+			
+			if (matchesSearch && matchesType) {
+				card.style.display = '';
+				visibleCards.push(card);
+			} else {
+				card.style.display = 'none';
+			}
+		});
+		
+		// Simple sorting (note: would need more complex logic for actual price sorting)
+		var sortValue = sortSelect.value;
+		if (sortValue === 'name') {
+			visibleCards.sort(function(a, b) {
+				return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+			});
+		}
+		
+		// Re-append in sorted order
+		var container = document.getElementById('services-container');
+		visibleCards.forEach(function(card) {
+			container.appendChild(card);
+		});
+	}
+	
+	if (searchInput) searchInput.addEventListener('input', filterAndSort);
+	if (filterType) filterType.addEventListener('change', filterAndSort);
+	if (sortSelect) sortSelect.addEventListener('change', filterAndSort);
+});
+</script>
+{% endblock %}

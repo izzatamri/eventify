@@ -9,11 +9,14 @@ use App\Entity\Order;
 use App\Entity\Ticket;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\TicketQrCodeGenerator;
+use Symfony\Component\Uid\Uuid;
 
 class OrderService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+            private readonly TicketQrCodeGenerator $ticketQrCodeGenerator,
     ) {
     }
 
@@ -45,6 +48,8 @@ class OrderService
         $order->setQuantity($quantity);
         $order->setTotalPrice($totalPrice);
         $order->setStatus(Order::STATUS_CONFIRMED);
+        // Set UUID before persist so QR generator can run (PrePersist will skip if already set)
+        $order->setUuid(Uuid::v4()->toRfc4122());
 
         $this->entityManager->wrapInTransaction(function () use ($order, $event, $ticket, $quantity, $totalPrice): void {
             $this->entityManager->persist($order);
@@ -53,6 +58,12 @@ class OrderService
             $event->setGross(bcadd($event->getGross(), $totalPrice, 2));
 
             $ticket->setQuantitySold($ticket->getQuantitySold() + $quantity);
+
+            try {
+                $this->ticketQrCodeGenerator->generateForOrder($order);
+            } catch (\Throwable $e) {
+                // Don't fail the order if QR generation fails; QR can be generated on first view
+            }
 
             $this->entityManager->flush();
         });

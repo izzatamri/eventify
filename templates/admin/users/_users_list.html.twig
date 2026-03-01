@@ -1,0 +1,100 @@
+<div class="team-list grid-view-filter row" id="team-member-list">
+	{% for user in users %}
+		<div class="col member-card">
+			<div class="card team-box" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); overflow: hidden;">
+				<div class="team-cover">
+					<div style="height:120px;width:100%;background:linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);"></div>
+				</div>
+				<div class="card-body" style="padding: 1.25rem;">
+					<div class="row align-items-center team-row">
+						<div class="col team-settings">
+							<div class="row">
+								<div class="col"></div>
+								<div class="col text-end dropdown">
+									<a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false">
+										<i class="ri-more-fill fs-17"></i>
+									</a>
+									<ul class="dropdown-menu dropdown-menu-end">
+										<li>
+											<a class="dropdown-item" href="{{ path('app_admin_users_edit', { id: user.id }) }}">
+												<i class="ri-pencil-line me-2 align-bottom text-muted"></i>
+												Modify user
+											</a>
+										</li>
+										<li>
+											<form method="post" action="{{ path('app_admin_users_toggle_active', { id: user.id }) }}" class="d-inline" id="form-toggle-{{ user.id }}">
+												<input type="hidden" name="_token" value="{{ csrf_token('user_toggle_' ~ user.id) }}">
+												<button type="submit" class="dropdown-item">
+													<i class="ri-user-follow-line me-2 align-bottom text-muted"></i>
+													{{ user.isActive ? 'Deactivate' : 'Activate' }}
+												</button>
+											</form>
+										</li>
+										{% if user.id != app.user.id %}
+											<li>
+												<form method="post" action="{{ path('app_admin_users_delete', { id: user.id }) }}" class="d-inline" id="form-delete-{{ user.id }}" onsubmit="return confirm('Delete this user?');">
+													<input type="hidden" name="_token" value="{{ csrf_token('user_delete_' ~ user.id) }}">
+													<button type="submit" class="dropdown-item text-danger">
+														<i class="ri-delete-bin-5-line me-2 align-bottom text-muted"></i>
+														Delete
+													</button>
+												</form>
+											</li>
+										{% endif %}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col">
+							<div class="team-profile-img">
+								<div class="avatar-lg img-thumbnail rounded-circle flex-shrink-0" style="border-radius: 50% !important;">
+									<div class="avatar-title border bg-light text-primary rounded-circle text-uppercase" style="font-size: 20px; font-weight: 600;">{{ user.displayName|slice(0,1)|default(user.email|slice(0,1))|upper }}</div>
+								</div>
+								<div class="team-content">
+									<h5 class="mb-1 member-name fw-bold" style="font-size: 15px;">{{ user.displayName }}</h5>
+									<p class="text-muted member-designation mb-0" style="font-size: 13px;">{{ user.email }}</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col">
+							<div class="row text-muted text-center">
+								<div class="col-6 border-end" style="border-color: rgba(0,0,0,0.08) !important;">
+									<h5 class="mb-1 fw-bold" style="font-size: 18px;">{{ user.roles|length }}</h5>
+									<p class="text-muted mb-0" style="font-size: 12px;">Roles</p>
+								</div>
+								<div class="col-6">
+									<h5 class="mb-1">
+										{% if user.isActive %}
+											<span class="badge bg-success" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Active</span>
+										{% else %}
+											<span class="badge bg-danger" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Inactive</span>
+										{% endif %}
+									</h5>
+									<p class="text-muted mb-0" style="font-size: 12px;">Status</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col">
+							<div class="text-end">
+								{% for role in user.roles %}
+									<span class="badge bg-primary mb-1" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">{{ role }}</span>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="col-12">
+			<div class="text-center py-5 text-muted">
+				<i class="ri-user-line fs-1"></i>
+				<p class="mt-2 mb-0">No users found.</p>
+			</div>
+		</div>
+	{% endfor %}
+</div>
+<div class="py-4 mt-4 text-center {{ users|length > 0 ? 'd-none' : '' }}" id="noresult">
+	<lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:72px;height:72px"></lord-icon>
+	<h5 class="mt-4">No users match your search.</h5>
+</div>

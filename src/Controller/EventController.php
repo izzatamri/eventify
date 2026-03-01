@@ -6,9 +6,11 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\Organizer;
+use App\Entity\Sponsor;
 use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\EventType;
+use App\Form\SponsorRequestType;
 use App\Form\TicketType;
 use App\Repository\EventRepository;
 use App\Repository\OrganizerRepository;
@@ -19,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/events')]
+#[Route('')]
 class EventController extends AbstractController
 {
     public function __construct(
@@ -29,17 +31,43 @@ class EventController extends AbstractController
     ) {
     }
 
-    #[Route('', name: 'app_events', methods: ['GET'])]
-    public function index(): Response
+    #[Route('/', name: 'app_home', methods: ['GET'])]
+    #[Route('/events', name: 'app_events', methods: ['GET'])]
+    public function index(Request $request): Response
     {
-        $events = $this->eventRepository->findAllOrderByStart();
+        $filterOrganizer = null;
+        $organizerId = $request->query->getInt('organizer');
+        if ($organizerId > 0 && $this->isGranted('ROLE_ADMIN')) {
+            $organizer = $this->organizerRepository->find($organizerId);
+            if ($organizer instanceof Organizer) {
+                $filterOrganizer = $organizer;
+            }
+        }
+
+        $q = trim($request->query->getString('q'));
+        $sort = $request->query->getString('sort');
+        $allowedSort = ['date_asc', 'date_desc', 'title_asc', 'title_desc'];
+        if (!\in_array($sort, $allowedSort, true)) {
+            $sort = 'date_asc';
+        }
+
+        $events = $this->eventRepository->findForListing($q, $sort, $filterOrganizer);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('events/_events_list.html.twig', [
+                'events' => $events,
+            ]);
+        }
 
         return $this->render('events.html.twig', [
             'events' => $events,
+            'filter_organizer' => $filterOrganizer,
+            'search_q' => $q,
+            'search_sort' => $sort,
         ]);
     }
 
-    #[Route('/my', name: 'app_my_events', methods: ['GET'])]
+    #[Route('/myevents', name: 'app_my_events', methods: ['GET'])]
     public function myEvents(Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -227,16 +255,29 @@ class EventController extends AbstractController
         $otherEvents = array_values(array_filter($otherEvents, fn (Event $e) => $e->getId() !== $event->getId()));
         $otherEvents = array_slice($otherEvents, 0, 3);
 
+        $sponsorRequest = new Sponsor();
+        $sponsorRequestForm = $this->createForm(SponsorRequestType::class, $sponsorRequest);
+
         return $this->render('event_show.html.twig', [
             'event' => $event,
             'otherEvents' => $otherEvents,
+            'sponsorRequestForm' => $sponsorRequestForm,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function edit(Request $request, Event $event): Response
+    public function edit(Request $request, int $id): Response
     {
-        $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
+        $event = $this->eventRepository->find($id);
+        
+        if (!$event) {
+            return $this->render('error/event_not_found.html.twig', [], new Response('', 404));
+        }
+
+        if (!$this->isGranted(EventVoter::EDIT, $event)) {
+            return $this->render('error/event_access_denied.html.twig', [], new Response('', 403));
+        }
+
         $form = $this->createForm(EventType::class, $event, [
             'allow_organizer_choice' => $this->isGranted('ROLE_ADMIN'),
         ]);

@@ -15492,6 +15492,34 @@ html {
   transition: all 0.6s;
 }
 
+/* Events listing toolbar (search + sort) */
+.events-toolbar {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 22px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+.events-toolbar .form-label {
+  margin-bottom: 6px;
+}
+.events-toolbar .input-group-lg .form-control,
+.events-toolbar .input-group-lg .input-group-text,
+.events-toolbar .form-select-lg {
+  border-radius: 999px;
+}
+.events-toolbar .input-group-lg .input-group-text {
+  border-right: 0;
+}
+.events-toolbar .input-group-lg .form-control {
+  border-left: 0;
+}
+@media (max-width: 767.98px) {
+  .events-toolbar {
+    padding: 14px 16px;
+  }
+}
+
 .team-details-section-area {
   position: relative;
   z-index: 1;

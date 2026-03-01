@@ -1,0 +1,184 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Sponsors - {{ event.title }} - Eventify{% endblock %}
+{% block page_heading %}Sponsors{% endblock %}
+{% block page_breadcrumb %}Sponsors{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('warning') %}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+	{% endfor %}
+
+	<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+		<div>
+			<a href="{{ path('app_my_events') }}" class="text-primary text-decoration-none small"><i class="fa-solid fa-chevron-left me-1"></i> My events</a>
+			<span class="mx-2 text-muted">/</span>
+			<a href="{{ path('app_event_show', { id: event.id }) }}" class="text-dark text-decoration-none fw-semibold">{{ event.title }}</a>
+		</div>
+		<div class="d-flex gap-2">
+			<a href="{{ path('app_sponsorship_package_index', { id: event.id }) }}" class="btn btn-outline-primary btn-sm">Packages</a>
+			<a href="{{ path('app_sponsor_new', { id: event.id }) }}" class="btn btn-warning text-dark fw-semibold btn-sm">New sponsor</a>
+		</div>
+	</div>
+
+	{# Sort & search (multi-criteria) #}
+	<form method="get" action="{{ path('app_sponsor_index', { id: event.id }) }}" class="card border-0 shadow-sm mb-4">
+		<div class="card-body py-3">
+			<div class="row g-2 align-items-end flex-wrap">
+				<div class="col-auto">
+					<label class="form-label small mb-0">Name</label>
+					<input type="text" name="name" class="form-control form-control-sm" placeholder="Company name…" value="{{ searchName }}" style="min-width: 140px;" />
+				</div>
+				<div class="col-auto">
+					<label class="form-label small mb-0">Email</label>
+					<input type="text" name="email" class="form-control form-control-sm" placeholder="Email…" value="{{ searchEmail }}" style="min-width: 160px;" />
+				</div>
+				<div class="col-auto">
+					<label class="form-label small mb-0">Status</label>
+					<select name="status" class="form-select form-select-sm" style="min-width: 130px;">
+						<option value="">All</option>
+						<option value="pending_approval" {{ filterStatus == 'pending_approval' ? 'selected' : '' }}>Pending approval</option>
+						<option value="active" {{ filterStatus == 'active' ? 'selected' : '' }}>Active</option>
+						<option value="inactive" {{ filterStatus == 'inactive' ? 'selected' : '' }}>Inactive</option>
+						<option value="rejected" {{ filterStatus == 'rejected' ? 'selected' : '' }}>Rejected</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label small mb-0">Payment</label>
+					<select name="payment" class="form-select form-select-sm" style="min-width: 110px;">
+						<option value="">All</option>
+						<option value="pending" {{ filterPaymentStatus == 'pending' ? 'selected' : '' }}>Pending</option>
+						<option value="paid" {{ filterPaymentStatus == 'paid' ? 'selected' : '' }}>Paid</option>
+						<option value="partially_paid" {{ filterPaymentStatus == 'partially_paid' ? 'selected' : '' }}>Partially</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label small mb-0">Package</label>
+					<select name="package" class="form-select form-select-sm" style="min-width: 120px;">
+						<option value="">All</option>
+						{% for pkg in packages %}
+							<option value="{{ pkg.id }}" {{ filterPackageId == pkg.id ? 'selected' : '' }}>{{ pkg.name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label small mb-0">Sort by</label>
+					<select name="sort" class="form-select form-select-sm" style="min-width: 120px;">
+						<option value="name" {{ sortBy == 'name' ? 'selected' : '' }}>Name</option>
+						<option value="email" {{ sortBy == 'email' ? 'selected' : '' }}>Email</option>
+						<option value="package" {{ sortBy == 'package' ? 'selected' : '' }}>Package</option>
+						<option value="status" {{ sortBy == 'status' ? 'selected' : '' }}>Status</option>
+						<option value="paymentStatus" {{ sortBy == 'paymentStatus' ? 'selected' : '' }}>Payment</option>
+						<option value="createdAt" {{ sortBy == 'createdAt' ? 'selected' : '' }}>Created</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label small mb-0">Order</label>
+					<select name="order" class="form-select form-select-sm" style="min-width: 90px;">
+						<option value="asc" {{ sortOrder == 'asc' ? 'selected' : '' }}>Asc</option>
+						<option value="desc" {{ sortOrder == 'desc' ? 'selected' : '' }}>Desc</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-search me-1"></i>Apply</button>
+					<a href="{{ path('app_sponsor_index', { id: event.id }) }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	{% set pending_count = sponsors|filter(s => s.status == 'pending_approval')|length %}
+	{% if pending_count > 0 %}
+		<div class="alert alert-info mb-4">
+			<i class="fa-solid fa-inbox me-2"></i><strong>{{ pending_count }}</strong> sponsorship request(s) waiting for your decision. Accept or Refuse below.
+		</div>
+	{% endif %}
+
+	<div class="card border-0 shadow-sm">
+		<div class="card-header bg-white border-0 border-bottom py-3">
+			<h2 class="h5 fw-bold mb-0">Sponsors for this event</h2>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead class="table-light">
+					<tr>
+						<th class="border-0 py-3">Company</th>
+						<th class="border-0 py-3">Package</th>
+						<th class="border-0 py-3">Payment</th>
+						<th class="border-0 py-3">Status</th>
+						<th class="border-0 py-3">Accepted / Refused by</th>
+						<th class="border-0 py-3 text-end" style="width: 120px;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sponsor in sponsors %}
+					<tr>
+						<td class="py-3">
+							<div class="d-flex align-items-center gap-2">
+								{% if sponsor.logoUrl %}
+									<img src="{{ sponsor.logoUrl }}" alt="" class="rounded" style="width: 36px; height: 36px; object-fit: contain; background: #f8f9fa;" />
+								{% endif %}
+								<div>
+									<span class="fw-semibold">{{ sponsor.name }}</span>
+									<p class="small text-muted mb-0">{{ sponsor.email }}</p>
+								</div>
+							</div>
+						</td>
+						<td class="py-3">{{ sponsor.sponsorshipPackage ? sponsor.sponsorshipPackage.name : '—' }}</td>
+						<td class="py-3">
+							<span class="badge {% if sponsor.paymentStatus == 'paid' %}bg-success{% elseif sponsor.paymentStatus == 'partially_paid' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ sponsor.paymentStatus|replace({'_': ' '})|title }}</span>
+							{% if sponsor.amountPaid is not null %}
+								<span class="small text-muted d-block">${{ sponsor.amountPaid|number_format(2) }}</span>
+							{% endif %}
+						</td>
+						<td class="py-3">
+							<span class="badge {% if sponsor.status == 'active' %}bg-primary{% elseif sponsor.status == 'rejected' %}bg-danger{% elseif sponsor.status == 'pending_approval' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ sponsor.status|replace({'_': ' '})|title }}</span>
+						</td>
+						<td class="py-3 small text-muted">
+							{% if sponsor.acceptedBy %}
+								<span class="text-success">Accepted by {{ sponsor.acceptedBy.displayName }}</span>
+							{% elseif sponsor.refusedBy %}
+								<span class="text-danger">Refused by {{ sponsor.refusedBy.displayName }}</span>
+							{% else %}
+								—
+							{% endif %}
+						</td>
+						<td class="py-3 text-end">
+							{% if sponsor.status == 'pending_approval' %}
+								<form method="post" action="{{ path('app_sponsor_accept', { id: event.id, sponsorId: sponsor.id }) }}" class="d-inline">
+									<input type="hidden" name="_token" value="{{ csrf_token('accept_sponsor_' ~ sponsor.id) }}" />
+									<button type="submit" class="btn btn-sm btn-success me-1">Accept</button>
+								</form>
+								<form method="post" action="{{ path('app_sponsor_refuse', { id: event.id, sponsorId: sponsor.id }) }}" class="d-inline">
+									<input type="hidden" name="_token" value="{{ csrf_token('refuse_sponsor_' ~ sponsor.id) }}" />
+									<button type="submit" class="btn btn-sm btn-outline-danger me-1">Refuse</button>
+								</form>
+							{% endif %}
+							<a href="{{ path('app_sponsor_edit', { id: event.id, sponsorId: sponsor.id }) }}" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+							<form method="post" action="{{ path('app_sponsor_delete', { id: event.id, sponsorId: sponsor.id }) }}" class="d-inline" onsubmit="return confirm('Delete this sponsor?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete_sponsor_' ~ sponsor.id) }}" />
+								<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+							</form>
+						</td>
+					</tr>
+					{% else %}
+					<tr>
+						<td colspan="6" class="py-5 text-center text-muted">
+							<p class="mb-2">No sponsors yet.</p>
+							<a href="{{ path('app_sponsor_new', { id: event.id }) }}" class="btn btn-warning text-dark btn-sm">Add first sponsor</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
