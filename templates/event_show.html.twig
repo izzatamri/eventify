@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -782,3 +783,1176 @@
 		</script>
 	</body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{{ event.title }} - Eventify</title>
+		<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
+		<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/aos.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/magnific-popup.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/mobile.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/owlcarousel.min.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/sidebar.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/slick-slider.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/nice-select.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/odometer.css" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/header-custom.css" />
+		<style>
+			/* Remove extra spacing around footer */
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				overflow-x: hidden;
+			}
+			.footer1-sertion-area {
+				margin: 0 !important;
+				padding-left: 0 !important;
+				padding-right: 0 !important;
+			}
+			/* Ticket checkout overlay (Reserve a spot) */
+			.ticket-checkout-overlay {
+				position: fixed;
+				inset: 0;
+				z-index: 999;
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: 20px;
+			}
+			.ticket-checkout-overlay.active {
+				display: flex;
+				animation: fadeIn 0.2s ease-out;
+			}
+			@keyframes fadeIn {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+			.ticket-checkout-backdrop {
+				position: absolute;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.75);
+				backdrop-filter: blur(4px);
+			}
+			.ticket-checkout-modal {
+				position: relative;
+				max-width: 1000px;
+				width: 100%;
+				max-height: 90vh;
+				background: #fff;
+				border-radius: 20px;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+				overflow: hidden;
+				display: flex;
+				flex-direction: row;
+				z-index: 1;
+				animation: slideUp 0.3s ease-out;
+			}
+			@keyframes slideUp {
+				from { transform: translateY(20px); opacity: 0; }
+				to { transform: translateY(0); opacity: 1; }
+			}
+			@media (max-width: 991px) {
+				.ticket-checkout-modal {
+					flex-direction: column;
+					max-height: 95vh;
+				}
+			}
+			.ticket-checkout-main {
+				flex: 2;
+				padding: 2.5rem;
+				overflow-y: auto;
+				max-height: 90vh;
+			}
+			@media (max-width: 991px) {
+				.ticket-checkout-main {
+					padding: 1.5rem;
+				}
+			}
+			.ticket-checkout-summary {
+				flex: 1.3;
+				padding: 2.5rem;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				border-left: 1px solid #dee2e6;
+				overflow-y: auto;
+			}
+			@media (max-width: 991px) {
+				.ticket-checkout-summary {
+					padding: 1.5rem;
+					border-left: none;
+					border-top: 1px solid #dee2e6;
+				}
+			}
+			.ticket-checkout-thankyou {
+				text-align: center;
+				padding: 2rem 0;
+			}
+			.ticket-checkout-thankyou-icon {
+				width: 56px;
+				height: 56px;
+				border-radius: 50%;
+				background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+				color: #fff;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1rem;
+				font-size: 24px;
+				box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+			}
+			.ticket-summary-hero {
+				border-radius: 15px;
+				overflow: hidden;
+				margin-bottom: 1.5rem;
+				background: #e5e7eb;
+				height: 160px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			}
+			.ticket-summary-hero img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+			.ticket-checkout-header-title {
+				font-size: 1.5rem;
+				font-weight: 700;
+				margin-bottom: 0.5rem;
+				color: #1f2937;
+			}
+			.ticket-checkout-header-subtitle {
+				font-size: 0.95rem;
+				color: #6b7280;
+				margin-bottom: 1.5rem;
+			}
+			.ticket-checkout-card {
+				border-radius: 15px;
+				border: 1px solid #e5e7eb;
+				padding: 1.5rem;
+				background: #fff;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+				margin-bottom: 1.5rem;
+			}
+			.ticket-checkout-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 1rem 0;
+				border-bottom: 1px solid #f3f4f6;
+			}
+			.ticket-checkout-row:last-child {
+				border-bottom: none;
+				padding-bottom: 0;
+			}
+			.ticket-checkout-row:first-child {
+				padding-top: 0;
+			}
+			.ticket-name {
+				font-weight: 600;
+				font-size: 1rem;
+				color: #1f2937;
+			}
+			.ticket-meta {
+				font-size: 0.85rem;
+				color: #9ca3af;
+				margin-top: 0.25rem;
+			}
+			.ticket-price {
+				font-size: 1rem;
+				font-weight: 600;
+				color: #059669;
+			}
+			.ticket-qty-control {
+				display: inline-flex;
+				align-items: center;
+				border-radius: 10px;
+				border: 2px solid #e5e7eb;
+				overflow: hidden;
+				background: #fff;
+			}
+			.ticket-qty-btn {
+				width: 36px;
+				height: 36px;
+				border: none;
+				background: transparent;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1rem;
+				cursor: pointer;
+				color: #374151;
+				transition: all 0.2s;
+			}
+			.ticket-qty-btn:hover {
+				background: #f3f4f6;
+				color: #0d6efd;
+			}
+			.ticket-qty-btn:active {
+				transform: scale(0.95);
+			}
+			.ticket-qty-value {
+				min-width: 40px;
+				text-align: center;
+				font-size: 1rem;
+				font-weight: 600;
+				color: #1f2937;
+			}
+			.ticket-checkout-footer {
+				margin-top: 2rem;
+				display: flex;
+				justify-content: flex-end;
+			}
+			.ticket-summary-line {
+				display: flex;
+				justify-content: space-between;
+				font-size: 0.95rem;
+				margin-bottom: 0.75rem;
+				color: #4b5563;
+			}
+			.ticket-summary-line:last-child {
+				margin-bottom: 0;
+			}
+			.ticket-summary-total {
+				display: flex;
+				justify-content: space-between;
+				font-weight: 700;
+				font-size: 1.25rem;
+				margin-top: 1.25rem;
+				padding-top: 1.25rem;
+				border-top: 2px solid #d1d5db;
+				color: #1f2937;
+			}
+			.ticket-checkout-close {
+				position: absolute;
+				top: 1.25rem;
+				right: 1.25rem;
+				width: 36px;
+				height: 36px;
+				border: none;
+				background: #f3f4f6;
+				border-radius: 50%;
+				font-size: 1.25rem;
+				cursor: pointer;
+				color: #6b7280;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.2s;
+				z-index: 10;
+			}
+			.ticket-checkout-close:hover {
+				background: #e5e7eb;
+				color: #374151;
+				transform: rotate(90deg);
+			}
+		</style>
+		<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
+	</head>
+	<body class="homepage1-body">
+		<div id="popup" class="popup-overlay d-none"></div>
+		<div class="preloader">
+			<div class="loading-container">
+				<div class="loading"></div>
+				<div id="loading-icon"><img src="/assets/img/logo/preloader.png" alt="" /></div>
+			</div>
+		</div>
+		<div class="paginacontainer">
+			<div class="progress-wrap">
+				<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+					<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+				</svg>
+			</div>
+		</div>
+
+		<header>
+			<div class="header-area homepage1 header header-sticky d-none d-lg-block" id="header">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="header-elements">
+								<div class="site-logo">
+									<a href="{{ path('app_home') }}"><img src="/assets/img/logo/logo1.png" alt="" /></a>
+								</div>
+								<div class="main-menu">
+									<ul>
+										<li><a href="{{ path('app_home') }}">Browse Events</a></li>
+										{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+										<li><a href="{{ path('app_my_events') }}">My Events</a></li>
+										<li><a href="{{ path('app_services_catalog') }}">Services</a></li>
+										{% endif %}
+									</ul>
+								</div>
+								<div class="user-menu-area">
+									{% if app.user %}
+									<ul>
+										<li>
+											<a href="#" class="user-menu-link"><i class="fa-solid fa-user"></i> {{ app.user.firstName }} {{ app.user.lastName }} <i class="fa-solid fa-angle-down"></i></a>
+											<ul class="dropdown-padding">
+												<li><a href="{{ path('app_profile') }}"><i class="fa-solid fa-id-card"></i> My Profile</a></li>
+												<li><a href="{{ path('app_orders_index') }}"><i class="fa-solid fa-ticket"></i> My Orders</a></li>
+												{% if is_granted('ROLE_ADMIN') %}
+												<li><a href="{{ path('app_admin_dashboard') }}"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+												<li><a href="{{ path('app_admin_service_provider_index') }}"><i class="fa-solid fa-truck"></i> Providers</a></li>
+												{% endif %}
+												<li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+											</ul>
+										</li>
+									</ul>
+									{% else %}
+									<ul>
+										<li><a href="{{ path('app_login') }}" class="btn-login">Log in</a></li>
+										<li><a href="{{ path('app_register') }}" class="btn-register">Sign up</a></li>
+									</ul>
+									{% endif %}
+								</div>
+								<div class="body-overlay"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="mobile-header mobile-haeder1 d-block d-lg-none">
+			<div class="container-fluid">
+				<div class="col-12">
+					<div class="mobile-header-elements">
+						<div class="mobile-logo">
+							<a href="{{ path('app_home') }}"><img src="/assets/img/logo/logo1.png" alt="" /></a>
+						</div>
+						<div class="mobile-nav-icon dots-menu"><i class="fa-solid fa-bars-staggered"></i></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mobile-sidebar mobile-sidebar1">
+			<div class="logosicon-area">
+				<div class="logos"><img src="/assets/img/logo/logo2.png" alt="" /></div>
+				<div class="menu-close"><i class="fa-solid fa-xmark"></i></div>
+			</div>
+			<div class="mobile-nav mobile-nav1">
+				<ul class="mobile-nav-list nav-list1">
+					<li><a href="{{ path('app_home') }}">Home</a></li>
+					<li><a href="{{ path('app_events') }}">Events</a></li>
+					<li><a href="contact.html">Contact Us</a></li>
+				</ul>
+			</div>
+		</div>
+
+		{# ----- EVENT HERO BANNER ----- #}
+		<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png); padding: 100px 0;">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 m-auto">
+						<div class="heading1 text-center">
+							<h1 style="font-size: 48px; margin-bottom: 20px;">{{ event.title }}</h1>
+							{% if event.description %}
+								<p style="font-size: 18px; color: rgba(255,255,255,0.9); margin-bottom: 30px;">
+									{{ event.description|length > 120 ? event.description|slice(0, 120) ~ '...' : event.description }}
+								</p>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# ----- EVENT DETAIL CONTENT ----- #}
+		<div class="container py-5">
+			<div class="row g-4">
+				<div class="col-lg-8">
+					{# Organizer Card #}
+					{% if event.organizer %}
+					<div class="card border-0 mb-4" style="border-radius: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+						<div class="card-body p-4">
+							<div class="d-flex align-items-center">
+								<div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 56px; height: 56px; flex-shrink: 0;">
+									<span class="fw-bold text-primary" style="font-size: 18px;">{{ event.organizer.name|slice(0, 2)|upper }}</span>
+								</div>
+								<div class="flex-grow-1">
+									<p class="text-muted mb-0" style="font-size: 13px;">Organized by</p>
+									<p class="fw-bold mb-0" style="font-size: 16px; color: #333;">{{ event.organizer.name }}</p>
+								</div>
+								<button type="button" class="btn btn-outline-primary btn-sm" style="border-radius: 8px;">Follow</button>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+
+					{# About Event Card #}
+					<div class="card border-0 mb-4" style="border-radius: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+						<div class="card-body p-4">
+							<h3 class="fw-bold mb-3" style="font-size: 20px; color: #333;">About This Event</h3>
+							<div style="color: #555; line-height: 1.7;">{{ event.description|nl2br }}</div>
+						</div>
+					</div>
+
+					{# Event Details Card #}
+					<div class="card border-0 mb-4" style="border-radius: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+						<div class="card-body p-4">
+							<h3 class="fw-bold mb-4" style="font-size: 20px; color: #333;">Event Details</h3>
+							<div class="row g-3">
+								<div class="col-md-6">
+									<div class="d-flex align-items-start">
+										<div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; flex-shrink: 0;">
+											<i class="fa-solid fa-calendar-days text-primary"></i>
+										</div>
+										<div>
+											<p class="text-muted mb-1" style="font-size: 13px;">Date & Time</p>
+											<p class="fw-semibold mb-0" style="font-size: 15px; color: #333;">
+												{% if event.startDatetime and event.endDatetime %}
+													{{ event.startDatetime|date('l, M d') }}<br>
+													{{ event.startDatetime|date('g:i A') }} - {{ event.endDatetime|date('g:i A') }}
+												{% elseif event.startDatetime %}
+													{{ event.startDatetime|date('l, F j, Y') }}<br>
+													{{ event.startDatetime|date('g:i A') }}
+												{% endif %}
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="d-flex align-items-start">
+										<div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; flex-shrink: 0;">
+											<i class="fa-solid fa-clock text-success"></i>
+										</div>
+										<div>
+											<p class="text-muted mb-1" style="font-size: 13px;">Duration</p>
+											<p class="fw-semibold mb-0" style="font-size: 15px; color: #333;">
+												{% if event.startDatetime and event.endDatetime %}
+													{% set diff = event.endDatetime.diff(event.startDatetime) %}
+													{{ diff.days * 24 + diff.h }} hours
+												{% else %}
+													TBA
+												{% endif %}
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="d-flex align-items-start">
+										<div class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; flex-shrink: 0;">
+											<i class="fa-solid fa-location-dot text-danger"></i>
+										</div>
+										<div>
+											<p class="text-muted mb-1" style="font-size: 13px;">Venue Type</p>
+											<p class="fw-semibold mb-0" style="font-size: 15px; color: #333;">{% if event.venue %}In-Person Event{% else %}Online / TBA{% endif %}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{# Location Card #}
+					{% if event.venue %}
+					<div class="card border-0 mb-4" style="border-radius: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+						<div class="card-body p-4">
+							<h3 class="fw-bold mb-3" style="font-size: 20px; color: #333;">Location</h3>
+							<div class="d-flex align-items-start mb-3">
+								<div class="rounded-circle bg-danger bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; flex-shrink: 0;">
+									<i class="fa-solid fa-map-marker-alt text-danger"></i>
+								</div>
+								<div>
+									<p class="fw-bold mb-1" style="font-size: 16px; color: #333;">{{ event.venue.name }}</p>
+									<p class="text-muted mb-0" style="font-size: 14px;">
+										{% if event.venue.address %}{{ event.venue.address }}{% endif %}
+										{% if event.venue.city %}<br>{{ event.venue.city }}{% endif %}
+										{% if event.venue.state %}, {{ event.venue.state }}{% endif %}
+										{% if event.venue.postalCode %} {{ event.venue.postalCode }}{% endif %}
+									</p>
+								</div>
+							</div>
+							<div class="rounded bg-light d-flex align-items-center justify-content-center" style="height: 200px; border: 2px dashed #dee2e6;">
+								<button type="button" class="btn btn-primary" style="border-radius: 8px;"><i class="fa-solid fa-map me-2"></i>View on Map</button>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+
+					{# Sponsors Card #}
+					{% set visible_sponsors = event.sponsors|filter(s => s.status == 'active') %}
+					{% if visible_sponsors|length > 0 %}
+					<div class="card border-0 mb-4" style="border-radius: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+						<div class="card-body p-4">
+							<h3 class="fw-bold mb-3" style="font-size: 20px; color: #333;">Event Sponsors</h3>
+							<div class="d-flex flex-wrap gap-3">
+								{% for sponsor in visible_sponsors %}
+									<div class="d-flex align-items-center gap-3 border rounded p-3" style="border-radius: 10px;">
+										{% if sponsor.logoUrl %}
+											<img src="{{ sponsor.logoUrl }}" alt="{{ sponsor.name }}" class="rounded" style="width: 56px; height: 56px; object-fit: contain; background: #fff;" />
+										{% else %}
+											<div class="rounded d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 text-secondary fw-bold" style="width: 56px; height: 56px; font-size: 1rem;">{{ sponsor.name|slice(0, 2)|upper }}</div>
+										{% endif %}
+										<div>
+											<span class="fw-semibold">{{ sponsor.name }}</span>
+											{% if sponsor.website %}
+												<a href="{{ sponsor.website }}" target="_blank" rel="noopener" class="small text-muted ms-1"><i class="fa-solid fa-external-link-alt"></i></a>
+											{% endif %}
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					{% endif %}
+
+					{% if event.sponsorshipPackages|length > 0 %}
+						<h3 class="h5 fw-bold mt-4 mb-2">Sponsorship packages</h3>
+						<p class="text-muted small mb-3">Support this event by choosing a sponsorship package.</p>
+						<div class="row g-3 mb-4">
+							{% for package in event.sponsorshipPackages %}
+								<div class="col-md-6 col-lg-4">
+									<div class="border rounded p-3 h-100 shadow-sm d-flex flex-column">
+										<div class="fw-bold text-primary mb-1">{{ package.name }}</div>
+										<div class="h5 mb-2">${{ package.price|number_format(2) }}</div>
+										{% if package.description %}
+											<p class="small text-muted mb-2">{{ package.description }}</p>
+										{% endif %}
+										<p class="small mb-1"><i class="fa-solid fa-table-cells me-1"></i>{{ package.numberOfTables }} table(s) · {{ package.seatsPerTable }} seats/table</p>
+										{% if package.benefits %}
+											<p class="small text-muted mb-2">{{ package.benefits|nl2br }}</p>
+										{% endif %}
+										<button type="button" class="btn btn-primary btn-sm mt-auto sponsor-request-btn" data-submit-url="{{ path('app_sponsor_request_submit', { id: event.id, packageId: package.id }) }}" data-package-name="{{ package.name }}"><i class="fa-solid fa-handshake me-1"></i>Become a sponsor</button>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+
+				</div>
+
+				<div class="col-lg-4">
+					<div class="position-sticky" style="top: 100px;">
+						<div class="card border-0" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+							<div class="card-body p-4">
+								{# Event Image #}
+								{% if event.image %}
+								<div class="rounded mb-4" style="overflow: hidden; height: 200px;">
+									<img src="{{ event.image }}" alt="{{ event.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+								</div>
+								{% endif %}
+								
+								{# Pricing #}
+								<div class="mb-4">
+									<p class="text-muted mb-1" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Ticket Price</p>
+									<p class="h3 fw-bold mb-0" style="color: #198754;">{{ event.priceLabel }}</p>
+								</div>
+								
+								{# CTA Button #}
+								<button type="button" class="btn btn-primary w-100 btn-lg mb-3" id="open-ticket-checkout" style="border-radius: 10px; font-weight: 600;">
+									<i class="fa-solid fa-ticket me-2"></i>Get Tickets
+								</button>
+								
+								{# Quick Actions #}
+								<div class="d-flex gap-2 mb-4">
+									<button type="button" class="btn btn-outline-secondary flex-fill" id="share-event-btn" style="border-radius: 8px;" title="Share this event">
+										<i class="fa-solid fa-share-nodes"></i>
+									</button>
+									<button type="button" class="btn btn-outline-secondary flex-fill" id="favorite-event-btn" style="border-radius: 8px;" title="Save to favorites">
+										<i class="fa-regular fa-heart"></i>
+									</button>
+								</div>
+							{% if is_granted('EVENT_EDIT', event) %}
+							<div class="pt-3 border-top mt-3">
+								<a href="{{ path('app_orders_event', { id: event.id }) }}" class="btn btn-outline-primary btn-sm me-1">View orders</a>
+								<a href="{{ path('app_sponsorship_package_index', { id: event.id }) }}" class="btn btn-outline-primary btn-sm me-1">Packages</a>
+								<a href="{{ path('app_sponsor_index', { id: event.id }) }}" class="btn btn-outline-primary btn-sm me-1">Sponsors</a>
+								<a href="{{ path('app_service_booking_index', { eventId: event.id }) }}" class="btn btn-outline-primary btn-sm me-1"><i class="fa-solid fa-truck me-1"></i>Service bookings</a>
+								<a href="{{ path('app_event_edit', { id: event.id }) }}" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
+								<form method="post" action="{{ path('app_event_delete', { id: event.id }) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}" />
+									<button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+								</form>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+					
+					{# Other Events Card #}
+					{% if otherEvents|length > 0 %}
+					<div class="card border-0 mt-4" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+						<div class="card-body p-4">
+							<h3 class="fw-bold mb-3" style="font-size: 18px; color: #333;">Other Events You May Like</h3>
+							<div class="list-group list-group-flush">
+								{% for other in otherEvents|slice(0, 3) %}
+									<div class="list-group-item border-0 px-0 py-3 {% if not loop.last %}border-bottom{% endif %}">
+										<a href="{{ path('app_event_show', { id: other.id }) }}" class="fw-semibold text-dark text-decoration-none d-block mb-1" style="font-size: 15px;">{{ other.title }}</a>
+										<p class="small text-muted mb-2">
+											{% if other.startDatetime %}{{ other.startDatetime|date('D, d M') }} · {{ other.startDatetime|date('H:i') }}{% endif %}
+											{% if other.venue %} · {{ other.venue.name }}{% endif %}
+										</p>
+										<div class="d-flex align-items-center justify-content-between">
+											<span class="small fw-semibold text-success">{{ other.priceLabel }}</span>
+											<a href="{{ path('app_event_show', { id: other.id }) }}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px;">View</a>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		{# ----- SPONSOR REQUEST MODAL ----- #}
+		{% if event.sponsorshipPackages|length > 0 and sponsorRequestForm is defined %}
+		<div class="sponsor-request-overlay" id="sponsor-request-modal" style="display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+			<div class="sponsor-request-dialog rounded shadow bg-white mx-3" style="max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto;">
+				<div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+					<h3 class="h5 mb-0">Become a sponsor — <span id="sponsor-modal-package-name"></span></h3>
+					<button type="button" class="btn btn-link text-dark p-0" id="sponsor-request-close" aria-label="Close">&times;</button>
+				</div>
+				<div class="p-4">
+					{{ form_start(sponsorRequestForm, { attr: { id: 'sponsor-request-form', novalidate: 'novalidate' } }) }}
+					{{ form_widget(sponsorRequestForm._token) }}
+					<div class="mb-3">
+						{{ form_label(sponsorRequestForm.name) }}
+						{{ form_widget(sponsorRequestForm.name, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(sponsorRequestForm.name) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(sponsorRequestForm.email) }}
+						{{ form_widget(sponsorRequestForm.email, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(sponsorRequestForm.email) }}
+					</div>
+					<div class="row g-2">
+						<div class="col-6 mb-3">
+							{{ form_label(sponsorRequestForm.phone) }}
+							{{ form_widget(sponsorRequestForm.phone, { attr: { class: 'form-control' } }) }}
+							{{ form_errors(sponsorRequestForm.phone) }}
+						</div>
+						<div class="col-6 mb-3">
+							{{ form_label(sponsorRequestForm.website) }}
+							{{ form_widget(sponsorRequestForm.website, { attr: { class: 'form-control' } }) }}
+							{{ form_errors(sponsorRequestForm.website) }}
+						</div>
+					</div>
+					<div class="mb-3">
+						{{ form_label(sponsorRequestForm.logoFile) }}
+						{{ form_widget(sponsorRequestForm.logoFile, { attr: { class: 'form-control' } }) }}
+						<p class="small text-muted mb-0">PNG, JPEG, JPG, WebP or GIF. Max 2 MB.</p>
+						{{ form_errors(sponsorRequestForm.logoFile) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(sponsorRequestForm.logoUrl) }}
+						{{ form_widget(sponsorRequestForm.logoUrl, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(sponsorRequestForm.logoUrl) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(sponsorRequestForm.description) }}
+						{{ form_widget(sponsorRequestForm.description, { attr: { class: 'form-control', rows: 2 } }) }}
+						{{ form_errors(sponsorRequestForm.description) }}
+					</div>
+					<div class="row g-2">
+						<div class="col-6 mb-3">
+							{{ form_label(sponsorRequestForm.contactPersonName) }}
+							{{ form_widget(sponsorRequestForm.contactPersonName, { attr: { class: 'form-control' } }) }}
+							{{ form_errors(sponsorRequestForm.contactPersonName) }}
+						</div>
+						<div class="col-6 mb-3">
+							{{ form_label(sponsorRequestForm.contactPersonEmail) }}
+							{{ form_widget(sponsorRequestForm.contactPersonEmail, { attr: { class: 'form-control' } }) }}
+							{{ form_errors(sponsorRequestForm.contactPersonEmail) }}
+						</div>
+					</div>
+					<div class="d-flex gap-2 mt-3">
+						<button type="submit" class="btn btn-primary">Submit request</button>
+						<button type="button" class="btn btn-outline-secondary" id="sponsor-request-cancel">Cancel</button>
+					</div>
+					{{ form_end(sponsorRequestForm) }}
+				</div>
+			</div>
+		</div>
+		{% endif %}
+
+		{# ----- TICKET CHECKOUT MODAL ----- #}
+		<div class="ticket-checkout-overlay" id="ticket-checkout"
+			data-checkout-url="{{ path('app_stripe_create_checkout_session') }}"
+			data-event-id="{{ event.id }}"
+			data-checkout-token="{{ csrf_token('order_checkout_' ~ event.id) }}">
+			<div class="ticket-checkout-backdrop"></div>
+			<div class="ticket-checkout-modal" role="dialog" aria-modal="true" aria-labelledby="ticket-checkout-title">
+				<button type="button" class="ticket-checkout-close" id="ticket-checkout-close" aria-label="Close checkout">&times;</button>
+				<div class="ticket-checkout-main">
+					{# Step 1: select tickets #}
+					<div class="ticket-step ticket-step-1" id="ticket-step-1">
+						<div class="ticket-checkout-header mb-3">
+							<div class="ticket-checkout-header-title" id="ticket-checkout-title">{{ event.title }}</div>
+							<div class="ticket-checkout-header-subtitle">
+								{% if event.startDatetime %}{{ event.startDatetime|date('l, F j \\· g a') }}{% endif %}
+							</div>
+						</div>
+						<div class="ticket-checkout-card">
+							{% if event.tickets|length > 0 %}
+								{% for ticket in event.tickets %}
+									<div class="ticket-checkout-row" data-ticket-id="{{ ticket.id }}" data-ticket-name="{{ ticket.name }}" data-ticket-price="{{ ticket.price }}">
+										<div class="me-3">
+											<div class="ticket-name">{{ ticket.name }}</div>
+											<div class="ticket-price">
+												{% if ticket.price == '0' or ticket.price == '0.00' %}
+													Free
+												{% else %}
+													${{ ticket.price }}
+												{% endif %}
+											</div>
+											<div class="ticket-meta">
+												{% if ticket.saleEnd %}Sales end {{ ticket.saleEnd|date('M j, Y') }}{% endif %}
+											</div>
+										</div>
+										<div class="ticket-qty-control" aria-label="Quantity for {{ ticket.name }}">
+											<button type="button" class="ticket-qty-btn ticket-qty-minus" aria-label="Decrease quantity">-</button>
+											<span class="ticket-qty-value">0</span>
+											<button type="button" class="ticket-qty-btn ticket-qty-plus" aria-label="Increase quantity">+</button>
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								<p class="mb-0 small text-muted">No tickets are available for this event yet.</p>
+							{% endif %}
+						</div>
+						<div class="ticket-checkout-footer">
+							<button type="button" class="btn btn-primary btn-lg" id="ticket-checkout-continue" style="border-radius: 10px; padding: 12px 32px; font-weight: 600;">Continue to Checkout</button>
+						</div>
+					</div>
+
+					{# Step 2: contact information #}
+					<div class="ticket-step ticket-step-2 d-none" id="ticket-step-2">
+						<div class="mb-4">
+							<button type="button" class="btn btn-outline-secondary btn-sm mb-3" id="ticket-step2-back" style="border-radius: 8px;"><i class="fa-solid fa-arrow-left me-2"></i>Back</button>
+							<h2 class="fw-bold mb-2" style="font-size: 1.5rem; color: #1f2937;">Complete Your Order</h2>
+							<p class="text-muted mb-0" style="font-size: 0.95rem;">Enter your contact information to receive your tickets</p>
+						</div>
+						{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user %}
+							<p class="small text-muted mb-2">Logged in as <strong>{{ app.user.email }}</strong>. Not you? <a href="{{ path('app_logout') }}">Log out</a></p>
+						{% endif %}
+						<form id="ticket-contact-form">
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label class="form-label small">First name *</label>
+									<input type="text" class="form-control form-control-sm" name="firstName" value="{{ app.user.firstName ?? '' }}" required />
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small">Last name *</label>
+									<input type="text" class="form-control form-control-sm" name="lastName" value="{{ app.user.lastName ?? '' }}" required />
+								</div>
+							</div>
+							<div class="mb-3">
+								<label class="form-label small">Email address *</label>
+								<input type="email" class="form-control form-control-sm" name="email" value="{{ app.user.email ?? '' }}" required />
+							</div>
+							<div class="form-check mb-1">
+								<input class="form-check-input" type="checkbox" value="1" id="ticket-optin-organizer" checked />
+								<label class="form-check-label small" for="ticket-optin-organizer">
+									Keep me updated on more events and news from this event organizer.
+								</label>
+							</div>
+							<div class="form-check mb-3">
+								<input class="form-check-input" type="checkbox" value="1" id="ticket-optin-platform" />
+								<label class="form-check-label small" for="ticket-optin-platform">
+									Send me emails about the best events happening nearby or online.
+								</label>
+							</div>
+							<div class="alert alert-info border-0" style="background: #e0f2fe; border-radius: 10px; margin-bottom: 1.5rem;">
+								<i class="fa-solid fa-info-circle me-2"></i>
+								<small>By proceeding, you will be redirected to Stripe for secure payment. Free orders are confirmed immediately.</small>
+							</div>
+							<div class="ticket-checkout-footer">
+								<button type="submit" class="btn btn-success btn-lg" id="ticket-checkout-register" style="border-radius: 10px; padding: 12px 32px; font-weight: 600;"><i class="fa-solid fa-lock me-2"></i>Proceed to Payment</button>
+							</div>
+						</form>
+					</div>
+
+					{# Step 3: thank you page #}
+					<div class="ticket-step ticket-step-3 d-none" id="ticket-step-3">
+						<div class="ticket-checkout-thankyou">
+							<div class="ticket-checkout-thankyou-icon">
+								<i class="fa-solid fa-check" aria-hidden="true"></i>
+							</div>
+							<h2 class="fw-bold mb-2" style="font-size: 1.75rem; color: #1f2937;">Order Confirmed!</h2>
+							<p class="small text-muted mb-2" id="ticket-thankyou-order-id"></p>
+							<p class="small text-muted mb-3">You're going to <strong>{{ event.title }}</strong>.</p>
+							<div class="mb-3">
+								<div class="small text-muted text-uppercase mb-1">Ticket sent to</div>
+								<div class="fw-semibold small" id="ticket-thankyou-email"></div>
+							</div>
+							<div class="mb-3" id="ticket-thankyou-qr-wrapper" style="display: none;">
+								<div class="small text-muted text-uppercase mb-1">Your ticket QR code</div>
+								<img id="ticket-thankyou-qr" src="" alt="Ticket QR code" style="width: 150px; height: 150px; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb; padding: 4px; background: #fff;">
+							</div>
+							<div class="row g-3 mb-3">
+								<div class="col-md-4">
+									<div class="small text-muted text-uppercase mb-1">Date</div>
+									<div class="small fw-semibold">
+										{% if event.startDatetime %}
+											{{ event.startDatetime|date('l, M d · g a') }}
+										{% endif %}
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="small text-muted text-uppercase mb-1">Location</div>
+									<div class="small fw-semibold">
+										{% if event.venue %}{{ event.venue.name }}{% else %}Online / TBA{% endif %}
+									</div>
+								</div>
+							</div>
+							<div class="d-flex flex-column gap-2 mt-4">
+								<a href="{{ path('app_orders_index') }}" class="btn btn-primary btn-lg" style="border-radius: 10px; font-weight: 600;"><i class="fa-solid fa-ticket me-2"></i>View My Tickets</a>
+								<button type="button" class="btn btn-outline-secondary" id="ticket-thankyou-close" style="border-radius: 10px;">Back to Event</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ticket-checkout-summary">
+					<div class="ticket-summary-hero">
+						<img src="{{ event.image ?: '/assets/img/bg/header-bg6.png' }}" alt="{{ event.title }}" />
+					</div>
+					<h3 class="h6 fw-bold mb-3">Order summary</h3>
+					<div id="ticket-summary-lines"></div>
+					<div class="ticket-summary-total">
+						<span>Total</span>
+						<span id="ticket-summary-total-amount">$0.00</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		</div>
+
+		{# ----- FOOTER (same as events.html.twig) ----- #}
+		<div class="footer1-sertion-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-6">
+						<div class="footer-logo-area">
+							<img src="/assets/img/logo/logo2.png" alt="" />
+							<div class="space16"></div>
+							<p>We are committed to creating a platform where business leaders, innovators, and professionals can come together to exchange ideas</p>
+							<div class="space24"></div>
+							<ul>
+								<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+								<li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+								<li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+								<li><a href="#" class="m-0"><i class="fa-brands fa-pinterest-p"></i></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-6">
+						<div class="link-content">
+							<h3>Quick Links</h3>
+							<ul>
+								<li><a href="about.html">About Us</a></li>
+								<li><a href="blog.html">Our Blogs</a></li>
+								<li><a href="{{ path('app_events') }}">Event Listing</a></li>
+								<li><a href="pricing-plan.html">Pricing Plan</a></li>
+								<li><a href="contact.html">Contact Us</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="link-content2">
+							<h3>Contact Us</h3>
+							<ul>
+								<li><a href="tel:+11234567890"><img src="/assets/img/icons/phn1.svg" alt="" />+1 123 456 7890</a></li>
+								<li><a href="#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</a></li>
+								<li><a href="mailto:eventifyevent@gmail.com"><img src="/assets/img/icons/mail1.svg" alt="" />eventifyevent@gmail.com</a></li>
+								<li><a href="#"><img src="/assets/img/icons/world1.svg" alt="" />eventifyevent.com</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6">
+						<div class="footer-social-box">
+							<h3>Our Recent Event Gallery</h3>
+							<div class="space12"></div>
+							<div class="row">
+								{% for i in 1..6 %}
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img{{ i }}.png" alt="" />
+										<div class="icons"><a href="#"><i class="fa-brands fa-instagram"></i></a></div>
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="space60"></div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="copyright">
+							<p>&copy; Copyright 2024 - Eventify. All Right Reserved</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="/assets/js/vendor/bootstrap.min.js"></script>
+		<script src="/assets/js/vendor/fontawesome.js"></script>
+		<script src="/assets/js/vendor/aos.js"></script>
+		<script src="/assets/js/vendor/owlcarousel.min.js"></script>
+		<script src="/assets/js/vendor/sidebar.js"></script>
+		<script src="/assets/js/vendor/mobilemenu.js"></script>
+		<script src="/assets/js/vendor/nice-select.js"></script>
+		<script src="/assets/js/main.js"></script>
+		<script>
+			function hidePreloader() {
+				$('.preloader').fadeOut(300);
+			}
+			$(window).on('load', function() {
+				setTimeout(hidePreloader, 200);
+			});
+			setTimeout(hidePreloader, 2500);
+
+			// Sponsor request modal
+			$(function() {
+				var $sponsorModal = $('#sponsor-request-modal');
+				var $sponsorForm = $('#sponsor-request-form');
+				if ($sponsorModal.length && $sponsorForm.length) {
+					$('.sponsor-request-btn').on('click', function() {
+						var url = $(this).data('submit-url');
+						var name = $(this).data('package-name');
+						$sponsorForm.attr('action', url);
+						$('#sponsor-modal-package-name').text(name);
+						$sponsorModal.css('display', 'flex');
+					});
+					function closeSponsorModal() {
+						$sponsorModal.css('display', 'none');
+					}
+					$('#sponsor-request-close, #sponsor-request-cancel').on('click', closeSponsorModal);
+					$sponsorModal.on('click', function(e) {
+						if (e.target === $sponsorModal[0]) closeSponsorModal();
+					});
+				}
+			});
+
+			// Ticket checkout modal logic
+			$(function() {
+				var $overlay = $('#ticket-checkout');
+				var $openBtn = $('#open-ticket-checkout');
+				var $closeBtn = $('#ticket-checkout-close');
+				var $backdrop = $('.ticket-checkout-backdrop');
+
+				function recalcSummary() {
+					var $lines = $('#ticket-summary-lines');
+					var total = 0;
+					$lines.empty();
+					$('.ticket-checkout-row').each(function() {
+						var $row = $(this);
+						var qty = parseInt($row.find('.ticket-qty-value').text(), 10) || 0;
+						if (!qty) return;
+						var name = $row.data('ticket-name');
+						var priceStr = $row.data('ticket-price');
+						var price = parseFloat(priceStr || '0');
+						var lineTotal = price * qty;
+						if (!isNaN(lineTotal)) total += lineTotal;
+						var labelPrice = price === 0 ? 'Free' : '$' + price.toFixed(2);
+						var $line = $('<div class=\"ticket-summary-line\"></div>');
+						$line.append('<span>' + qty + ' × ' + name + '</span>');
+						$line.append('<span>' + labelPrice + '</span>');
+						$lines.append($line);
+					});
+					var totalLabel = total === 0 ? '$0.00' : '$' + total.toFixed(2);
+					$('#ticket-summary-total-amount').text(totalLabel);
+				}
+
+				function openOverlay() {
+					if (!$overlay.length) return;
+					$overlay.addClass('active');
+					recalcSummary();
+					$('#ticket-step-1').removeClass('d-none');
+					$('#ticket-step-2').addClass('d-none');
+					$('#ticket-step-3').addClass('d-none');
+					$('#ticket-checkout-register').prop('disabled', false).text('Register');
+				}
+				function closeOverlay() {
+					$overlay.removeClass('active');
+				}
+
+				$openBtn.on('click', function(e) {
+					e.preventDefault();
+					openOverlay();
+				});
+				$closeBtn.on('click', function() {
+					closeOverlay();
+				});
+				$backdrop.on('click', function() {
+					closeOverlay();
+				});
+
+				$(document).on('click', '.ticket-qty-plus', function() {
+					var $val = $(this).siblings('.ticket-qty-value');
+					var current = parseInt($val.text(), 10) || 0;
+					$val.text(current + 1);
+					recalcSummary();
+				});
+				$(document).on('click', '.ticket-qty-minus', function() {
+					var $val = $(this).siblings('.ticket-qty-value');
+					var current = parseInt($val.text(), 10) || 0;
+					if (current > 0) {
+						$val.text(current - 1);
+						recalcSummary();
+					}
+				});
+
+				// Step 1 -> Step 2 transition (allow free events: total can be $0.00 if at least one ticket qty > 0)
+				$('#ticket-checkout-continue').on('click', function () {
+					var hasSelection = false;
+					$('.ticket-checkout-row').each(function() {
+						var qty = parseInt($(this).find('.ticket-qty-value').text(), 10) || 0;
+						if (qty > 0) { hasSelection = true; }
+					});
+					if (!hasSelection) {
+						alert('Please select at least one ticket.');
+						return;
+					}
+					$('#ticket-step-1').addClass('d-none');
+					$('#ticket-step-2').removeClass('d-none');
+				});
+
+				$('#ticket-step2-back').on('click', function () {
+					$('#ticket-step-2').addClass('d-none');
+					$('#ticket-step-1').removeClass('d-none');
+				});
+
+				// Final step: create Stripe Checkout Session (or free order) then redirect to Stripe or show thank-you
+				$('#ticket-contact-form').on('submit', function (e) {
+					e.preventDefault();
+					var $form = $(this);
+					var $btn = $('#ticket-checkout-register');
+					var email = $form.find('input[name=\"email\"]').val() || '';
+					var url = $overlay.data('checkout-url');
+					var eventId = $overlay.data('event-id');
+					var token = $overlay.data('checkout-token');
+					var items = [];
+					$('.ticket-checkout-row').each(function() {
+						var $row = $(this);
+						var qty = parseInt($row.find('.ticket-qty-value').text(), 10) || 0;
+						if (qty > 0) {
+							items.push({
+								ticketId: parseInt($row.data('ticket-id'), 10),
+								quantity: qty
+							});
+						}
+					});
+					if (items.length === 0) {
+						alert('Please select at least one ticket.');
+						return;
+					}
+					$btn.prop('disabled', true).text('Processing…');
+					$.ajax({
+						url: url,
+						method: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({ _token: token, eventId: eventId, items: items }),
+						success: function (data) {
+							if (!data || typeof data !== 'object') {
+								$btn.prop('disabled', false).text('Proceed to payment');
+								alert('Invalid response from server. Please try again.');
+								return;
+							}
+							if (data.url) {
+								window.location.href = data.url;
+								return;
+							}
+							if (data.skipStripe && data.success) {
+								$('#ticket-thankyou-email').text(email);
+								var orderId = data.orderId || (data.orders && data.orders[0] && data.orders[0].id);
+								$('#ticket-thankyou-order-id').text(orderId ? 'Order #' + orderId : '').toggle(!!orderId);
+								if (data.qrCodeUrl || data.qrCodePath) {
+									var src = data.qrCodeUrl || (data.qrCodePath.charAt(0) === '/' ? data.qrCodePath : '/' + data.qrCodePath);
+									$('#ticket-thankyou-qr').attr('src', src);
+									$('#ticket-thankyou-qr-wrapper').show();
+								} else {
+									$('#ticket-thankyou-qr-wrapper').hide();
+								}
+								$('#ticket-step-2').addClass('d-none');
+								$('#ticket-step-3').removeClass('d-none');
+							} else {
+								$btn.prop('disabled', false).text('Proceed to payment');
+								alert(data.error || 'Unable to complete registration.');
+							}
+						},
+						error: function (xhr) {
+							$btn.prop('disabled', false).text('Proceed to payment');
+							var msg = 'Unable to complete registration.';
+							if (xhr.status === 401) {
+								msg = 'Please log in to complete your order.';
+								window.location.href = xhr.responseJSON && xhr.responseJSON.login_url
+									? xhr.responseJSON.login_url
+									: '{{ path('app_login') }}?redirect=' + encodeURIComponent(window.location.href);
+								return;
+							}
+							try {
+								var data = xhr.responseJSON || (xhr.responseText ? JSON.parse(xhr.responseText) : null);
+								if (data && data.error) msg = data.error;
+							} catch (e) {}
+							alert(msg);
+						}
+					});
+				});
+
+				$('#ticket-thankyou-close').on('click', function () {
+					closeOverlay();
+				});
+			});
+
+			// Share event functionality
+			$(function() {
+				$('#share-event-btn').on('click', function() {
+					var eventTitle = '{{ event.title|e('js') }}';
+					var eventUrl = window.location.href;
+					var eventDescription = '{{ event.description|default('')|slice(0, 100)|e('js') }}';
+
+					// Check if Web Share API is supported
+					if (navigator.share) {
+						navigator.share({
+							title: eventTitle,
+							text: eventDescription,
+							url: eventUrl
+						}).then(function() {
+							console.log('Event shared successfully');
+						}).catch(function(err) {
+							console.log('Error sharing:', err);
+						});
+					} else {
+						// Fallback: Copy to clipboard
+						var tempInput = document.createElement('input');
+						tempInput.value = eventUrl;
+						document.body.appendChild(tempInput);
+						tempInput.select();
+						tempInput.setSelectionRange(0, 99999);
+						
+						try {
+							document.execCommand('copy');
+							document.body.removeChild(tempInput);
+							
+							// Show success message
+							var $btn = $(this);
+							var originalHTML = $btn.html();
+							$btn.html('<i class="fa-solid fa-check"></i>');
+							$btn.addClass('btn-success').removeClass('btn-outline-secondary');
+							
+							setTimeout(function() {
+								$btn.html(originalHTML);
+								$btn.removeClass('btn-success').addClass('btn-outline-secondary');
+							}, 2000);
+						} catch (err) {
+							alert('Could not copy link. Please copy manually: ' + eventUrl);
+							document.body.removeChild(tempInput);
+						}
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
+>>>>>>> ecebe19 (feat: full Eventify update - add Stripe, 2FA, QR codes, sponsorship, service booking, password reset, email verification, admin panel, and more)

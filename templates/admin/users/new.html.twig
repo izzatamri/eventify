@@ -1,0 +1,86 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Create user - Eventify Admin{% endblock %}
+{% block page_heading %}Create user{% endblock %}
+{% block page_breadcrumb %}<a href="{{ path('app_admin_dashboard') }}">Admin</a> / <a href="{{ path('app_admin_users_index') }}">Users</a> / New{% endblock %}
+
+{% block page_styles %}
+	{% include 'admin/partials/user_form_styles.html.twig' %}
+{% endblock %}
+
+{% block content %}
+<div class="team-sperkers-section-area sp1 ef-animate-slideUp admin-user-form-page">
+	{{ form_start(form, { attr: { id: 'admin-user-form' } }) }}
+	<div class="admin-form-layout">
+		<aside class="admin-form-sidebar" aria-label="Summary">
+			<a href="{{ path('app_admin_users_index') }}" class="back-link" aria-label="Back to users"><i class="fa-solid fa-arrow-left me-2" aria-hidden="true"></i> Back to users</a>
+			<div class="summary-card mb-4">
+				<div class="summary-title">New user</div>
+				<div class="summary-date">Fill in the form to create an account.</div>
+			</div>
+		</aside>
+
+		<div class="admin-form-main">
+			<div class="section-card">
+				<h3 class="mb-3">Account</h3>
+				<div class="mb-3">
+					{{ form_label(form.email) }}
+					{{ form_widget(form.email, { attr: { class: 'form-control' ~ (form.email.vars.errors|length ? ' is-invalid' : '') } }) }}
+					{{ form_errors(form.email) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.plainPassword.first) }}
+					<p class="hint">At least 6 characters.</p>
+					{{ form_widget(form.plainPassword.first, { attr: { class: 'form-control' ~ (form.plainPassword.first.vars.errors|length ? ' is-invalid' : '') } }) }}
+					{{ form_errors(form.plainPassword.first) }}
+				</div>
+				<div class="mb-0">
+					{{ form_label(form.plainPassword.second) }}
+					{{ form_widget(form.plainPassword.second, { attr: { class: 'form-control' ~ (form.plainPassword.second.vars.errors|length ? ' is-invalid' : '') } }) }}
+					{{ form_errors(form.plainPassword.second) }}
+					{{ form_errors(form.plainPassword) }}
+				</div>
+			</div>
+
+			<div class="section-card">
+				<h3 class="mb-3">Profile</h3>
+				<div class="row g-3">
+					<div class="col-md-6">
+						{{ form_label(form.firstName) }}
+						{{ form_widget(form.firstName, { attr: { class: 'form-control' ~ (form.firstName.vars.errors|length ? ' is-invalid' : '') } }) }}
+						{{ form_errors(form.firstName) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_label(form.lastName) }}
+						{{ form_widget(form.lastName, { attr: { class: 'form-control' ~ (form.lastName.vars.errors|length ? ' is-invalid' : '') } }) }}
+						{{ form_errors(form.lastName) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="section-card">
+				<h3 class="mb-3">Roles & status</h3>
+				<div class="mb-3">
+					{{ form_label(form.roles) }}
+					<div class="roles-group mt-2">
+						{{ form_widget(form.roles) }}
+					</div>
+					{{ form_errors(form.roles) }}
+				</div>
+				<div class="mb-0">
+					<div class="form-check">
+						{{ form_widget(form.isActive, { attr: { class: 'form-check-input' } }) }}
+						{{ form_label(form.isActive, null, { label_attr: { class: 'form-check-label' } }) }}
+					</div>
+					{{ form_errors(form.isActive) }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="admin-form-sticky-save">
+		<button type="submit" form="admin-user-form" class="btn vl-btn4 save-btn"><i class="fa-solid fa-check me-2" aria-hidden="true"></i>Create user</button>
+	</div>
+	{{ form_end(form) }}
+</div>
+{% endblock %}

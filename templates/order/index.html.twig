@@ -5,54 +5,108 @@
 {% block page_breadcrumb %}My Orders{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-	<div class="d-flex justify-content-between align-items-center mb-4">
-		<h2 class="h4 fw-bold mb-0">My Orders</h2>
-		<a href="{{ path('app_events') }}" class="btn btn-outline-primary btn-sm">Browse events</a>
+<div class="container py-5">
+	{# Page Header #}
+	<div class="section-header mb-4">
+		<div class="row align-items-center">
+			<div class="col-md-8">
+				<h2 style="font-size: 32px; font-weight: 600; margin-bottom: 5px;">My Orders</h2>
+				<p style="font-size: 15px; color: #666; margin-bottom: 0;">View and manage your event ticket purchases</p>
+			</div>
+			<div class="col-md-4 text-md-end mt-3 mt-md-0">
+				<a href="{{ path('app_events') }}" class="btn btn-primary btn-lg px-4">
+					<i class="fa-solid fa-ticket me-2"></i>Browse Events
+				</a>
+			</div>
+		</div>
 	</div>
 
 	{% if orders|length > 0 %}
-	<div class="card border-0 shadow-sm">
-		<div class="table-responsive">
-			<table class="table table-hover align-middle mb-0">
-				<thead class="table-light">
-					<tr>
-						<th class="border-0 py-3">Event</th>
-						<th class="border-0 py-3">Ticket</th>
-						<th class="border-0 py-3">Quantity</th>
-						<th class="border-0 py-3">Total</th>
-						<th class="border-0 py-3">Status</th>
-						<th class="border-0 py-3">Date</th>
-						<th class="border-0 py-3 text-end">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for order in orders %}
-					<tr>
-						<td class="py-3">
-							<a href="{{ path('app_event_show', { id: order.event.id }) }}" class="fw-semibold text-dark text-decoration-none">{{ order.event.title }}</a>
-						</td>
-						<td class="py-3">{{ order.ticket.name }}</td>
-						<td class="py-3">{{ order.quantity }}</td>
-						<td class="py-3">${{ order.totalPrice|number_format(2) }}</td>
-						<td class="py-3">
-							<span class="badge {% if order.status == 'confirmed' %}bg-success{% elseif order.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ order.status|capitalize }}</span>
-						</td>
-						<td class="py-3 text-muted small">{{ order.createdAt|date('M j, Y') }}</td>
-						<td class="py-3 text-end">
-							<a href="{{ path('app_order_show', { id: order.id }) }}" class="btn btn-sm btn-outline-primary">View</a>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+	<div class="row g-4">
+		{% for order in orders %}
+		<div class="col-12">
+			<div class="card border-0 h-100" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(0,0,0,0.12)';" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+				<div class="card-body p-4">
+					<div class="row align-items-center">
+						<div class="col-lg-4 mb-3 mb-lg-0">
+							<div class="d-flex align-items-start">
+								<div class="flex-shrink-0 me-3">
+									{% if order.qrCodePath and order.uuid %}
+										<img src="{{ path('app_qrcode_serve', { uuid: order.uuid }) }}" alt="QR" style="width: 80px; height: 80px; object-fit: contain; border-radius: 10px; border: 2px solid #e9ecef; padding: 6px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+									{% else %}
+										<div style="width: 80px; height: 80px; border-radius: 10px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px dashed #dee2e6;">
+											<i class="fa-solid fa-qrcode text-muted" style="font-size: 32px;"></i>
+										</div>
+									{% endif %}
+								</div>
+								<div class="flex-grow-1">
+									<a href="{{ path('app_event_show', { id: order.event.id }) }}" class="fw-bold text-dark text-decoration-none d-block mb-1" style="font-size: 17px;">{{ order.event.title }}</a>
+									<p class="text-muted small mb-2">Order #{{ order.id }}</p>
+									<div class="d-flex gap-2 flex-wrap">
+										<span class="badge bg-light text-dark border" style="padding: 4px 10px; font-size: 12px;">
+											<i class="fa-solid fa-ticket me-1"></i>{{ order.ticket.name }}
+										</span>
+										<span class="badge bg-secondary" style="padding: 4px 10px; font-size: 12px;">{{ order.quantity }}x</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-3 col-md-4 mb-3 mb-lg-0">
+							<div class="text-center text-md-start">
+								<label class="text-muted mb-1" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: block;">Order Total</label>
+								<div class="fw-bold mb-2" style="color: #198754; font-size: 24px; line-height: 1;">${{ order.totalPrice|number_format(2) }}</div>
+								<span class="text-muted" style="font-size: 13px;">
+									<i class="fa-solid fa-calendar-days me-1"></i>{{ order.createdAt|date('M j, Y') }}
+								</span>
+							</div>
+						</div>
+						
+						<div class="col-lg-2 col-md-4 mb-3 mb-lg-0 text-center">
+							<label class="text-muted mb-2" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: block;">Status</label>
+							<span class="badge {% if order.status == 'confirmed' %}bg-success{% elseif order.status == 'cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}" style="padding: 8px 16px; font-size: 13px; font-weight: 600;">
+								<i class="fa-solid fa-circle-check me-1"></i>{{ order.status|capitalize }}
+							</span>
+						</div>
+						
+						<div class="col-lg-3 col-md-4 text-center text-lg-end">
+							<div class="d-grid gap-2">
+								<a href="{{ path('app_order_show', { id: order.id }) }}" class="btn btn-outline-primary" style="border-radius: 8px;">
+									<i class="fa-solid fa-eye me-2"></i>View Details
+								</a>
+								<a href="{{ path('app_order_ticket_pdf', { id: order.id }) }}" class="btn btn-success" style="border-radius: 8px;" download>
+									<i class="fa-solid fa-download me-2"></i>Download Ticket
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	
+	<div class="card border-0 mt-4" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+		<div class="card-body p-4">
+			<div class="row align-items-center">
+				<div class="col-md-6 mb-3 mb-md-0">
+					<h5 class="fw-bold mb-1" style="color: #333;">Order Summary</h5>
+					<p class="text-muted small mb-0">Total of {{ orders|length }} order(s) placed</p>
+				</div>
+				<div class="col-md-6 text-md-end">
+					<span class="text-muted me-2" style="font-size: 14px;">Total Amount Spent:</span>
+					<span class="fw-bold" style="color: #198754; font-size: 28px;">${{ orders|reduce((carry, order) => carry + order.totalPrice, 0)|number_format(2) }}</span>
+				</div>
+			</div>
 		</div>
 	</div>
 	{% else %}
-	<div class="card border-0 shadow-sm">
-		<div class="card-body text-center py-5">
-			<p class="text-muted mb-3">You haven't placed any orders yet.</p>
-			<a href="{{ path('app_events') }}" class="btn btn-primary">Browse events</a>
+	<div class="card border-0" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+		<div class="card-body text-center" style="padding: 80px 20px;">
+			<i class="fa-solid fa-receipt" style="font-size: 64px; color: #dee2e6; margin-bottom: 20px;"></i>
+			<h4 style="color: #6c757d; margin-bottom: 10px;">No Orders Yet</h4>
+			<p class="text-muted mb-4">You haven't purchased any event tickets yet. Browse events and get your tickets now!</p>
+			<a href="{{ path('app_events') }}" class="btn btn-primary btn-lg px-4"><i class="fa-solid fa-ticket me-2"></i>Browse Events</a>
 		</div>
 	</div>
 	{% endif %}

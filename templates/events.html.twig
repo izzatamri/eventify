@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Our Events - Eventify</title>
+		<title>Eventify - Discover Amazing Events</title>
 
 		<!--=====FAB ICON=======-->
 		<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
@@ -20,6 +20,8 @@
 		<link rel="stylesheet" href="/assets/css/vendor/nice-select.css" />
 		<link rel="stylesheet" href="/assets/css/vendor/odometer.css" />
 		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/header-custom.css" />
+		<link rel="stylesheet" href="/assets/css/events-custom.css" />
 
 		<!--=====  JS SCRIPT LINK =======-->
 		<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
@@ -71,14 +73,20 @@
 		{% include 'partials/header_events.html.twig' %}
 
 		<!--===== HERO AREA STARTS =======-->
-		<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png)">
+		<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png); padding: 100px 0;">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-5 m-auto">
+					<div class="col-lg-8 m-auto">
 						<div class="heading1 text-center">
-							<h1>Our Events</h1>
-							<div class="space20"></div>
-							<a href="{{ path('app_home') }}">Home <i class="fa-solid fa-angle-right"></i> <span>Our Events</span></a>
+							<h1 style="font-size: 48px; margin-bottom: 20px;">{% if filter_organizer %}Events by {{ filter_organizer.name }}{% else %}Discover & Book Amazing Events{% endif %}</h1>
+							<p style="font-size: 18px; color: rgba(255,255,255,0.9); margin-bottom: 40px;">Find the perfect event for you. From conferences to concerts, workshops to festivals.</p>
+							<div class="hero-search-box" style="max-width: 600px; margin: 0 auto;">
+								<div class="input-group input-group-lg">
+									<span class="input-group-text bg-white border-0"><i class="fa-solid fa-search"></i></span>
+									<input type="text" class="form-control border-0" id="hero-search" placeholder="Search for events..." style="padding: 15px;">
+									<button class="btn btn-primary" type="button" style="padding: 0 30px;">Search</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -90,12 +98,19 @@
 		<div class="team-sperkers-section-area sp1">
 			<div class="container">
 				{% for message in app.flashes('success') %}
-					<div class="alert alert-success" role="alert">{{ message }}</div>
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+					</div>
 				{% endfor %}
 				{% for message in app.flashes('error') %}
-					<div class="alert alert-danger" role="alert">{{ message }}</div>
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+					</div>
 				{% endfor %}
 
+<<<<<<< HEAD
 				<div class="row align-items-center mb-4">
 					<div class="col-md-8">
 						<form method="get" class="d-flex flex-wrap gap-2">
@@ -183,104 +198,70 @@
 							<a href="{{ path('app_event_create') }}" class="vl-btn4">Create your first event</a>
 						</div>
 					{% endfor %}
+=======
+				<div class="section-header text-center mb-5">
+					<h2 style="font-size: 36px; font-weight: 600; margin-bottom: 10px;">Upcoming Events</h2>
+					<p style="font-size: 16px; color: #666;">Explore our curated selection of events happening near you</p>
+				</div>
+
+				<div class="row" id="events-list-container">
+					{% include 'events/_events_list.html.twig' with { events: events } %}
+>>>>>>> ecebe19 (feat: full Eventify update - add Stripe, 2FA, QR codes, sponsorship, service booking, password reset, email verification, admin panel, and more)
 				</div>
 			</div>
 		</div>
 		<!--===== EVENTS AREA ENDS =======-->
 
-		<!--===== CTA AREA STARTS =======-->
-		<div class="cta1-section-area d-lg-block d-block">
+		<!--===== WHY CHOOSE US AREA STARTS =======-->
+		<div class="features-section" style="background: #f8f9fa; padding: 80px 0;">
 			<div class="container">
-				<div class="row">
-					<div class="col-lg-10 m-auto">
-						<div class="cta1-main-boxarea">
-							<div class="timer-btn-area">
-								<div class="timer">
-									<div class="time-box">
-										<span id="days1" class="time-value">119</span>
-										<br />
-									</div>
-									<div class="space14"></div>
-									<div class="time-box">
-										<span id="hours1" class="time-value">22</span>
-										<br />
-									</div>
-									<div class="space14"></div>
-									<div class="time-box">
-										<span id="minutes1" class="time-value">18</span>
-										<br />
-									</div>
-									<div class="space14"></div>
-									<div class="time-box" style="margin: 0 26px 0 0">
-										<span id="seconds1" class="time-value">44</span>
-										<br />
-									</div>
-								</div>
-								<div class="btn-area1">
-									<a href="pricing-plan.html" class="vl-btn4">Buy Ticket</a>
-								</div>
+				<div class="row text-center mb-5">
+					<div class="col-lg-8 m-auto">
+						<h2 style="font-size: 36px; font-weight: 600; margin-bottom: 15px;">Why Choose Eventify?</h2>
+						<p style="font-size: 16px; color: #666;">Your trusted platform for discovering and booking amazing events</p>
+					</div>
+				</div>
+				<div class="row g-4">
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-calendar-check"></i>
 							</div>
-							<ul>
-								<li>
-									<a href="#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</a>
-								</li>
-								<li class="m-0">
-									<a href="#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</a>
-								</li>
-							</ul>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Easy Booking</h4>
+							<p style="color: #666; font-size: 14px;">Book tickets in just a few clicks with secure payment</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-ticket"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Instant Tickets</h4>
+							<p style="color: #666; font-size: 14px;">Get your tickets instantly delivered to your email</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-shield-halved"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Secure Payment</h4>
+							<p style="color: #666; font-size: 14px;">Your transactions are safe and encrypted</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-headset"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">24/7 Support</h4>
+							<p style="color: #666; font-size: 14px;">Our team is always here to help you</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!--===== CTA AREA ENDS =======-->
-
-		<!--===== CTA AREA STARTS =======-->
-		<div class="cta1-section-area d-lg-none d-block">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-10 m-auto">
-						<div class="cta1-main-boxarea">
-							<div class="timer-btn-area">
-								<div class="timer">
-									<div class="time-box">
-										<span id="days" class="time-value">119</span>
-										<br />
-									</div>
-									<div class="space14"></div>
-									<div class="time-box">
-										<span id="hours" class="time-value">22</span>
-										<br />
-									</div>
-									<div class="space14"></div>
-									<div class="time-box">
-										<span id="minutes" class="time-value">18</span>
-										<br />
-									</div>
-									<div class="space14"></div>
-									<div class="time-box" style="margin: 0 26px 0 0">
-										<span id="seconds" class="time-value">44</span>
-										<br />
-									</div>
-								</div>
-								<div class="btn-area1">
-									<a href="pricing-plan.html" class="vl-btn4">Buy Ticket</a>
-								</div>
-							</div>
-							<ul>
-								<li>
-									<a href="#"><img src="/assets/img/icons/calender1.svg" alt="" />30 January 2025 - 6pm to 11:30pm</a>
-								</li>
-								<li class="m-0">
-									<a href="#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--===== CTA AREA ENDS =======-->
+		<!--===== WHY CHOOSE US AREA ENDS =======-->
 
 		<!--===== FOOTER AREA STARTS =======-->
 		<div class="footer1-sertion-area">
@@ -427,5 +408,79 @@
 		<script src="/assets/js/vendor/slick-slider.js"></script>
 		<script src="/assets/js/vendor/circle-progress.js"></script>
 		<script src="/assets/js/main.js"></script>
+		<script>
+		(function () {
+			var container = document.getElementById('events-list-container');
+			var heroSearchEl = document.getElementById('hero-search');
+			var heroSearchBtn = heroSearchEl ? heroSearchEl.nextElementSibling : null;
+			if (!container || !heroSearchEl) return;
+
+			var debounceTimer;
+			function debounce(fn, ms) {
+				return function () {
+					clearTimeout(debounceTimer);
+					var self = this, args = arguments;
+					debounceTimer = setTimeout(function () { fn.apply(self, args); }, ms);
+				};
+			}
+
+			function loadEvents() {
+				var q = heroSearchEl.value ? heroSearchEl.value.trim() : '';
+				var sort = 'date_asc'; // Default sort
+				var params = new URLSearchParams();
+				if (q) params.set('q', q);
+				params.set('sort', sort);
+				var url = (window.location.pathname || '/events') + '?' + params.toString();
+
+				container.style.opacity = '0.6';
+				container.style.pointerEvents = 'none';
+
+				fetch(url, {
+					headers: { 'X-Requested-With': 'XMLHttpRequest' }
+				})
+					.then(function (r) { return r.text(); })
+					.then(function (html) {
+						container.innerHTML = html;
+						history.replaceState(null, '', url);
+					})
+					.catch(function () {
+						container.innerHTML = '<div class="col-12 text-center py-5"><p class="text-danger">Error loading events. Please refresh.</p></div>';
+					})
+					.finally(function () {
+						container.style.opacity = '';
+						container.style.pointerEvents = '';
+					});
+			}
+
+			// Hero search on input - filter without scrolling
+			heroSearchEl.addEventListener('input', debounce(function() {
+				loadEvents();
+			}, 350));
+
+			// Handle search button click - filter and scroll
+			if (heroSearchBtn) {
+				heroSearchBtn.addEventListener('click', function() {
+					loadEvents();
+					// Scroll to events section
+					var eventsSection = document.querySelector('.team-sperkers-section-area');
+					if (eventsSection) {
+						eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				});
+			}
+
+			// Handle Enter key on hero search - filter and scroll
+			heroSearchEl.addEventListener('keypress', function(e) {
+				if (e.key === 'Enter') {
+					loadEvents();
+					// Scroll to events section
+					var eventsSection = document.querySelector('.team-sperkers-section-area');
+					if (eventsSection) {
+						eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				}
+			});
+		})();
+		</script>
 	</body>
 </html>

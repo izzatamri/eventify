@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Verify Email - Eventify{% endblock %}
+
+{% block body %}
+<style>
+    .letter-spacing { letter-spacing: 0.5em; }
+</style>
+
+<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png); padding: 80px 0 60px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 style="font-size: 42px; margin-bottom: 15px; color: #fff;">Verify Your Email</h1>
+                <p style="font-size: 16px; color: rgba(255,255,255,0.9);">Enter the verification code we sent to your email</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0" style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                <div class="card-body p-4">
+                    <div class="text-center mb-3">
+                        <div class="mb-2">
+                            <i class="fa-solid fa-envelope-circle-check" style="font-size: 36px; color: #0d6efd;"></i>
+                        </div>
+                        <h2 class="fw-bold mb-1" style="font-size: 20px; color: #1f2937;">Enter Verification Code</h2>
+                        <p class="text-muted mb-0 small">We sent a 6-digit code to <strong>{{ email }}</strong></p>
+                    </div>
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success border-0" role="alert" style="border-radius: 10px;">
+                            <i class="fa-solid fa-check-circle me-2"></i>{{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger border-0" role="alert" style="border-radius: 10px;">
+                            <i class="fa-solid fa-exclamation-circle me-2"></i>{{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('info') %}
+                        <div class="alert alert-info border-0" role="alert" style="border-radius: 10px;">
+                            <i class="fa-solid fa-info-circle me-2"></i>{{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {{ form_start(form) }}
+                        {{ form_widget(form._token) }}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.code.vars.id }}" class="form-label fw-semibold small text-center d-block" style="color: #374151;">Verification Code</label>
+                            {{ form_widget(form.code, {
+                                'attr': {
+                                    'class': 'form-control text-center letter-spacing',
+                                    'style': 'border-radius: 8px;',
+                                    'placeholder': '000000',
+                                    'maxlength': '6'
+                                }
+                            }) }}
+                            {{ form_errors(form.code) }}
+                        </div>
+
+                        <button class="btn btn-success w-100 mb-3" type="submit" style="border-radius: 8px; font-weight: 600;">
+                            <i class="fa-solid fa-check me-2"></i>Verify and Continue
+                        </button>
+                    {{ form_end(form) }}
+
+                    <div class="text-center">
+                        <p class="mb-1 text-muted small">Didn't receive the code?</p>
+                        <form action="{{ path('app_verify_email_resend') }}" method="post" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('verify_email_resend') }}">
+                            <button type="submit" class="btn btn-link p-0 small text-primary">Send a new code</button>
+                        </form>
+                    </div>
+
+                    <div class="text-center mt-3 pt-3 border-top">
+                        <p class="mb-0 text-muted small">
+                            Already verified? 
+                            <a href="{{ path('app_login') }}" class="text-primary text-decoration-none fw-semibold">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ path('app_home') }}" class="text-muted text-decoration-none">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

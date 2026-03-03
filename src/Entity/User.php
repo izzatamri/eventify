@@ -51,6 +51,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(length: 100, unique: true, nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $resetTokenExpiresAt = null;
+
+    #[ORM\Column(length: 6, nullable: true)]
+    private ?string $emailVerificationCode = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $emailVerificationCodeExpiresAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $emailVerifiedAt = null;
+
     /** @var Collection<int, Organizer> */
     #[ORM\OneToMany(targetEntity: Organizer::class, mappedBy: 'user')]
     private Collection $organizers;
@@ -210,5 +225,79 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getOrders(): Collection
     {
         return $this->orders;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): static
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+    public function getResetTokenExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->resetTokenExpiresAt;
+    }
+
+    public function setResetTokenExpiresAt(?\DateTimeImmutable $resetTokenExpiresAt): static
+    {
+        $this->resetTokenExpiresAt = $resetTokenExpiresAt;
+        return $this;
+    }
+
+    public function isResetTokenValid(): bool
+    {
+        return $this->resetToken !== null
+            && $this->resetTokenExpiresAt !== null
+            && $this->resetTokenExpiresAt->getTimestamp() > time();
+    }
+
+    public function getEmailVerificationCode(): ?string
+    {
+        return $this->emailVerificationCode;
+    }
+
+    public function setEmailVerificationCode(?string $emailVerificationCode): static
+    {
+        $this->emailVerificationCode = $emailVerificationCode;
+        return $this;
+    }
+
+    public function getEmailVerificationCodeExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->emailVerificationCodeExpiresAt;
+    }
+
+    public function setEmailVerificationCodeExpiresAt(?\DateTimeImmutable $emailVerificationCodeExpiresAt): static
+    {
+        $this->emailVerificationCodeExpiresAt = $emailVerificationCodeExpiresAt;
+        return $this;
+    }
+
+    public function getEmailVerifiedAt(): ?\DateTimeImmutable
+    {
+        return $this->emailVerifiedAt;
+    }
+
+    public function setEmailVerifiedAt(?\DateTimeImmutable $emailVerifiedAt): static
+    {
+        $this->emailVerifiedAt = $emailVerifiedAt;
+        return $this;
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return $this->emailVerifiedAt !== null;
+    }
+
+    public function isEmailVerificationCodeValid(): bool
+    {
+        return $this->emailVerificationCode !== null
+            && $this->emailVerificationCodeExpiresAt !== null
+            && $this->emailVerificationCodeExpiresAt->getTimestamp() > time();
     }
 }

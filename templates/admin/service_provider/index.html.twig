@@ -1,0 +1,124 @@
+{% extends 'admin/layout_velzon.html.twig' %}
+
+{% block title %}Service providers{% endblock %}
+{% block page_heading %}Service providers{% endblock %}
+{% block page_breadcrumb %}<li class="breadcrumb-item active">Service providers</li>{% endblock %}
+
+{% block content %}
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+	{% endfor %}
+
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h3 class="mb-0 fw-bold" style="font-size: 20px;">Service Providers Catalog</h3>
+		<a href="{{ path('app_admin_service_provider_create') }}" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1.25rem; font-weight: 600;">
+			<i class="ri-add-line me-1"></i>New Provider
+		</a>
+	</div>
+
+	{# Sort & search (multi-criteria) #}
+	<form method="get" action="{{ path('app_admin_service_provider_index') }}" class="card mb-4" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+		<div class="card-body" style="padding: 1.25rem;">
+			<div class="row g-3 align-items-end flex-wrap">
+				<div class="col-auto">
+					<label class="form-label mb-1 fw-semibold" style="font-size: 12px;">Search</label>
+					<input type="text" name="q" class="form-control" placeholder="Name, email, phone…" value="{{ search }}" style="min-width: 200px; border-radius: 8px; padding: 0.5rem 0.75rem;" />
+				</div>
+				<div class="col-auto">
+					<label class="form-label mb-1 fw-semibold" style="font-size: 12px;">Service type</label>
+					<select name="service_type" class="form-select" style="min-width: 150px; border-radius: 8px; padding: 0.5rem 0.75rem;">
+						<option value="">All</option>
+						<option value="Catering" {{ filterServiceType == 'Catering' ? 'selected' : '' }}>Catering</option>
+						<option value="Security" {{ filterServiceType == 'Security' ? 'selected' : '' }}>Security</option>
+						<option value="Photography" {{ filterServiceType == 'Photography' ? 'selected' : '' }}>Photography</option>
+						<option value="Videography" {{ filterServiceType == 'Videography' ? 'selected' : '' }}>Videography</option>
+						<option value="Decoration" {{ filterServiceType == 'Decoration' ? 'selected' : '' }}>Decoration</option>
+						<option value="Entertainment" {{ filterServiceType == 'Entertainment' ? 'selected' : '' }}>Entertainment</option>
+						<option value="Transportation" {{ filterServiceType == 'Transportation' ? 'selected' : '' }}>Transportation</option>
+						<option value="Other" {{ filterServiceType == 'Other' ? 'selected' : '' }}>Other</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label mb-1 fw-semibold" style="font-size: 12px;">Status</label>
+					<select name="status" class="form-select" style="min-width: 120px; border-radius: 8px; padding: 0.5rem 0.75rem;">
+						<option value="">All</option>
+						<option value="active" {{ filterStatus == 'active' ? 'selected' : '' }}>Active</option>
+						<option value="inactive" {{ filterStatus == 'inactive' ? 'selected' : '' }}>Inactive</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label mb-1 fw-semibold" style="font-size: 12px;">Sort by</label>
+					<select name="sort" class="form-select" style="min-width: 150px; border-radius: 8px; padding: 0.5rem 0.75rem;">
+						<option value="name" {{ sortBy == 'name' ? 'selected' : '' }}>Name</option>
+						<option value="email" {{ sortBy == 'email' ? 'selected' : '' }}>Email</option>
+						<option value="serviceType" {{ sortBy == 'serviceType' ? 'selected' : '' }}>Service type</option>
+						<option value="hourlyRate" {{ sortBy == 'hourlyRate' ? 'selected' : '' }}>Hourly rate</option>
+						<option value="status" {{ sortBy == 'status' ? 'selected' : '' }}>Status</option>
+						<option value="createdAt" {{ sortBy == 'createdAt' ? 'selected' : '' }}>Created</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<label class="form-label mb-1 fw-semibold" style="font-size: 12px;">Order</label>
+					<select name="order" class="form-select" style="min-width: 110px; border-radius: 8px; padding: 0.5rem 0.75rem;">
+						<option value="asc" {{ sortOrder == 'asc' ? 'selected' : '' }}>Asc</option>
+						<option value="desc" {{ sortOrder == 'desc' ? 'selected' : '' }}>Desc</option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1rem; font-weight: 600;"><i class="ri-search-line me-1"></i>Apply</button>
+					<a href="{{ path('app_admin_service_provider_index') }}" class="btn btn-outline-secondary" style="border-radius: 8px; padding: 0.5rem 1rem;">Reset</a>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="card" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); overflow: hidden;">
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead style="background: #f8f9fa;">
+					<tr>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Name</th>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Email</th>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Phone</th>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Service type</th>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Hourly rate</th>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Status</th>
+						<th style="padding: 1rem; font-size: 13px; font-weight: 600;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for provider in providers %}
+					<tr>
+						<td style="padding: 1rem; font-size: 14px; font-weight: 500;">{{ provider.name }}</td>
+						<td style="padding: 1rem; font-size: 14px;">{{ provider.email }}</td>
+						<td style="padding: 1rem; font-size: 14px;">{{ provider.phone }}</td>
+						<td style="padding: 1rem;"><span class="badge bg-primary" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">{{ provider.serviceType }}</span></td>
+						<td style="padding: 1rem; font-size: 14px; font-weight: 600;">${{ provider.hourlyRate|number_format(2) }}</td>
+						<td style="padding: 1rem;">
+							{% if provider.status == 'active' %}
+								<span class="badge bg-success" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Active</span>
+							{% else %}
+								<span class="badge bg-secondary" style="border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 11px;">Inactive</span>
+							{% endif %}
+						</td>
+						<td style="padding: 1rem;">
+							<a href="{{ path('app_admin_service_provider_edit', { id: provider.id }) }}" class="btn btn-sm btn-primary me-1" style="border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 12px;">Edit</a>
+							<form method="post" action="{{ path('app_admin_service_provider_delete', { id: provider.id }) }}" class="d-inline" onsubmit="return confirm('Delete this service provider?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('service_provider_delete_' ~ provider.id) }}">
+								<button type="submit" class="btn btn-sm btn-danger" style="border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 12px;">Delete</button>
+							</form>
+						</td>
+					</tr>
+					{% else %}
+					<tr>
+						<td colspan="7" class="text-center text-muted py-5" style="font-size: 14px;">No service providers yet. <a href="{{ path('app_admin_service_provider_create') }}" class="fw-semibold">Create one</a>.</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

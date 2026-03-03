@@ -40,6 +40,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    /**
+     * Search users by name (firstName, lastName) or email, ordered by createdAt desc.
+     *
+     * @return User[]
+     */
+    public function findBySearchOrderByCreatedAt(string $q): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->orderBy('u.createdAt', 'DESC');
+        if ($q === '') {
+            return $qb->getQuery()->getResult();
+        }
+        $term = '%' . addcslashes($q, '%_') . '%';
+        $qb->andWhere(
+            $qb->expr()->orX(
+                'u.firstName LIKE :q',
+                'u.lastName LIKE :q',
+                'u.email LIKE :q'
+            )
+        )->setParameter('q', $term);
+        return $qb->getQuery()->getResult();
+    }
+
     public function findActiveByEmail(string $email): ?User
     {
         return $this->createQueryBuilder('u')
@@ -49,5 +72,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('active', true)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findOneByValidResetToken(string $token): ?User
+    {
+        $user = $this->createQueryBuilder('u')
+            ->where('u.resetToken = :token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+        return $user && $user->isResetTokenValid() ? $user : null;
     }
 }

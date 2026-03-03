@@ -1,0 +1,54 @@
+{% extends 'admin/layout_velzon.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block page_heading %}{{ title }}{% endblock %}
+{% block page_breadcrumb %}
+	<li class="breadcrumb-item"><a href="{{ path('app_admin_service_provider_index') }}">Service providers</a></li>
+	<li class="breadcrumb-item active">{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+	<div class="card" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+		<div class="card-body" style="padding: 1.5rem;">
+			<h3 class="fw-bold mb-4" style="font-size: 20px;">{{ title }}</h3>
+			{{ form_start(form, { attr: { class: 'row g-3', novalidate: 'novalidate' } }) }}
+				<div class="col-md-6">
+					{{ form_label(form.name, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.name, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.name) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.email, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.email, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.email) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.phone, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.phone, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.phone) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.serviceType, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.serviceType, { attr: { class: 'form-select', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.serviceType) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.hourlyRate, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.hourlyRate, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.hourlyRate) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.status, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.status, { attr: { class: 'form-select', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.status) }}
+				</div>
+				<div class="col-12 pt-3">
+					<button type="submit" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1.5rem; font-weight: 600;">
+						<i class="ri-save-line me-1"></i>Save
+					</button>
+					<a href="{{ path('app_admin_service_provider_index') }}" class="btn btn-outline-secondary" style="border-radius: 8px; padding: 0.5rem 1.5rem;">Cancel</a>
+				</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}

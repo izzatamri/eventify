@@ -1,0 +1,65 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}User {{ user.displayName }} - Eventify Admin{% endblock %}
+{% block page_heading %}User details{% endblock %}
+{% block page_breadcrumb %}<a href="{{ path('app_admin_dashboard') }}">Admin</a> / <a href="{{ path('app_admin_users_index') }}">Users</a> / {{ user.displayName }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<p class="mb-3"><a href="{{ path('app_admin_users_index') }}">&larr; Back to users</a></p>
+	<div class="row">
+		<div class="col-lg-8">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body p-4">
+					<h2 class="h5 fw-bold mb-4">{{ user.displayName }}</h2>
+					<dl class="row mb-0">
+						<dt class="col-sm-3 text-muted">ID</dt>
+						<dd class="col-sm-9">{{ user.id }}</dd>
+						<dt class="col-sm-3 text-muted">Email</dt>
+						<dd class="col-sm-9">{{ user.email }}</dd>
+						<dt class="col-sm-3 text-muted">First name</dt>
+						<dd class="col-sm-9">{{ user.firstName }}</dd>
+						<dt class="col-sm-3 text-muted">Last name</dt>
+						<dd class="col-sm-9">{{ user.lastName }}</dd>
+						<dt class="col-sm-3 text-muted">Roles</dt>
+						<dd class="col-sm-9">
+							{% for role in user.roles %}
+								<span class="badge bg-secondary me-1">{{ role }}</span>
+							{% endfor %}
+							{% if user.roles is empty %}<span class="text-muted">—</span>{% endif %}
+						</dd>
+						<dt class="col-sm-3 text-muted">Active</dt>
+						<dd class="col-sm-9">
+							{% if user.isActive %}
+								<span class="text-success">Yes</span>
+							{% else %}
+								<span class="text-danger">No (banned)</span>
+							{% endif %}
+						</dd>
+						<dt class="col-sm-3 text-muted">Created</dt>
+						<dd class="col-sm-9">{{ user.createdAt|date('F j, Y \\a\\t g:i A') }}</dd>
+						<dt class="col-sm-3 text-muted">Updated</dt>
+						<dd class="col-sm-9">{{ user.updatedAt|date('F j, Y \\a\\t g:i A') }}</dd>
+					</dl>
+					<div class="mt-4 pt-3 border-top d-flex flex-wrap gap-2">
+						<a href="{{ path('app_admin_users_edit', { id: user.id }) }}" class="btn btn-primary">Edit user</a>
+						{% if user.id != app.user.id %}
+							<form method="post" action="{{ path('app_admin_users_toggle_active', { id: user.id }) }}" class="d-inline">
+								<input type="hidden" name="_token" value="{{ csrf_token('user_toggle_' ~ user.id) }}">
+								<button type="submit" class="btn {{ user.isActive ? 'btn-warning' : 'btn-success' }}">
+									{{ user.isActive ? 'Deactivate' : 'Activate' }}
+								</button>
+							</form>
+							<form method="post" action="{{ path('app_admin_users_delete', { id: user.id }) }}" class="d-inline" onsubmit="return confirm('Delete this user?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('user_delete_' ~ user.id) }}">
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						{% endif %}
+						<a href="{{ path('app_admin_users_index') }}" class="btn btn-outline-secondary ms-auto">Back to list</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -74,6 +74,12 @@ class EventType extends AbstractType
                 'label' => 'Venue',
                 'placeholder' => '-- Optional --',
                 'required' => false,
+                'choice_attr' => function (Venue $venue) {
+                    return [
+                        'data-lat' => $venue->getLatitude() ?? '',
+                        'data-lng' => $venue->getLongitude() ?? '',
+                    ];
+                },
             ])
             ->add('categories', EntityType::class, [
                 'class' => Category::class,

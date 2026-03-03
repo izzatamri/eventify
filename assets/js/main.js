@@ -75,7 +75,7 @@ AOS.init;
 AOS.init({disable: 'mobile'});
 
 //========== NICE SELECT ============= //
-$('select').niceSelect();
+$('select').not('#events-tri').niceSelect();
 
 });
 //========== COUNTER UP============= //
