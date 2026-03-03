@@ -296,7 +296,10 @@ class __TwigTemplate_1759985060a3992c451992a6d351e15b extends Template
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_events");
         yield "\">Event Listing</a></li>
 \t\t\t\t\t\t\t\t<li><a href=\"pricing-plan.html\">Pricing Plan</a></li>
-\t\t\t\t\t\t\t\t<li><a href=\"contact.html\">Contact Us</a></li>
+\t\t\t\t\t\t\t\t<li><a href=\"";
+        // line 210
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_reclamation_new");
+        yield "\">Contact Us</a></li>
 \t\t\t\t\t\t\t</ul>
 \t\t\t\t\t\t</div>
 \t\t\t\t\t</div>
@@ -514,7 +517,7 @@ class __TwigTemplate_1759985060a3992c451992a6d351e15b extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  296 => 208,  206 => 120,  204 => 119,  195 => 112,  185 => 108,  182 => 107,  177 => 106,  167 => 102,  164 => 101,  160 => 100,  133 => 81,  124 => 74,  122 => 73,  48 => 1,);
+        return array (  301 => 210,  296 => 208,  206 => 120,  204 => 119,  195 => 112,  185 => 108,  182 => 107,  177 => 106,  167 => 102,  164 => 101,  160 => 100,  133 => 81,  124 => 74,  122 => 73,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -728,7 +731,7 @@ class __TwigTemplate_1759985060a3992c451992a6d351e15b extends Template
 \t\t\t\t\t\t\t\t<li><a href=\"blog.html\">Our Blogs</a></li>
 \t\t\t\t\t\t\t\t<li><a href=\"{{ path('app_events') }}\">Event Listing</a></li>
 \t\t\t\t\t\t\t\t<li><a href=\"pricing-plan.html\">Pricing Plan</a></li>
-\t\t\t\t\t\t\t\t<li><a href=\"contact.html\">Contact Us</a></li>
+\t\t\t\t\t\t\t\t<li><a href=\"{{ path('app_reclamation_new') }}\">Contact Us</a></li>
 \t\t\t\t\t\t\t</ul>
 \t\t\t\t\t\t</div>
 \t\t\t\t\t</div>

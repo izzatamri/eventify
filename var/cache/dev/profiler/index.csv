@@ -52,3 +52,15 @@ ee12df,127.0.0.1,GET,https://127.0.0.1:8000/reclamation/admin/back,1772515313,,2
 061ae4,127.0.0.1,GET,https://127.0.0.1:8000/reponse/new?reclamation_id=1,1772515317,,200,request
 c91d39,127.0.0.1,POST,https://127.0.0.1:8000/reponse/new?reclamation_id=1,1772515359,,302,request
 98579b,127.0.0.1,GET,https://127.0.0.1:8000/reponse,1772515360,,200,request
+ba2bbd,127.0.0.1,GET,https://127.0.0.1:8000/reglement,1772515976,,200,request
+d02658,127.0.0.1,GET,https://127.0.0.1:8000/reglement/pdf,1772515979,,200,request
+9f83bc,127.0.0.1,GET,https://127.0.0.1:8000/,1772559657,,200,request
+1346e0,127.0.0.1,GET,https://127.0.0.1:8000/contact.html,1772559673,55561b,404,request
+55561b,127.0.0.1,GET,https://127.0.0.1:8000/contact.html,1772559673,,404,request
+3f9af5,127.0.0.1,GET,https://127.0.0.1:8000/,1772559734,,200,request
+dde720,127.0.0.1,GET,https://127.0.0.1:8000/reclamation/new,1772559740,,200,request
+7d26ad,127.0.0.1,GET,https://127.0.0.1:8000/reglement/qrcode,1772559741,,200,request
+827f75,127.0.0.1,GET,https://127.0.0.1:8000/,1772559761,,200,request
+c18f90,127.0.0.1,GET,https://127.0.0.1:8000/create,1772559765,,302,request
+10418e,127.0.0.1,GET,https://127.0.0.1:8000/login,1772559766,,200,request
+121cd0,127.0.0.1,GET,https://127.0.0.1:8000/,1772559778,,200,request
