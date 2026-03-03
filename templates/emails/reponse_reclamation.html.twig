@@ -1,0 +1,21 @@
+{# templates/emails/reponse_reclamation.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Réponse à votre réclamation</title>
+</head>
+<body>
+    <h2>Bonjour {{ nom }},</h2>
+    
+    <p>Votre réclamation #{{ id }} a reçu une réponse.</p>
+    
+    <h3>Sujet: {{ sujet }}</h3>
+    <p><strong>Votre message:</strong> {{ description }}</p>
+    
+    <h3>Notre réponse:</h3>
+    <p>{{ reponse|nl2br }}</p>
+    
+    <p>Cordialement,<br>L'équipe support</p>
+</body>
+</html>

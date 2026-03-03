@@ -1,0 +1,198 @@
+{# templates/reponse/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la réponse{% endblock %}
+
+{% block page_styles %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+header, .preloader { display:none !important; }
+body { background:#f5f7fb; }
+
+.wrapper {
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar {
+    width:260px;
+    background: linear-gradient(180deg, #0f172a 0%, #1a2639 100%);
+    color:white;
+    padding:25px 15px;
+}
+
+.sidebar a {
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.content {
+    flex:1;
+    padding:30px;
+}
+
+.card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 20px 25px;
+    border: none;
+}
+
+.card-header h4 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.info-label {
+    width: 150px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.info-value {
+    flex: 1;
+    color: #1f2937;
+}
+
+.reponse-content {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+    <div class="sidebar">
+        <h4 style="color: white;">🛠 Back Office</h4>
+        <hr style="border-color: #334155;">
+        <a href="{{ path('app_back_reclamation') }}">
+            <i class="bi bi-envelope"></i> Réclamations
+        </a>
+        <a href="{{ path('app_reponse_index') }}" class="active">
+            <i class="bi bi-chat"></i> Réponses
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <i class="bi bi-chat-dots"></i>
+                    Détails de la réponse #{{ reponse.id }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="info-row">
+                    <div class="info-label">Auteur :</div>
+                    <div class="info-value">
+                        <strong>{{ reponse.nomRep }}</strong>
+                    </div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">Email :</div>
+                    <div class="info-value">
+                        <a href="mailto:{{ reponse.adressmailRep }}">{{ reponse.adressmailRep }}</a>
+                    </div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">Date :</div>
+                    <div class="info-value">
+                        {{ reponse.dateReponse|date('d/m/Y H:i:s') }}
+                    </div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">Réclamation associée :</div>
+                    <div class="info-value">
+                        #{{ reponse.reclamation.id }} - {{ reponse.reclamation.sujetrec }}
+                    </div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">État de la réclamation :</div>
+                    <div class="info-value">
+                        {% if reponse.reclamation.etat == 'Pending' %}
+                            <span class="badge bg-warning">En attente</span>
+                        {% else %}
+                            <span class="badge bg-success">Résolue</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="reponse-content">
+                    <h6 class="mb-3">Contenu de la réponse :</h6>
+                    <p style="white-space: pre-line;">{{ reponse.reponseRep }}</p>
+                </div>
+                
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ path('app_reponse_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+                    <div>
+                        <a href="{{ path('app_reponse_edit', {id: reponse.id}) }}" class="btn btn-warning me-2">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </a>
+                        <form method="post" action="{{ path('app_reponse_delete', {id: reponse.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reponse.id) }}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

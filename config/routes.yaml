@@ -9,3 +9,24 @@
 
 controllers:
     resource: routing.controllers
+
+
+
+
+app_reglement:
+    path: /reglement
+    controller: App\Controller\ReglementController::index
+
+    
+
+app_reglement_qrcode:
+    path: /reglement/qrcode
+    controller: App\Controller\ReglementController::qrcode
+
+app_reglement_pdf:
+    path: /reglement/pdf
+    controller: App\Controller\ReglementController::generatePdf
+
+app_reglement_pdf_view:
+    path: /reglement/pdf/view
+    controller: App\Controller\ReglementController::viewPdf
