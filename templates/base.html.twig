@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{% block title %}Eventify{% endblock %}</title>
+		<link rel="shortcut icon" href="{{ asset('img/logo/fav-logo1.png') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}" />
+		<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/aos.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/fontawesome.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/magnific-popup.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/mobile.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/owlcarousel.min.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/sidebar.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/slick-slider.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/nice-select.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/vendor/odometer.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/eventify-design.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/header-custom.css') }}" />
+		<link rel="stylesheet" href="{{ asset('css/events-custom.css') }}" />
+		<link rel="stylesheet" href="{{ asset('styles/app.css') }}" />
+		
+		{% block page_styles %}{% endblock %}
+		<script src="{{ asset('js/vendor/jquery-3.7.1.min.js') }}"></script>
+	</head>
+	<body class="homepage1-body">
+		{% include 'partials/header_events.html.twig' %}
+		{% block body %}{% endblock %}
+		{% include 'partials/footer_events.html.twig' %}
+		<script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
+		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+		<script src="{{ asset('js/vendor/gsap.min.js') }}"></script>
+		<script src="{{ asset('js/vendor/waypoints.js') }}"></script>
+		<script src="{{ asset('js/vendor/aos.js') }}"></script>
+		<script src="{{ asset('js/vendor/owlcarousel.min.js') }}"></script>
+		<script src="{{ asset('js/vendor/slick-slider.js') }}"></script>
+		<script src="{{ asset('js/vendor/magnific-popup.js') }}"></script>
+		<script src="{{ asset('js/vendor/nice-select.js') }}"></script>
+		<script src="{{ asset('js/vendor/sidebar.js') }}"></script>
+		<script src="{{ asset('js/vendor/jquery.odometer.min.js') }}"></script>
+		<script src="{{ asset('js/vendor/jquery.appear.js') }}"></script>
+		<script src="{{ asset('js/vendor/circle-progress.js') }}"></script>
+		<script src="{{ asset('js/vendor/counter.js') }}"></script>
+		<script src="{{ asset('js/vendor/mobilemenu.js') }}"></script>
+		<script src="{{ asset('js/vendor/Splitetext.js') }}"></script>
+		<script src="{{ asset('js/vendor/ScrollTrigger.min.js') }}"></script>
+		<script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
+		<script src="{{ asset('js/main.js') }}"></script>
+		<script src="{{ asset('stimulus_bootstrap.js') }}"></script>
+		<script src="{{ asset('app.js') }}"></script>
+		{% block page_scripts %}{% endblock %}
+	</body>
+</html>

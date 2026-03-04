@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{% block inner_hero %}
+	<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png)">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-5 m-auto">
+					<div class="heading1 text-center">
+						<h1>{% block page_heading %}Events{% endblock %}</h1>
+						<div class="space20"></div>
+						<a href="{{ path('app_home') }}">Home <i class="fa-solid fa-angle-right"></i> <span>{% block page_breadcrumb %}Events{% endblock %}</span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+	{% block content %}{% endblock %}
+{% endblock %}

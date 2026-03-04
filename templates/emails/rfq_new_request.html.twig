@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8" /><style>body{font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.6;margin:0;padding:0;background:#f4f4f7}.wrapper{max-width:600px;margin:0 auto;background:#fff}.header{background:#6c63ff;padding:30px 40px;text-align:center}.header h1{color:#fff;font-size:20px;margin:0}.content{padding:30px 40px}.footer{padding:20px 40px;text-align:center;font-size:12px;color:#999;border-top:1px solid #eee}</style></head>
+<body>
+<div class="wrapper">
+	<div class="header"><h1>Nouvel appel d'offres</h1></div>
+	<div class="content">
+		<p>Bonjour {{ provider.name }},</p>
+		<p>Un nouvel appel d'offres correspondant à votre catégorie de service a été publié sur Eventify.</p>
+		<p><strong>{{ request.title }}</strong></p>
+		<p>Catégorie : {{ request.serviceType }}<br />Budget : {{ request.budgetMin }} € — {{ request.budgetMax }} €<br />Lieu : {{ request.location }}<br />Deadline : {{ request.deadline|date('d/m/Y H:i') }}</p>
+		<p>{{ request.description|u.truncate(300, '...') }}</p>
+		<p>Connectez-vous à Eventify pour soumettre votre proposition.</p>
+		<p>L'équipe Eventify</p>
+	</div>
+	<div class="footer">&copy; {{ "now"|date('Y') }} Eventify</div>
+</div>
+</body>
+</html>

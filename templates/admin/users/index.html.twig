@@ -1,0 +1,125 @@
+{% extends 'admin/layout_velzon.html.twig' %}
+
+{% block title %}Users{% endblock %}
+{% block page_heading %}Users{% endblock %}
+{% block page_breadcrumb %}<li class="breadcrumb-item active">Users</li>{% endblock %}
+
+{% block content %}
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endfor %}
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endfor %}
+
+	{# Toolbar: search + grid/list toggle #}
+	<div class="card" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+		<div class="card-body" style="padding: 1.25rem;">
+			<div class="row g-3 align-items-center">
+				<div class="col-sm-4">
+					<div class="search-box">
+						<input type="text" class="form-control" id="searchMemberList" placeholder="Search by name or email..." value="{{ search_q|default('') }}" autocomplete="off" style="border-radius: 8px; padding: 0.5rem 2.5rem 0.5rem 1rem;">
+						<i class="ri-search-line search-icon"></i>
+					</div>
+				</div>
+				<div class="col-sm-auto ms-auto">
+					<div class="list-grid-nav hstack gap-2">
+						<a href="{{ path('app_admin_users_export_csv') }}" class="btn btn-success" style="border-radius: 8px; padding: 0.5rem 1rem;">
+							<i class="ri-file-excel-2-line me-1 align-bottom"></i>Export CSV
+						</a>
+						<a href="{{ path('app_admin_users_export_pdf') }}" class="btn btn-danger" style="border-radius: 8px; padding: 0.5rem 1rem;">
+							<i class="ri-file-pdf-line me-1 align-bottom"></i>Export PDF
+						</a>
+						<a href="{{ path('app_admin_users_new') }}" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1.25rem; font-weight: 600;">
+							<i class="ri-user-add-line me-1 align-bottom"></i>Add User
+						</a>
+						<div class="btn-group" role="group" style="border-radius: 8px; overflow: hidden;">
+							<button type="button" id="grid-view-button" class="btn btn-outline-secondary active" title="Grid" style="padding: 0.5rem 0.75rem;"><i class="ri-grid-fill"></i></button>
+							<button type="button" id="list-view-button" class="btn btn-outline-secondary" title="List" style="padding: 0.5rem 0.75rem;"><i class="ri-list-unordered"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div id="teamlist">
+				{% include 'admin/users/_users_list.html.twig' with { users: users } %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_scripts %}
+	<script>
+		// Grid / List view toggle (same behavior as Velzon team.init.js)
+		(function () {
+			var list = document.querySelectorAll('.team-list');
+			var gridBtn = document.getElementById('grid-view-button');
+			var listBtn = document.getElementById('list-view-button');
+			if (list.length && gridBtn && listBtn) {
+				function setView(isList) {
+					if (isList) {
+						listBtn.classList.add('active');
+						gridBtn.classList.remove('active');
+						list.forEach(function (el) {
+							el.classList.add('list-view-filter');
+							el.classList.remove('grid-view-filter');
+						});
+					} else {
+						gridBtn.classList.add('active');
+						listBtn.classList.remove('active');
+						list.forEach(function (el) {
+							el.classList.remove('list-view-filter');
+							el.classList.add('grid-view-filter');
+						});
+					}
+				}
+				gridBtn.addEventListener('click', function () { setView(false); });
+				listBtn.addEventListener('click', function () { setView(true); });
+			}
+
+			// Search via AJAX
+			var searchEl = document.getElementById('searchMemberList');
+			var teamlist = document.getElementById('teamlist');
+			if (searchEl && teamlist) {
+				var debounceTimer;
+				function debounce(fn, ms) {
+					return function () {
+						clearTimeout(debounceTimer);
+						var self = this, args = arguments;
+						debounceTimer = setTimeout(function () { fn.apply(self, args); }, 320);
+					};
+				}
+				function loadUsers() {
+					var q = searchEl.value.trim();
+					var url = (window.location.pathname || '/admin/users') + (q ? '?q=' + encodeURIComponent(q) : '');
+					teamlist.style.opacity = '0.7';
+					teamlist.style.pointerEvents = 'none';
+					fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+						.then(function (r) { return r.text(); })
+						.then(function (html) {
+							teamlist.innerHTML = html;
+							history.replaceState(null, '', url);
+						})
+						.catch(function () {
+							teamlist.innerHTML = '<div class="col-12 text-center py-5"><p class="text-danger">Error loading users.</p></div>';
+						})
+						.finally(function () {
+							teamlist.style.opacity = '';
+							teamlist.style.pointerEvents = '';
+						});
+				}
+				searchEl.addEventListener('input', debounce(loadUsers, 320));
+			}
+		})();
+	</script>
+{% endblock %}

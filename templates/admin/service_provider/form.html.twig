@@ -1,0 +1,164 @@
+{% extends 'admin/layout_velzon.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block page_heading %}{{ title }}{% endblock %}
+{% block page_breadcrumb %}
+	<li class="breadcrumb-item"><a href="{{ path('app_admin_service_provider_index') }}">Service providers</a></li>
+	<li class="breadcrumb-item active">{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+	{# ====== SIRET Verification Card ====== #}
+	<div class="card mb-4" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+		<div class="card-header bg-white border-bottom py-3">
+			<h5 class="fw-bold mb-0"><i class="ri-shield-check-line me-2"></i>Vérification SIRET</h5>
+		</div>
+		<div class="card-body">
+			<div class="row g-3 align-items-end">
+				<div class="col-md-5">
+					<label class="form-label small fw-semibold">Numéro SIRET</label>
+					<input type="text" id="siret-input" class="form-control" placeholder="12345678901234" maxlength="14"
+						value="{{ provider.siret ?? '' }}" style="border-radius: 8px; padding: 0.5rem 0.75rem;" />
+				</div>
+				<div class="col-auto">
+					<button type="button" id="siret-verify-btn" class="btn btn-primary" style="border-radius: 8px; padding: 0.5rem 1rem; font-weight: 600;">
+						<i class="ri-search-line me-1"></i>Vérifier
+					</button>
+				</div>
+				<div class="col-12">
+					<div id="siret-result" class="mt-2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# ====== Provider Form ====== #}
+	<div class="card" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);">
+		<div class="card-body" style="padding: 1.5rem;">
+			<h3 class="fw-bold mb-4" style="font-size: 20px;">{{ title }}</h3>
+			{{ form_start(form, { attr: { class: 'row g-3', novalidate: 'novalidate', id: 'provider-form' } }) }}
+				<div class="col-md-6" style="display:none;">
+					{{ form_widget(form.siret, { attr: { id: 'form-siret' } }) }}
+					{{ form_widget(form.verified, { attr: { id: 'form-verified' } }) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.legalName, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.legalName, { attr: { class: 'form-control bg-light', id: 'form-legal-name', readonly: true, style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.legalName) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.name, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.name, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.name) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.email, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.email, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.email) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.phone, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.phone, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.phone) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.serviceType, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.serviceType, { attr: { class: 'form-select', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.serviceType) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.hourlyRate, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.hourlyRate, { attr: { class: 'form-control', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.hourlyRate) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.status, null, { label_attr: { class: 'form-label fw-semibold', style: 'font-size: 14px;' } }) }}
+					{{ form_widget(form.status, { attr: { class: 'form-select', style: 'border-radius: 8px; padding: 0.5rem 0.75rem;' } }) }}
+					{{ form_errors(form.status) }}
+				</div>
+				<div class="col-12 pt-3">
+					<button type="submit" class="btn btn-primary" id="submit-btn" style="border-radius: 8px; padding: 0.5rem 1.5rem; font-weight: 600;"
+						{% if not provider.verified and provider.id is null %}disabled{% endif %}>
+						<i class="ri-save-line me-1"></i>Save
+					</button>
+					<a href="{{ path('app_admin_service_provider_index') }}" class="btn btn-outline-secondary" style="border-radius: 8px; padding: 0.5rem 1.5rem;">Cancel</a>
+				</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+<script>
+(function() {
+	var verifyBtn = document.getElementById('siret-verify-btn');
+	var siretInput = document.getElementById('siret-input');
+	var resultDiv = document.getElementById('siret-result');
+	var submitBtn = document.getElementById('submit-btn');
+	var providerForm = document.getElementById('provider-form');
+
+	function getField(suffix) {
+		if (!providerForm) return null;
+		return providerForm.querySelector('[name$="[' + suffix + ']"]');
+	}
+
+	{% if provider.verified %}
+	resultDiv.innerHTML = '<div class="alert alert-success py-2 mb-0"><i class="ri-checkbox-circle-line me-1"></i> SIRET vérifié</div>';
+	{% endif %}
+
+	verifyBtn.addEventListener('click', function() {
+		var siret = siretInput.value.replace(/\s/g, '');
+		if (siret.length !== 14) {
+			resultDiv.innerHTML = '<div class="alert alert-warning py-2 mb-0">Le SIRET doit comporter 14 chiffres.</div>';
+			return;
+		}
+
+		verifyBtn.disabled = true;
+		verifyBtn.innerHTML = '<i class="ri-loader-4-line ri-spin me-1"></i>Vérification...';
+		resultDiv.innerHTML = '';
+
+		fetch('{{ path("app_admin_service_provider_verify_siret") }}', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+			body: JSON.stringify({ siret: siret }),
+			credentials: 'same-origin'
+		})
+		.then(function(r) { return r.text().then(function(t) { return { status: r.status, text: t }; }); })
+		.then(function(res) {
+			verifyBtn.disabled = false;
+			verifyBtn.innerHTML = '<i class="ri-search-line me-1"></i>Vérifier';
+
+			var data;
+			try { data = JSON.parse(res.text); } catch (e) { data = null; }
+
+			if (!data || typeof data.valid === 'undefined') {
+				resultDiv.innerHTML = '<div class="alert alert-danger py-2 mb-0"><i class="ri-close-circle-line me-1"></i> Réponse serveur invalide (HTTP ' + res.status + ').</div>';
+				return;
+			}
+
+			if (data.valid) {
+				resultDiv.innerHTML = '<div class="alert alert-success py-2 mb-0"><i class="ri-checkbox-circle-line me-1"></i> Entreprise vérifiée : <strong>' + (data.legalName || '') + '</strong>'
+					+ (data.address ? '<br><small>' + data.address + '</small>' : '')
+					+ (data.nafCode ? ' <span class="badge bg-secondary ms-1">NAF ' + data.nafCode + '</span>' : '')
+					+ '</div>';
+				var fSiret = getField('siret');
+				var fVerified = getField('verified');
+				var fLegalName = getField('legalName');
+				if (fSiret) fSiret.value = siret;
+				if (fVerified) fVerified.value = '1';
+				if (fLegalName && data.legalName) fLegalName.value = data.legalName;
+				if (submitBtn) submitBtn.disabled = false;
+			} else {
+				resultDiv.innerHTML = '<div class="alert alert-danger py-2 mb-0"><i class="ri-close-circle-line me-1"></i> ' + (data.error || 'Erreur technique.') + '</div>';
+				var fv = getField('verified');
+				if (fv) fv.value = '0';
+				if (submitBtn) submitBtn.disabled = true;
+			}
+		})
+		.catch(function(err) {
+			verifyBtn.disabled = false;
+			verifyBtn.innerHTML = '<i class="ri-search-line me-1"></i>Vérifier';
+			resultDiv.innerHTML = '<div class="alert alert-danger py-2 mb-0"><i class="ri-close-circle-line me-1"></i> Erreur réseau : ' + err.message + '</div>';
+		});
+	});
+})();
+</script>
+{% endblock %}

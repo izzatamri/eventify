@@ -1,0 +1,67 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                default_target_path: app_events
+                success_handler: App\Security\AdminLoginSuccessHandler
+                enable_csrf: true
+            logout:
+                path: app_logout
+                target: app_home
+            user_checker: App\Security\UserChecker
+            two_factor:
+                auth_form_path: 2fa_login
+                check_path: 2fa_login_check
+                enable_csrf: true
+
+    access_control:
+        - { path: ^/2fa, roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/events/my, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/create, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/tickets, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/publish, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/packages, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/sponsors, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/event/\d+/service-bookings, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/service-requests, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/service-requests, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/provider/\d+/dashboard, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/services, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/orders, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/create-checkout-session, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/payment, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/events/\d+/sponsor-request, roles: PUBLIC_ACCESS }
+        - { path: ^/ticket/validate, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/verify-email, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/venues, roles: IS_AUTHENTICATED_FULLY }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

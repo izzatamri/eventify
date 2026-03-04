@@ -1,0 +1,7 @@
+framework:
+    mailer:
+        # DSN is built from MAILER_USER, MAILER_PASSWORD, MAILER_HOST, MAILER_PORT (password is URL-encoded automatically)
+        dsn: '%env(mailer_dsn:MAILER_USER)%'
+
+parameters:
+    mailer_from: '%env(default::MAILER_FROM)%'

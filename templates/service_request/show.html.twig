@@ -1,0 +1,287 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}{{ serviceRequest.title }} - Eventify{% endblock %}
+{% block page_heading %}{{ serviceRequest.title }}{% endblock %}
+{% block page_breadcrumb %}Détail de la demande{% endblock %}
+
+{% block content %}
+<style>
+	.ai-score-pill { display:inline-flex; align-items:center; gap:4px; padding:4px 14px; border-radius:20px; font-weight:700; font-size:13px; }
+	.ai-score-high { background:rgba(34,197,94,0.15); color:#16a34a; }
+	.ai-score-mid { background:rgba(245,158,11,0.15); color:#d97706; }
+	.ai-score-low { background:rgba(239,68,68,0.15); color:#dc2626; }
+	.ai-pending { background:rgba(148,163,184,0.15); color:#64748b; font-style:italic; }
+	.bg-purple { background-color: #6c63ff !important; color: #fff; }
+
+	.ai-drawer { position:fixed; top:0; right:-480px; width:480px; max-width:90vw; height:100vh; background:#fff; z-index:1060; transition:right 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow:-8px 0 30px rgba(0,0,0,0.15); overflow-y:auto; }
+	.ai-drawer.open { right:0; }
+	.ai-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1055; }
+	.ai-overlay.open { display:block; }
+	.ai-drawer-header { background:linear-gradient(135deg,#6c63ff,#8b5cf6); color:#fff; padding:20px 24px; position:sticky; top:0; z-index:1; }
+	.ai-drawer-body { padding:24px; line-height:1.8; white-space:pre-wrap; font-size:0.93rem; color:#334155; }
+	.ai-drawer-close { background:none; border:none; color:#fff; font-size:20px; cursor:pointer; opacity:0.8; }
+	.ai-drawer-close:hover { opacity:1; }
+
+	.status-flow { display:flex; align-items:center; gap:8px; }
+	.flow-step { padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; opacity:0.3; }
+	.flow-step.active { opacity:1; }
+
+	.provider-submit-card { border:2px dashed #6c63ff33; border-radius:12px; transition:all 0.2s; }
+	.provider-submit-card:hover { border-color:#6c63ff; background:#6c63ff08; }
+</style>
+
+<div class="container py-4">
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('warning') %}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+	{% endfor %}
+
+	{# Breadcrumb #}
+	<div class="mb-3">
+		<a href="{{ path('app_service_request_index', { eventId: event.id }) }}" class="text-primary text-decoration-none small">
+			<i class="fa-solid fa-chevron-left me-1"></i> Retour aux demandes
+		</a>
+	</div>
+
+	{# ====== REQUEST DETAILS CARD ====== #}
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-body">
+			<div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+				<div>
+					<h3 class="h5 fw-bold mb-2">{{ serviceRequest.title }}</h3>
+					<div class="status-flow">
+						<span class="flow-step bg-secondary text-white {{ serviceRequest.status == 'draft' ? 'active' : '' }}">Brouillon</span>
+						<i class="fa-solid fa-chevron-right text-muted" style="font-size:10px;"></i>
+						<span class="flow-step bg-success text-white {{ serviceRequest.status == 'open' ? 'active' : '' }}">Ouvert</span>
+						<i class="fa-solid fa-chevron-right text-muted" style="font-size:10px;"></i>
+						<span class="flow-step bg-warning text-dark {{ serviceRequest.status == 'closed' ? 'active' : '' }}">Fermé</span>
+						<i class="fa-solid fa-chevron-right text-muted" style="font-size:10px;"></i>
+						<span class="flow-step bg-info text-white {{ serviceRequest.status == 'awarded' ? 'active' : '' }}">Attribué</span>
+					</div>
+				</div>
+
+				<div>
+					{% if serviceRequest.status == 'draft' %}
+						<form method="post" action="{{ path('app_service_request_publish', { eventId: event.id, id: serviceRequest.id }) }}">
+							<input type="hidden" name="_token" value="{{ csrf_token('publish_request_' ~ serviceRequest.id) }}" />
+							<button class="btn btn-success btn-sm"><i class="fa-solid fa-paper-plane me-1"></i>Publier (open)</button>
+						</form>
+					{% elseif serviceRequest.status == 'awarded' %}
+						<div class="d-flex gap-2">
+							<form method="post" action="{{ path('app_service_request_create_booking_from_award', { eventId: event.id, id: serviceRequest.id }) }}">
+								<input type="hidden" name="_token" value="{{ csrf_token('create_booking_' ~ serviceRequest.id) }}" />
+								<button class="btn btn-success btn-sm"><i class="fa-solid fa-plus me-1"></i>Créer booking</button>
+							</form>
+							<a href="{{ path('app_service_booking_index', { eventId: event.id }) }}" class="btn btn-info btn-sm">
+								<i class="fa-solid fa-clipboard-check me-1"></i>Voir les bookings
+							</a>
+						</div>
+					{% elseif serviceRequest.status == 'open' %}
+						<form method="post" action="{{ path('app_service_request_close', { eventId: event.id, id: serviceRequest.id }) }}">
+							<input type="hidden" name="_token" value="{{ csrf_token('close_request_' ~ serviceRequest.id) }}" />
+							<button class="btn btn-warning btn-sm"><i class="fa-solid fa-lock me-1"></i>Clôturer</button>
+						</form>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="row g-3">
+				<div class="col-md-4">
+					<div class="p-3 rounded" style="background:#f8fafc;">
+						<small class="text-muted d-block mb-1">Catégorie</small>
+						<span class="badge bg-secondary">{{ serviceRequest.serviceType }}</span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="p-3 rounded" style="background:#f8fafc;">
+						<small class="text-muted d-block mb-1">Budget</small>
+						<strong>{{ serviceRequest.budgetMin|number_format(0) }} € — {{ serviceRequest.budgetMax|number_format(0) }} €</strong>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="p-3 rounded" style="background:#f8fafc;">
+						<small class="text-muted d-block mb-1">Deadline</small>
+						<strong>{{ serviceRequest.deadline|date('d/m/Y H:i') }}</strong>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="p-3 rounded" style="background:#f8fafc;">
+						<small class="text-muted d-block mb-1">Description</small>
+						<p class="mb-0">{{ serviceRequest.description|nl2br }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# ====== AI RANKING BUTTON ====== #}
+	{% if aiRanking %}
+	<div class="card border-0 shadow-sm mb-4" style="border-left:4px solid #6c63ff !important;">
+		<div class="card-body py-3 d-flex justify-content-between align-items-center">
+			<div>
+				<i class="fa-solid fa-robot text-primary me-2"></i>
+				<strong>Analyse IA disponible</strong>
+				<span class="text-muted ms-2">— Classement et recommandation des propositions</span>
+			</div>
+			<button class="btn btn-sm text-white" style="background:linear-gradient(135deg,#6c63ff,#8b5cf6);" onclick="openAiDrawer()">
+				<i class="fa-solid fa-brain me-1"></i>Voir l'analyse IA
+			</button>
+		</div>
+	</div>
+	{% endif %}
+
+	{# ====== SUBMIT PROPOSALS (only when open) ====== #}
+	{% if serviceRequest.status == 'open' and providers|default([])|length > 0 %}
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-header bg-white border-bottom py-3">
+			<h5 class="h6 fw-bold mb-0"><i class="fa-solid fa-plus-circle me-2 text-primary"></i>Soumettre une proposition</h5>
+		</div>
+		<div class="card-body">
+			<p class="text-muted small mb-3">Choisissez un prestataire actif pour soumettre une proposition. L'IA analysera automatiquement la proposition.</p>
+			<div class="row g-2">
+				{% for p in providers %}
+				<div class="col-md-4 col-lg-3">
+					<a href="{{ path('app_service_proposal_create', { requestId: serviceRequest.id, providerId: p.id }) }}" class="d-block p-3 text-center text-decoration-none provider-submit-card">
+						<div class="fw-bold text-dark">{{ p.name }}</div>
+						<span class="badge bg-secondary" style="font-size:9px;">{{ p.serviceType }}</span>
+						{% set badgeColors = { 'none': 'bg-secondary', 'rising': 'bg-success', 'certified': 'bg-info', 'top_performer': 'bg-warning text-dark', 'preferred_partner': 'bg-purple' } %}
+						<span class="badge {{ badgeColors[p.badge] ?? 'bg-secondary' }}" style="font-size:9px;">{{ p.badge }}</span>
+					</a>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{# ====== PROPOSALS TABLE ====== #}
+	<div class="card border-0 shadow-sm">
+		<div class="card-header bg-white border-bottom py-3">
+			<h5 class="h6 fw-bold mb-0">
+				<i class="fa-solid fa-list-check me-2"></i>Propositions ({{ proposals|length }})
+			</h5>
+		</div>
+		{% if proposals|length > 0 %}
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead class="table-light">
+					<tr>
+						<th>Prestataire</th>
+						<th>Prix</th>
+						<th>Durée</th>
+						<th>Équipe</th>
+						<th class="text-center">Score IA</th>
+						<th>Analyse</th>
+						{% if serviceRequest.status in ['open', 'closed'] %}<th>Action</th>{% endif %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for proposal in proposals %}
+					<tr>
+						<td>
+							<span class="fw-semibold">{{ proposal.serviceProvider.name }}</span><br>
+							{% set badgeColors = { 'none': 'bg-secondary', 'rising': 'bg-success', 'certified': 'bg-info', 'top_performer': 'bg-warning text-dark', 'preferred_partner': 'bg-purple' } %}
+							<span class="badge {{ badgeColors[proposal.serviceProvider.badge] ?? 'bg-secondary' }}" style="font-size:10px;">{{ proposal.serviceProvider.badge }}</span>
+						</td>
+						<td class="fw-semibold">{{ proposal.price|number_format(2) }} €</td>
+						<td>{{ proposal.estimatedDuration }}</td>
+						<td>{{ proposal.proposedTeamSize }} pers.</td>
+						<td class="text-center">
+							{% if proposal.aiMatchScore is not null %}
+								{% set scoreVal = proposal.aiMatchScore|number_format(0) %}
+								<span class="ai-score-pill {% if scoreVal >= 70 %}ai-score-high{% elseif scoreVal >= 40 %}ai-score-mid{% else %}ai-score-low{% endif %}">
+									<i class="fa-solid fa-robot"></i> {{ scoreVal }}/100
+								</span>
+							{% else %}
+								<span class="ai-score-pill ai-pending"><i class="fa-solid fa-hourglass-half"></i> —</span>
+							{% endif %}
+						</td>
+						<td style="max-width:200px;">
+							{% if proposal.aiMatchExplanation %}
+								<button class="btn btn-sm btn-outline-primary" onclick="openExplanation({{ proposal.id }})">
+									<i class="fa-solid fa-eye me-1"></i>Voir
+								</button>
+								<div id="explanation-{{ proposal.id }}" style="display:none;">{{ proposal.aiMatchExplanation }}</div>
+							{% else %}
+								<span class="text-muted">—</span>
+							{% endif %}
+						</td>
+						{% if serviceRequest.status in ['open', 'closed'] %}
+						<td>
+							<form method="post" action="{{ path('app_service_request_award', { eventId: event.id, id: serviceRequest.id, proposalId: proposal.id }) }}" onsubmit="return confirm('Attribuer à {{ proposal.serviceProvider.name }} ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('award_request_' ~ serviceRequest.id) }}" />
+								<button class="btn btn-sm btn-success"><i class="fa-solid fa-trophy me-1"></i>Award</button>
+							</form>
+						</td>
+						{% endif %}
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		{% else %}
+		<div class="card-body text-center text-muted py-5">
+			<i class="fa-solid fa-inbox fa-3x mb-3 d-block"></i>
+			<p>Aucune proposition reçue.</p>
+		</div>
+		{% endif %}
+	</div>
+</div>
+
+{# ====== AI RANKING DRAWER ====== #}
+{% if aiRanking %}
+<div class="ai-overlay" id="aiOverlay" onclick="closeAiDrawer()"></div>
+<div class="ai-drawer" id="aiDrawer">
+	<div class="ai-drawer-header d-flex justify-content-between align-items-center">
+		<div>
+			<h5 class="mb-1 fw-bold"><i class="fa-solid fa-brain me-2"></i>Analyse IA</h5>
+			<small class="opacity-75">Classement & recommandation — OpenRouter NLP</small>
+		</div>
+		<button class="ai-drawer-close" onclick="closeAiDrawer()"><i class="fa-solid fa-xmark"></i></button>
+	</div>
+	<div class="ai-drawer-body">{{ aiRanking|nl2br }}</div>
+</div>
+{% endif %}
+
+{# ====== EXPLANATION MODAL ====== #}
+<div class="modal fade" id="explanationModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content border-0 shadow">
+			<div class="modal-header" style="background:linear-gradient(135deg,#6c63ff,#8b5cf6);color:#fff;">
+				<h5 class="modal-title"><i class="fa-solid fa-robot me-2"></i>Analyse IA de la proposition</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body" id="explanationModalBody" style="line-height:1.8;"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+function openAiDrawer() {
+	document.getElementById('aiDrawer').classList.add('open');
+	document.getElementById('aiOverlay').classList.add('open');
+	document.body.style.overflow = 'hidden';
+}
+function closeAiDrawer() {
+	document.getElementById('aiDrawer').classList.remove('open');
+	document.getElementById('aiOverlay').classList.remove('open');
+	document.body.style.overflow = '';
+}
+function openExplanation(id) {
+	var el = document.getElementById('explanation-' + id);
+	if (el) {
+		document.getElementById('explanationModalBody').textContent = el.textContent;
+		var modal = new bootstrap.Modal(document.getElementById('explanationModal'));
+		modal.show();
+	}
+}
+document.addEventListener('keydown', function(e) {
+	if (e.key === 'Escape') closeAiDrawer();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Ticket validation - Eventify{% endblock %}
+{% block page_heading %}Ticket validation{% endblock %}
+{% block page_breadcrumb %}Ticket validation{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="row justify-content-center">
+		<div class="col-lg-6">
+			<div class="card border-0 shadow-sm">
+				<div class="card-body p-4 text-center">
+					<h2 class="h5 fw-bold mb-3">Ticket is valid</h2>
+					<p class="text-muted mb-3">This ticket belongs to the event <strong>{{ order.event.title }}</strong>.</p>
+					<ul class="list-unstyled mb-3 text-start mx-auto" style="max-width: 320px;">
+						<li class="mb-1"><strong>Event date:</strong> {{ order.event.startDatetime ? order.event.startDatetime|date('F j, Y \\a\\t g:i A') : 'TBA' }}</li>
+						<li class="mb-1"><strong>Location:</strong> {{ order.event.venue ? order.event.venue.name : 'Online / TBA' }}</li>
+						<li class="mb-1"><strong>Ticket type:</strong> {{ order.ticket.name }}</li>
+						<li class="mb-1"><strong>Quantity:</strong> {{ order.quantity }}</li>
+						<li class="mb-1"><strong>Status:</strong> {{ order.status|capitalize }}</li>
+					</ul>
+					<a href="{{ path('app_event_show', { id: order.event.id }) }}" class="btn btn-primary">View event</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

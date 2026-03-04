@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Eventify - Discover Amazing Events</title>
+
+		<!--=====FAB ICON=======-->
+		<link rel="shortcut icon" href="/assets/img/logo/fav-logo1.png" />
+
+		<!--===== CSS LINK =======-->
+		<link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/aos.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/fontawesome.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/magnific-popup.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/mobile.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/owlcarousel.min.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/sidebar.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/slick-slider.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/nice-select.css" />
+		<link rel="stylesheet" href="/assets/css/vendor/odometer.css" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/header-custom.css" />
+		<link rel="stylesheet" href="/assets/css/events-custom.css" />
+
+		<!--=====  JS SCRIPT LINK =======-->
+		<script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
+	</head>
+	<body class="homepage1-body">
+		<!-- Popup Section -->
+		<div id="popup" class="popup-overlay d-none">
+			<div class="popup-content">
+				<span class="close-btn" id="close-popup">&times;</span>
+				<div class="popup-icon">
+					<img src="/assets/img/logo/popup-logo.png" alt="" />
+				</div>
+				<div class="space32"></div>
+				<div class="heading2">
+					<h2>Grow your business with our agency</h2>
+					<div class="space8"></div>
+					<ul>
+						<li><img src="/assets/img/icons/check3.svg" alt="" />Elevate User Experience Expertise</li>
+						<li><img src="/assets/img/icons/check3.svg" alt="" /> Elevate Your UI/UX Skills Designer</li>
+						<li><img src="/assets/img/icons/check3.svg" alt="" />Join Leading UI/UX Event the Year</li>
+					</ul>
+				</div>
+				<div class="space50"></div>
+				<a class="vl-btn2" href="contact.html"
+					><span class="demo">Buy Ticket Now</span><span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+				</a>
+				<p class="no-thanks">No thanks</p>
+			</div>
+		</div>
+		<!--===== PRELOADER STARTS =======-->
+		<div class="preloader">
+			<div class="loading-container">
+				<div class="loading"></div>
+				<div id="loading-icon"><img src="/assets/img/logo/preloader.png" alt="" /></div>
+			</div>
+		</div>
+		<!--===== PRELOADER ENDS =======-->
+
+		<!--===== PAGE PROGRESS START=======-->
+		<div class="paginacontainer">
+			<div class="progress-wrap">
+				<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+					<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+				</svg>
+			</div>
+		</div>
+		<!--===== PAGE PROGRESS END=======-->
+
+		{% include 'partials/header_events.html.twig' %}
+
+		<!--===== HERO AREA STARTS =======-->
+		<div class="inner-page-header" style="background-image: url(/assets/img/bg/header-bg6.png); padding: 100px 0;">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 m-auto">
+						<div class="heading1 text-center">
+							<h1 style="font-size: 48px; margin-bottom: 20px;">{% if filter_organizer %}Events by {{ filter_organizer.name }}{% else %}Discover & Book Amazing Events{% endif %}</h1>
+							<p style="font-size: 18px; color: rgba(255,255,255,0.9); margin-bottom: 40px;">Find the perfect event for you. From conferences to concerts, workshops to festivals.</p>
+							<div class="hero-search-box" style="max-width: 600px; margin: 0 auto;">
+								<div class="input-group input-group-lg">
+									<span class="input-group-text bg-white border-0"><i class="fa-solid fa-search"></i></span>
+									<input type="text" class="form-control border-0" id="hero-search" placeholder="Search for events..." style="padding: 15px;">
+									<button class="btn btn-primary" type="button" style="padding: 0 30px;">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--===== HERO AREA ENDS =======-->
+
+		<!--===== EVENTS AREA STARTS =======-->
+		<div class="team-sperkers-section-area sp1">
+			<div class="container">
+				{% for message in app.flashes('success') %}
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+					</div>
+				{% endfor %}
+				{% for message in app.flashes('error') %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+					</div>
+				{% endfor %}
+
+				<div class="section-header text-center mb-5">
+					<h2 style="font-size: 36px; font-weight: 600; margin-bottom: 10px;">Upcoming Events</h2>
+					<p style="font-size: 16px; color: #666;">Explore our curated selection of events happening near you</p>
+				</div>
+
+				<div class="row" id="events-list-container">
+					{% include 'events/_events_list.html.twig' with { events: events } %}
+				</div>
+			</div>
+		</div>
+		<!--===== EVENTS AREA ENDS =======-->
+
+		<!--===== WHY CHOOSE US AREA STARTS =======-->
+		<div class="features-section" style="background: #f8f9fa; padding: 80px 0;">
+			<div class="container">
+				<div class="row text-center mb-5">
+					<div class="col-lg-8 m-auto">
+						<h2 style="font-size: 36px; font-weight: 600; margin-bottom: 15px;">Why Choose Eventify?</h2>
+						<p style="font-size: 16px; color: #666;">Your trusted platform for discovering and booking amazing events</p>
+					</div>
+				</div>
+				<div class="row g-4">
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-calendar-check"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Easy Booking</h4>
+							<p style="color: #666; font-size: 14px;">Book tickets in just a few clicks with secure payment</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-ticket"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Instant Tickets</h4>
+							<p style="color: #666; font-size: 14px;">Get your tickets instantly delivered to your email</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-shield-halved"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Secure Payment</h4>
+							<p style="color: #666; font-size: 14px;">Your transactions are safe and encrypted</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="feature-card text-center" style="background: white; padding: 40px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+							<div class="feature-icon" style="font-size: 40px; color: #0d6efd; margin-bottom: 20px;">
+								<i class="fa-solid fa-headset"></i>
+							</div>
+							<h4 style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">24/7 Support</h4>
+							<p style="color: #666; font-size: 14px;">Our team is always here to help you</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--===== WHY CHOOSE US AREA ENDS =======-->
+
+		<!--===== FOOTER AREA STARTS =======-->
+		<div class="footer1-sertion-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-6">
+						<div class="footer-logo-area">
+							<img src="/assets/img/logo/logo2.png" alt="" />
+							<div class="space16"></div>
+							<p>We are committed to creating a platform where business leaders, innovators, and professionals can come together to exchange ideas</p>
+							<div class="space24"></div>
+							<ul>
+								<li>
+									<a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="fa-brands fa-instagram"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+								</li>
+								<li>
+									<a href="#" class="m-0"><i class="fa-brands fa-pinterest-p"></i></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-6">
+						<div class="link-content">
+							<h3>Quick Links</h3>
+							<ul>
+								<li><a href="about.html">About Us</a></li>
+								<li><a href="blog.html">Our Blogs</a></li>
+								<li><a href="{{ path('app_events') }}">Event Listing</a></li>
+								<li><a href="pricing-plan.html">Pricing Plan</a></li>
+								<li><a href="{{ path('app_reclamation_new') }}">Contact Us</a></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="col-lg-3 col-md-6">
+						<div class="link-content2">
+							<h3>Contact Us</h3>
+							<ul>
+								<li>
+									<a href="tel:+11234567890"><img src="/assets/img/icons/phn1.svg" alt="" />+1 123 456 7890</a>
+								</li>
+								<li>
+									<a href="#"><img src="/assets/img/icons/location1.svg" alt="" />Secret Location In The UK</a>
+								</li>
+								<li>
+									<a href="mailto:eventifyevent@gmail.com"><img src="/assets/img/icons/mail1.svg" alt="" />eventifyevent@gmail.com</a>
+								</li>
+								<li>
+									<a href="#"> <img src="/assets/img/icons/world1.svg" alt="" />eventifyevent.com</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-6">
+						<div class="footer-social-box">
+							<h3>Our Recent Event Gallery</h3>
+							<div class="space12"></div>
+							<div class="row">
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img1.png" alt="" />
+										<div class="icons">
+											<a href="#"><i class="fa-brands fa-instagram"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img2.png" alt="" />
+										<div class="icons">
+											<a href="#"><i class="fa-brands fa-instagram"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img3.png" alt="" />
+										<div class="icons">
+											<a href="#"><i class="fa-brands fa-instagram"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img4.png" alt="" />
+										<div class="icons">
+											<a href="#"><i class="fa-brands fa-instagram"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img5.png" alt="" />
+										<div class="icons">
+											<a href="#"><i class="fa-brands fa-instagram"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-4">
+									<div class="img1">
+										<img src="/assets/img/all-images/footer/footer-img6.png" alt="" />
+										<div class="icons">
+											<a href="#"><i class="fa-brands fa-instagram"></i></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="space60"></div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="copyright">
+							<p>&copy; Copyright 2024 -Eventify. All Right Reserved</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--===== FOOTER AREA ENDS =======-->
+
+		<!--===== JS SCRIPT LINK =======-->
+		<script src="/assets/js/vendor/bootstrap.min.js"></script>
+		<script src="/assets/js/vendor/fontawesome.js"></script>
+		<script src="/assets/js/vendor/aos.js"></script>
+		<script src="/assets/js/vendor/jquery.appear.js"></script>
+		<script src="/assets/js/vendor/jquery.odometer.min.js"></script>
+		<script src="/assets/js/vendor/sidebar.js"></script>
+		<script src="/assets/js/vendor/magnific-popup.js"></script>
+		<script src="/assets/js/vendor/gsap.min.js"></script>
+		<script src="/assets/js/vendor/ScrollTrigger.min.js"></script>
+		<script src="/assets/js/vendor/Splitetext.js"></script>
+		<script src="/assets/js/vendor/mobilemenu.js"></script>
+		<script src="/assets/js/vendor/owlcarousel.min.js"></script>
+		<script src="/assets/js/vendor/nice-select.js"></script>
+		<script src="/assets/js/vendor/waypoints.js"></script>
+		<script src="/assets/js/vendor/slick-slider.js"></script>
+		<script src="/assets/js/vendor/circle-progress.js"></script>
+		<script src="/assets/js/main.js"></script>
+		<script>
+		(function () {
+			var container = document.getElementById('events-list-container');
+			var heroSearchEl = document.getElementById('hero-search');
+			var heroSearchBtn = heroSearchEl ? heroSearchEl.nextElementSibling : null;
+			if (!container || !heroSearchEl) return;
+
+			var debounceTimer;
+			function debounce(fn, ms) {
+				return function () {
+					clearTimeout(debounceTimer);
+					var self = this, args = arguments;
+					debounceTimer = setTimeout(function () { fn.apply(self, args); }, ms);
+				};
+			}
+
+			function loadEvents() {
+				var q = heroSearchEl.value ? heroSearchEl.value.trim() : '';
+				var sort = 'date_asc'; // Default sort
+				var params = new URLSearchParams();
+				if (q) params.set('q', q);
+				params.set('sort', sort);
+				var url = (window.location.pathname || '/events') + '?' + params.toString();
+
+				container.style.opacity = '0.6';
+				container.style.pointerEvents = 'none';
+
+				fetch(url, {
+					headers: { 'X-Requested-With': 'XMLHttpRequest' }
+				})
+					.then(function (r) { return r.text(); })
+					.then(function (html) {
+						container.innerHTML = html;
+						history.replaceState(null, '', url);
+					})
+					.catch(function () {
+						container.innerHTML = '<div class="col-12 text-center py-5"><p class="text-danger">Error loading events. Please refresh.</p></div>';
+					})
+					.finally(function () {
+						container.style.opacity = '';
+						container.style.pointerEvents = '';
+					});
+			}
+
+			// Hero search on input - filter without scrolling
+			heroSearchEl.addEventListener('input', debounce(function() {
+				loadEvents();
+			}, 350));
+
+			// Handle search button click - filter and scroll
+			if (heroSearchBtn) {
+				heroSearchBtn.addEventListener('click', function() {
+					loadEvents();
+					// Scroll to events section
+					var eventsSection = document.querySelector('.team-sperkers-section-area');
+					if (eventsSection) {
+						eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				});
+			}
+
+			// Handle Enter key on hero search - filter and scroll
+			heroSearchEl.addEventListener('keypress', function(e) {
+				if (e.key === 'Enter') {
+					loadEvents();
+					// Scroll to events section
+					var eventsSection = document.querySelector('.team-sperkers-section-area');
+					if (eventsSection) {
+						eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				}
+			});
+		})();
+		</script>
+	</body>
+</html>

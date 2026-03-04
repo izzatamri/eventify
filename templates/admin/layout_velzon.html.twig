@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Admin{% endblock %} | Eventify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="{{ asset('img/logo/fav-logo1.png') }}" />
+    <!-- Velzon assets (under public/Admin/) -->
+    <link href="/Admin/assets/libs/jsvectormap/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Admin/assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
+    <script src="/Admin/assets/js/layout.js"></script>
+    <link href="/Admin/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Admin/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Admin/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Admin/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+    {% block page_styles %}{% endblock %}
+</head>
+<body>
+    <div id="layout-wrapper">
+        <header id="page-topbar">
+            <div class="layout-width">
+                <div class="navbar-header">
+                    <div class="d-flex">
+                        <div class="navbar-brand-box horizontal-logo">
+                            <a href="{{ path('app_admin_dashboard') }}" class="logo logo-dark">
+                                <span class="logo-sm"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="22" onerror="this.style.display='none'"></span>
+                                <span class="logo-lg"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="17" onerror="this.parentElement.textContent='Eventify'"></span>
+                            </a>
+                            <a href="{{ path('app_admin_dashboard') }}" class="logo logo-light">
+                                <span class="logo-sm"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="22" onerror="this.style.display='none'"></span>
+                                <span class="logo-lg"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="17" onerror="this.parentElement.textContent='Eventify'"></span>
+                            </a>
+                        </div>
+                        <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon" aria-label="Toggle menu">
+                            <span class="hamburger-icon"><span></span><span></span><span></span></span>
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ path('app_events') }}" class="btn btn-soft-secondary btn-sm me-2">View site</a>
+                        <div class="dropdown ms-sm-3 header-item topbar-user">
+                            <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="d-flex align-items-center">
+                                    <span class="rounded-circle header-profile-user bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-semibold" style="width:32px;height:32px;font-size:14px">{{ app.user.email|slice(0,1)|upper }}</span>
+                                    <span class="text-start ms-xl-2">
+                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ app.user.email }}</span>
+                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Admin</span>
+                                    </span>
+                                </span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <h6 class="dropdown-header">Admin</h6>
+                                <a class="dropdown-item" href="{{ path('app_admin_dashboard') }}"><i class="ri-dashboard-2-line text-muted fs-16 align-middle me-1"></i> Dashboard</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="ri-logout-box-line text-muted fs-16 align-middle me-1"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="vertical-overlay"></div>
+
+        <div class="app-menu navbar-menu">
+            <div class="navbar-brand-box">
+                <a href="{{ path('app_admin_dashboard') }}" class="logo logo-dark">
+                    <span class="logo-sm"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="22" onerror="this.style.display='none'"></span>
+                    <span class="logo-lg"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="17" onerror="this.parentElement.textContent='Eventify'"></span>
+                </a>
+                <a href="{{ path('app_admin_dashboard') }}" class="logo logo-light">
+                    <span class="logo-sm"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="22" onerror="this.style.display='none'"></span>
+                    <span class="logo-lg"><img src="{{ asset('img/logo/logo1.png') }}" alt="Eventify" height="17" onerror="this.parentElement.textContent='Eventify'"></span>
+                </a>
+                <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover"><i class="ri-record-circle-line"></i></button>
+            </div>
+            <div id="scrollbar">
+                <div class="container-fluid">
+                    <ul class="navbar-nav" id="navbar-nav">
+
+                        <li class="menu-title"><span>Menu</span></li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ path('app_admin_dashboard') }}">
+                                <i class="ri-dashboard-2-line"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ path('app_admin_users_index') }}">
+                                <i class="ri-user-line"></i> <span>Users</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ path('app_admin_events_index') }}">
+                                <i class="ri-calendar-event-line"></i> <span>Events</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ path('app_admin_service_provider_index') }}">
+                                <i class="ri-truck-line"></i> <span>Service providers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ path('app_events') }}">
+                                <i class="ri-external-link-line"></i> <span>View site</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    {% block page_heading_wrapper %}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                <h4 class="mb-sm-0">{% block page_heading %}Admin{% endblock %}</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="{{ path('app_admin_dashboard') }}">Admin</a></li>
+                                        {% block page_breadcrumb %}{% endblock %}
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/Admin/assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="/Admin/assets/libs/node-waves/waves.min.js"></script>
+    <script src="/Admin/assets/libs/feather-icons/feather.min.js"></script>
+    <script src="/Admin/assets/js/plugins.js"></script>
+    <script src="/Admin/assets/js/app.js"></script>
+    {% block page_scripts %}{% endblock %}
+</body>
+</html>

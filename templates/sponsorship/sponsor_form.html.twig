@@ -1,0 +1,151 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}{{ title }} - {{ event.title }} - Eventify{% endblock %}
+{% block page_heading %}{{ title }}{% endblock %}
+{% block page_breadcrumb %}{{ title }}{% endblock %}
+
+{% block page_styles %}
+{{ parent() }}
+<style>
+.sponsorship-form .form-section { margin-bottom: 2rem; }
+.sponsorship-form .form-section-title { font-size: 1rem; font-weight: 600; color: #1a1a1a; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e9ecef; }
+.sponsorship-form .mb-3 .form-label { font-weight: 500; color: #374151; margin-bottom: 0.35rem; }
+.sponsorship-form .form-control, .sponsorship-form .form-select { border-radius: 8px; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; }
+.sponsorship-form .form-control:focus, .sponsorship-form .form-select:focus { border-color: #2E4DFD; box-shadow: 0 0 0 3px rgba(46,77,253,0.15); }
+.sponsorship-form textarea.form-control { min-height: 80px; resize: vertical; }
+.sponsorship-form .form-text { font-size: 0.8125rem; color: #6b7280; margin-top: 0.25rem; }
+.sponsorship-form .invalid-feedback { font-size: 0.8125rem; }
+.sponsorship-form .btn-primary { border-radius: 8px; padding: 0.5rem 1.25rem; font-weight: 600; }
+.sponsorship-form .btn-outline-secondary { border-radius: 8px; padding: 0.5rem 1.25rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="mb-3">
+		<a href="{{ path('app_sponsor_index', { id: event.id }) }}" class="text-primary text-decoration-none small"><i class="fa-solid fa-chevron-left me-1"></i> Back to sponsors</a>
+		<span class="mx-2 text-muted">/</span>
+		<a href="{{ path('app_event_show', { id: event.id }) }}" class="text-dark text-decoration-none">{{ event.title }}</a>
+	</div>
+
+	<div class="card border-0 shadow-sm overflow-hidden">
+		<div class="card-body p-4 p-lg-5">
+			<h2 class="h5 fw-bold mb-4">{{ title }}</h2>
+			{{ form_start(form, { attr: { class: 'sponsorship-form', novalidate: 'novalidate' } }) }}
+
+			<div class="form-section">
+				<div class="form-section-title">Company information</div>
+				<div class="row g-3">
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.name) }}
+						{{ form_widget(form.name, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.name) }}
+					</div>
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.email) }}
+						{{ form_widget(form.email, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.email) }}
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.phone) }}
+						{{ form_widget(form.phone, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.phone) }}
+					</div>
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.website) }}
+						{{ form_widget(form.website, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.website) }}
+					</div>
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.logoFile) }}
+					{{ form_widget(form.logoFile, { attr: { class: 'form-control' } }) }}
+					<p class="form-text">PNG, JPEG, JPG, WebP or GIF. Max 2 MB. Leave empty to keep current logo.</p>
+					{{ form_errors(form.logoFile) }}
+					{% if sponsor.logoUrl %}
+						<p class="small text-muted mt-2 mb-0">Current logo: <img src="{{ sponsor.logoUrl }}" alt="" class="rounded align-middle" style="height: 32px;" /></p>
+					{% endif %}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.logoUrl) }}
+					{{ form_widget(form.logoUrl, { attr: { class: 'form-control' } }) }}
+					<p class="form-text">Or paste a logo image URL instead of uploading a file.</p>
+					{{ form_errors(form.logoUrl) }}
+				</div>
+				<div class="mb-3">
+					{{ form_label(form.description) }}
+					{{ form_widget(form.description, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.description) }}
+				</div>
+			</div>
+
+			<div class="form-section">
+				<div class="form-section-title">Contact person</div>
+				<div class="row g-3">
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.contactPersonName) }}
+						{{ form_widget(form.contactPersonName, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.contactPersonName) }}
+					</div>
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.contactPersonEmail) }}
+						{{ form_widget(form.contactPersonEmail, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.contactPersonEmail) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="form-section">
+				<div class="form-section-title">Package &amp; payment</div>
+				<div class="row g-3">
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.sponsorshipPackage) }}
+						{{ form_widget(form.sponsorshipPackage, { attr: { class: 'form-select' } }) }}
+						{{ form_errors(form.sponsorshipPackage) }}
+					</div>
+					<div class="col-md-6 mb-3">
+						{{ form_label(form.status) }}
+						{{ form_widget(form.status, { attr: { class: 'form-select' } }) }}
+						{{ form_errors(form.status) }}
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-md-4 mb-3">
+						{{ form_label(form.paymentStatus) }}
+						{{ form_widget(form.paymentStatus, { attr: { class: 'form-select' } }) }}
+						{{ form_errors(form.paymentStatus) }}
+					</div>
+					<div class="col-md-4 mb-3">
+						{{ form_label(form.amountPaid) }}
+						{{ form_widget(form.amountPaid, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.amountPaid) }}
+					</div>
+					<div class="col-md-4 mb-3">
+						{{ form_label(form.paymentDate) }}
+						{{ form_widget(form.paymentDate, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.paymentDate) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="form-section">
+				<div class="form-section-title">Internal notes</div>
+				<div class="mb-3">
+					{{ form_label(form.notes) }}
+					{{ form_widget(form.notes, { attr: { class: 'form-control' } }) }}
+					<p class="form-text">Not visible to the public.</p>
+					{{ form_errors(form.notes) }}
+				</div>
+			</div>
+
+			<div class="d-flex flex-wrap gap-2 mt-4 pt-3 border-top">
+				<button type="submit" class="btn btn-primary">Save sponsor</button>
+				<a href="{{ path('app_sponsor_index', { id: event.id }) }}" class="btn btn-outline-secondary">Cancel</a>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>
+{% endblock %}

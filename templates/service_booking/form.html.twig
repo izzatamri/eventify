@@ -1,0 +1,64 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}{{ title }} - {{ event.title }} - Eventify{% endblock %}
+{% block page_heading %}{{ title }}{% endblock %}
+{% block page_breadcrumb %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<div class="mb-3">
+		<a href="{{ path('app_service_booking_index', { eventId: event.id }) }}" class="text-primary text-decoration-none small"><i class="fa-solid fa-chevron-left me-1"></i> Back to bookings</a>
+		<span class="mx-2 text-muted">/</span>
+		<a href="{{ path('app_event_show', { id: event.id }) }}" class="text-dark text-decoration-none">{{ event.title }}</a>
+	</div>
+
+	<div class="card border-0 shadow-sm">
+		<div class="card-body p-4">
+			<h2 class="h5 fw-bold mb-4">{{ title }}</h2>
+			{{ form_start(form, { attr: { class: 'row g-3', novalidate: 'novalidate' } }) }}
+				<div class="col-12">
+					{{ form_label(form.serviceProvider) }}
+					{{ form_widget(form.serviceProvider, { attr: { class: 'form-select' } }) }}
+					{{ form_errors(form.serviceProvider) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.scheduledDate) }}
+					{{ form_widget(form.scheduledDate, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.scheduledDate) }}
+				</div>
+				<div class="col-md-3">
+					{{ form_label(form.startTime) }}
+					{{ form_widget(form.startTime, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.startTime) }}
+				</div>
+				<div class="col-md-3">
+					{{ form_label(form.endTime) }}
+					{{ form_widget(form.endTime, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.endTime) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.quantity) }}
+					{{ form_widget(form.quantity, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.quantity) }}
+					<p class="form-text small mb-0">Number of staff, meals, or units.</p>
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.agreedPrice) }}
+					{{ form_widget(form.agreedPrice, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.agreedPrice) }}
+				</div>
+				<div class="col-12">
+					{{ form_label(form.notes) }}
+					{{ form_widget(form.notes, { attr: { class: 'form-control', rows: 3 } }) }}
+					{{ form_errors(form.notes) }}
+				</div>
+				<div class="col-12 pt-2">
+					<button type="submit" class="btn btn-primary">Save booking</button>
+					<a href="{{ path('app_service_booking_index', { eventId: event.id }) }}" class="btn btn-outline-secondary">Cancel</a>
+				</div>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>
+{% endblock %}

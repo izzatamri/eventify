@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+	body { font-family: Helvetica, Arial, sans-serif; color: #333; line-height: 1.6; margin: 0; padding: 0; background: #f4f4f7; }
+	.wrapper { max-width: 600px; margin: 0 auto; background: #fff; }
+	.header { background: #6c63ff; padding: 30px 40px; text-align: center; }
+	.header h1 { color: #fff; font-size: 22px; margin: 0; }
+	.content { padding: 30px 40px; }
+	.content h2 { font-size: 18px; color: #333; margin-top: 0; }
+	.detail-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+	.detail-table td { padding: 8px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+	.detail-table td:first-child { font-weight: bold; color: #555; width: 40%; }
+	.btn { display: inline-block; background: #6c63ff; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: bold; font-size: 14px; margin-top: 15px; }
+	.footer { padding: 20px 40px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+	<div class="header">
+		<h1>Sponsorship Approved</h1>
+	</div>
+
+	<div class="content">
+		<h2>Hello {{ sponsor.contactPersonName ?? sponsor.name }},</h2>
+
+		<p>We are pleased to inform you that your sponsorship request for <strong>{{ event.title }}</strong> has been approved.</p>
+
+		<table class="detail-table">
+			<tr>
+				<td>Event</td>
+				<td>{{ event.title }}</td>
+			</tr>
+			<tr>
+				<td>Event Date</td>
+				<td>{{ event.startDatetime|date('F j, Y') }}</td>
+			</tr>
+			<tr>
+				<td>Package</td>
+				<td>{{ package.name }} &mdash; ${{ package.price|number_format(2) }}</td>
+			</tr>
+			<tr>
+				<td>Tables</td>
+				<td>{{ package.numberOfTables }} table(s), {{ package.seatsPerTable }} seats each</td>
+			</tr>
+		</table>
+
+		<p>Attached to this email you will find the <strong>Sponsorship Agreement</strong> (PDF). An electronic signature request has been sent to you via Yousign. Please check your inbox for the signing link.</p>
+
+		<p>Once you have signed the agreement, your sponsorship will be fully confirmed.</p>
+
+		<p>If you have any questions, please don't hesitate to reach out to the event organizer.</p>
+
+		<p>Thank you for your support!<br /><strong>The Eventify Team</strong></p>
+	</div>
+
+	<div class="footer">
+		<p>&copy; {{ "now"|date('Y') }} Eventify. All rights reserved.</p>
+	</div>
+</div>
+
+</body>
+</html>

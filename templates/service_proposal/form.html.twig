@@ -1,0 +1,66 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Soumettre une proposition - Eventify{% endblock %}
+{% block page_heading %}Soumettre une proposition{% endblock %}
+{% block page_breadcrumb %}Nouvelle proposition{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+	<p class="mb-3"><a href="{{ path('app_service_proposal_index', { requestId: serviceRequest.id }) }}">&larr; Retour aux propositions</a></p>
+
+	<div class="alert alert-info border-0 shadow-sm">
+		<div class="row align-items-center">
+			<div class="col-md-8">
+				<strong>Demande :</strong> {{ serviceRequest.title }}<br />
+				<strong>Budget :</strong> {{ serviceRequest.budgetMin|number_format(2) }} € — {{ serviceRequest.budgetMax|number_format(2) }} €<br />
+				<strong>Catégorie :</strong> {{ serviceRequest.serviceType }}<br />
+				<strong>Prestataire :</strong> {{ provider.name }}
+				{% set badgeColors = { 'none': 'bg-secondary', 'rising': 'bg-success', 'certified': 'bg-info', 'top_performer': 'bg-warning text-dark', 'preferred_partner': 'bg-primary' } %}
+				<span class="badge {{ badgeColors[provider.badge] ?? 'bg-secondary' }} ms-1">{{ provider.badge }}</span>
+			</div>
+			<div class="col-md-4 text-md-end mt-2 mt-md-0">
+				<div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background:linear-gradient(135deg,#6c63ff,#8b5cf6);color:#fff;font-size:13px;">
+					<i class="fa-solid fa-robot"></i>
+					<span><strong>IA active</strong> — votre proposition sera analysée automatiquement</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card border-0 shadow-sm">
+		<div class="card-body p-4">
+			<h2 class="h5 fw-bold mb-4">Votre proposition</h2>
+			{{ form_start(form, { attr: { class: 'row g-3', novalidate: 'novalidate' } }) }}
+				<div class="col-md-6">
+					{{ form_label(form.price) }}
+					{{ form_widget(form.price, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.price) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.proposedTeamSize) }}
+					{{ form_widget(form.proposedTeamSize, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.proposedTeamSize) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_label(form.estimatedDuration) }}
+					{{ form_widget(form.estimatedDuration, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.estimatedDuration) }}
+				</div>
+				<div class="col-12">
+					{{ form_label(form.description) }}
+					{{ form_widget(form.description, { attr: { class: 'form-control', rows: 5 } }) }}
+					{{ form_errors(form.description) }}
+					<div class="form-text d-flex align-items-center gap-1 mt-1">
+						<i class="fa-solid fa-brain text-primary"></i>
+						<span>Cette description sera analysée par l'IA (OpenRouter NLP) pour évaluer la pertinence de votre offre et générer un score de correspondance.</span>
+					</div>
+				</div>
+				<div class="col-12 pt-2">
+					<button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane me-1"></i>Soumettre &amp; lancer l'analyse IA</button>
+					<a href="{{ path('app_service_proposal_index', { requestId: serviceRequest.id }) }}" class="btn btn-outline-secondary">Annuler</a>
+				</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>
+{% endblock %}

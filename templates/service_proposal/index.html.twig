@@ -1,0 +1,81 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Propositions - {{ serviceRequest.title }}{% endblock %}
+{% block page_heading %}Propositions{% endblock %}
+{% block page_breadcrumb %}Propositions{% endblock %}
+
+{% block content %}
+<style>
+	.ai-score-circle { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:50%; font-weight:700; font-size:14px; color:#fff; }
+	.ai-score-high { background: linear-gradient(135deg, #22c55e, #16a34a); }
+	.ai-score-mid { background: linear-gradient(135deg, #f59e0b, #d97706); }
+	.ai-score-low { background: linear-gradient(135deg, #ef4444, #dc2626); }
+	.ai-score-pending { background: #cbd5e1; }
+	.ai-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+	.ai-badge-active { background:rgba(108,99,255,0.12); color:#6c63ff; }
+</style>
+
+<div class="container py-4">
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('warning') %}
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+	{% endfor %}
+	{% for message in app.flashes('error') %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+	{% endfor %}
+
+	<p class="mb-3"><a href="{{ path('app_service_request_show', { eventId: serviceRequest.event.id, id: serviceRequest.id }) }}">&larr; Retour à la demande</a></p>
+
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h3 class="h5 fw-bold mb-0">Propositions pour : {{ serviceRequest.title }}</h3>
+		<span class="ai-badge ai-badge-active"><i class="fa-solid fa-robot me-1"></i>Analyse IA synchrone</span>
+	</div>
+
+	{% if proposals|length > 0 %}
+	<div class="row g-3 mb-4">
+		{% for proposal in proposals %}
+		<div class="col-md-6 col-xl-4">
+			<div class="card border-0 shadow-sm h-100">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-start mb-3">
+						<div>
+							<h6 class="fw-bold mb-1">{{ proposal.serviceProvider.name }}</h6>
+							{% set badgeColors = { 'none': 'bg-secondary', 'rising': 'bg-success', 'certified': 'bg-info', 'top_performer': 'bg-warning text-dark', 'preferred_partner': 'bg-primary' } %}
+							<span class="badge {{ badgeColors[proposal.serviceProvider.badge] ?? 'bg-secondary' }}" style="font-size:10px;">{{ proposal.serviceProvider.badge }}</span>
+						</div>
+						{% if proposal.aiMatchScore is not null %}
+							{% set scoreVal = proposal.aiMatchScore|number_format(0) %}
+							<div class="ai-score-circle {% if scoreVal >= 70 %}ai-score-high{% elseif scoreVal >= 40 %}ai-score-mid{% else %}ai-score-low{% endif %}">
+								{{ scoreVal }}
+							</div>
+						{% else %}
+							<div class="ai-score-circle ai-score-pending" title="Score non disponible">—</div>
+						{% endif %}
+					</div>
+					<div class="row g-2 mb-3 small">
+						<div class="col-6"><span class="text-muted">Prix :</span> <strong>{{ proposal.price|number_format(2) }} €</strong></div>
+						<div class="col-6"><span class="text-muted">Durée :</span> <strong>{{ proposal.estimatedDuration }}</strong></div>
+						<div class="col-6"><span class="text-muted">Équipe :</span> <strong>{{ proposal.proposedTeamSize }} pers.</strong></div>
+						<div class="col-6"><span class="text-muted">Soumis :</span> {{ proposal.createdAt|date('d/m/Y H:i') }}</div>
+					</div>
+					{% if proposal.aiMatchExplanation %}
+					<div class="p-2 rounded" style="background:rgba(108,99,255,0.06); border-left:3px solid #6c63ff;">
+						<small class="d-block text-muted mb-1"><i class="fa-solid fa-robot me-1"></i>Analyse IA :</small>
+						<small>{{ proposal.aiMatchExplanation }}</small>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="text-center text-muted py-5">
+		<i class="fa-solid fa-inbox fa-3x mb-3 d-block"></i>
+		<p>Aucune proposition reçue pour cette demande.</p>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

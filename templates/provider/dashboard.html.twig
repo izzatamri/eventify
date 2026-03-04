@@ -1,0 +1,131 @@
+{% extends 'layout_events.html.twig' %}
+
+{% block title %}Dashboard - {{ provider.name }}{% endblock %}
+{% block page_heading %}Tableau de bord prestataire{% endblock %}
+{% block page_breadcrumb %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+	.bg-purple { background-color: #6c63ff !important; color: #fff; }
+	.score-display { font-size: 3.5rem; font-weight: 800; color: #6c63ff; line-height: 1; }
+	.badge-display { font-size: 1rem; padding: 8px 20px; border-radius: 24px; }
+	.chart-card { min-height: 360px; }
+	.stat-card { border-radius: 12px; }
+	.stat-value { font-size: 1.8rem; font-weight: 700; }
+
+	.score-criteria { list-style: none; padding: 0; margin: 0; }
+	.score-criteria li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+	.score-criteria li:last-child { border-bottom: none; }
+	.criteria-bar { height: 6px; border-radius: 3px; background: #e2e8f0; flex: 1; margin-left: 12px; margin-right: 8px; position: relative; overflow: hidden; }
+	.criteria-fill { height: 100%; border-radius: 3px; background: #6c63ff; }
+</style>
+
+<div class="container py-4">
+	<div class="mb-3">
+		<a href="{{ path('app_admin_service_provider_index') }}" class="text-primary text-decoration-none small">
+			<i class="fa-solid fa-chevron-left me-1"></i> Retour aux prestataires
+		</a>
+	</div>
+
+	{# ====== PROVIDER HEADER ====== #}
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-body py-4">
+			<div class="row align-items-center">
+				<div class="col-md-7">
+					<h2 class="h4 fw-bold mb-1">{{ provider.name }}</h2>
+					<p class="text-muted mb-3">{{ provider.serviceType }} · {{ provider.email }}</p>
+					<div class="d-flex gap-2 flex-wrap">
+						<span class="badge badge-display {{ badge.cssClass }}">{{ badge.label }}</span>
+						{% if provider.verified %}
+							<span class="badge badge-display bg-success"><i class="fa-solid fa-shield-check me-1"></i>SIRET Vérifié</span>
+						{% endif %}
+						{% if provider.legalName %}
+							<span class="badge badge-display bg-light text-dark border">{{ provider.legalName }}</span>
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-md-5 text-md-end mt-3 mt-md-0">
+					<div class="score-display">{{ provider.score }}</div>
+					<p class="text-muted mb-0">Score global / 100</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# ====== SCORE BREAKDOWN ====== #}
+	<div class="card border-0 shadow-sm mb-4">
+		<div class="card-header bg-white border-bottom py-3">
+			<h5 class="h6 fw-bold mb-0"><i class="fa-solid fa-calculator me-2 text-primary"></i>Comment le score est calculé</h5>
+		</div>
+		<div class="card-body">
+			<p class="text-muted small mb-3">Le score est calculé automatiquement selon 4 critères pondérés :</p>
+			<ul class="score-criteria">
+				<li>
+					<span class="fw-semibold" style="min-width:200px;">Missions complétées (40%)</span>
+					<div class="criteria-bar"><div class="criteria-fill" style="width:{{ stats.missionsPercent }}%;"></div></div>
+					<span class="text-muted small" style="min-width:60px;">{{ stats.completedMissions }}/{{ stats.maxMissions }}</span>
+				</li>
+				<li>
+					<span class="fw-semibold" style="min-width:200px;">SIRET vérifié (20%)</span>
+					<div class="criteria-bar"><div class="criteria-fill" style="width:{{ provider.verified ? 100 : 0 }}%;"></div></div>
+					<span class="text-muted small" style="min-width:60px;">{{ provider.verified ? 'Oui' : 'Non' }}</span>
+				</li>
+				<li>
+					<span class="fw-semibold" style="min-width:200px;">Réactivité RFQ (20%)</span>
+					<div class="criteria-bar"><div class="criteria-fill" style="width:{{ stats.responsePercent }}%;"></div></div>
+					<span class="text-muted small" style="min-width:60px;">{{ stats.avgResponseHours }}h</span>
+				</li>
+				<li>
+					<span class="fw-semibold" style="min-width:200px;">Ancienneté (20%)</span>
+					<div class="criteria-bar"><div class="criteria-fill" style="width:{{ stats.seniorityPercent }}%;"></div></div>
+					<span class="text-muted small" style="min-width:60px;">{{ stats.seniorityMonths }} mois</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	{# ====== CHARTS ====== #}
+	<div class="row g-4">
+		<div class="col-md-6">
+			<div class="card border-0 shadow-sm chart-card">
+				<div class="card-header bg-white border-bottom py-3">
+					<h6 class="fw-bold mb-0"><i class="fa-solid fa-chart-pie me-2 text-primary"></i>Missions par catégorie</h6>
+				</div>
+				<div class="card-body d-flex align-items-center justify-content-center">
+					{{ render_chart(pieChart) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card border-0 shadow-sm chart-card">
+				<div class="card-header bg-white border-bottom py-3">
+					<h6 class="fw-bold mb-0"><i class="fa-solid fa-chart-bar me-2 text-primary"></i>Missions par mois (12 derniers)</h6>
+				</div>
+				<div class="card-body d-flex align-items-center justify-content-center">
+					{{ render_chart(barChart) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card border-0 shadow-sm chart-card">
+				<div class="card-header bg-white border-bottom py-3">
+					<h6 class="fw-bold mb-0"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Évolution du score</h6>
+				</div>
+				<div class="card-body d-flex align-items-center justify-content-center">
+					{{ render_chart(lineChart) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card border-0 shadow-sm chart-card">
+				<div class="card-header bg-white border-bottom py-3">
+					<h6 class="fw-bold mb-0"><i class="fa-solid fa-chart-column me-2 text-primary"></i>Benchmark vs. plateforme</h6>
+				</div>
+				<div class="card-body d-flex align-items-center justify-content-center">
+					{{ render_chart(benchmarkChart) }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        service_request:
+            type: state_machine
+            marking_store:
+                type: method
+                property: status
+            supports:
+                - App\Entity\ServiceRequest
+            initial_marking: draft
+            places:
+                - draft
+                - open
+                - closed
+                - awarded
+            transitions:
+                publish:
+                    from: draft
+                    to: open
+                close:
+                    from: open
+                    to: closed
+                award:
+                    from: [open, closed]
+                    to: awarded

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8" /><style>body{font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.6;margin:0;padding:0;background:#f4f4f7}.wrapper{max-width:600px;margin:0 auto;background:#fff}.header{background:#6c757d;padding:30px 40px;text-align:center}.header h1{color:#fff;font-size:20px;margin:0}.content{padding:30px 40px}.footer{padding:20px 40px;text-align:center;font-size:12px;color:#999;border-top:1px solid #eee}</style></head>
+<body>
+<div class="wrapper">
+	<div class="header"><h1>Appel d'offres clôturé</h1></div>
+	<div class="content">
+		<p>Bonjour {{ provider.name }},</p>
+		<p>L'appel d'offres <strong>{{ request.title }}</strong> a été attribué à un autre prestataire.</p>
+		<p>Nous vous remercions pour votre proposition et vous encourageons à continuer à répondre aux futurs appels d'offres sur Eventify.</p>
+		<p>L'équipe Eventify</p>
+	</div>
+	<div class="footer">&copy; {{ "now"|date('Y') }} Eventify</div>
+</div>
+</body>
+</html>
